@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/*
+ * HydroSight design tokens.
+ * Starting palette derived from the logo (globe blues/greens) per build prompt §9.
+ * Warning levels use colour + icon + text label: colour is never the only signal.
+ * Check local conventions with the relevant authorities before finalising warning colours.
+ */
+@theme {
+  --color-ink: #0b1f33;
+  --color-ocean: #1b5e9b;
+  --color-teal: #0e8f8a;
+  --color-leaf: #3e8e41;
+  --color-sky: #e6f1f8;
+
+  /* Source-type badge colours (rule 2) */
+  --color-src-measured: #3e8e41;
+  --color-src-forecast: #1b5e9b;
+  --color-src-estimated: #8a6d0e;
+  --color-src-community: #7a4aa8;
+  --color-src-synthetic: #b3261e;
+
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+:root {
+  color-scheme: dark light;
+  --surface: #0b1f33;
+  --surface-raised: #112c47;
+  --text: #e6f1f8;
+  --text-muted: #9db6cc;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --surface: #ffffff;
+    --surface-raised: #e6f1f8;
+    --text: #0b1f33;
+    --text-muted: #3d5a73;
+  }
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+}
+
+body {
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}

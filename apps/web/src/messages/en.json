@@ -1,0 +1,14 @@
+{
+  "app.name": "HydroSight",
+  "app.tagline": "Flood risk intelligence and early warning",
+  "maturity.prototype": "PROTOTYPE — not for operational decisions",
+  "maturity.validated": "VALIDATED — see evidence record",
+  "maturity.operational": "OPERATIONAL",
+  "source.measured": "MEASURED",
+  "source.estimated": "ESTIMATED",
+  "source.forecast": "FORECAST",
+  "source.community": "COMMUNITY · UNVERIFIED",
+  "source.synthetic": "SYNTHETIC DEMO",
+  "status.title": "Platform status",
+  "status.foundations": "Phase 0 foundations are in place. No live data, sensors or forecasts are connected yet."
+}

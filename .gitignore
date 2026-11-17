@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# builds
+.next/
+out/
+dist/
+coverage/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# secrets and local config - NEVER commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# misc
+.DS_Store
+*.log
