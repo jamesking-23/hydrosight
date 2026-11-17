@@ -17,4 +17,8 @@ NOT verified:
 
 Not in Phase 0 by design: shadcn/ui init (ADR-001), seed script (db/seed/README.md), authentication, any real data.
 
+## Progress preview (GitHub Pages)
+A static build of the web app is published by `.github/workflows/pages.yml` on every push to `main`, at https://jamesking-23.github.io/hydrosight/ once Pages is enabled (Settings > Pages > Source: GitHub Actions, if the workflow cannot enable it itself).
+It is a **static preview only**: no API, database, `/health` or `/ready`. It is not a production deployment. The normal Docker/standalone build is unchanged.
+
 ## Next: Phase 1 (identity, tenancy, RBAC, audit). Waiting for owner's "proceed".
