@@ -21,4 +21,11 @@ Not in Phase 0 by design: shadcn/ui init (ADR-001), seed script (db/seed/README.
 A static build of the web app is published by `.github/workflows/pages.yml` on every push to `main`, at https://jamesking-23.github.io/hydrosight/ once Pages is enabled (Settings > Pages > Source: GitHub Actions, if the workflow cannot enable it itself).
 It is a **static preview only**: no API, database, `/health` or `/ready`. It is not a production deployment. The normal Docker/standalone build is unchanged.
 
+## Hosting (Vercel + Supabase)
+- **Web:** Vercel project `hydrosight` (team `kkingg`, root `apps/web`), https://hydrosight-kkingg.vercel.app. Protected by Vercel Authentication (visible only when logged into Vercel). Redeploys on every push to `main`.
+- **API:** Vercel project `hydrosight-api` (root `services/api`, FastAPI via `index.py`), https://hydrosight-api.vercel.app. Vercel Authentication is OFF for this project only, because devices and the web server must reach it; it currently exposes only `/health`, `/ready`, `/docs`.
+- Web reaches the API through the `API_INTERNAL_URL` environment variable (a public URL, no secret).
+- **Database: NOT created.** Supabase refuses to create a project: "free project limit reached (2)" even though only `ezra-portfolio` is visible to this connection (the limit probably counts a project in another organization). Until it is created, API `/ready` correctly reports `database: DATABASE_URL is not set` (HTTP 503).
+- Serverless caveats: Vercel Functions are stateless and time-limited. Long-running workers, scheduled scientific jobs and an MQTT broker will need a different host later (ADR needed when Phase 3/6 arrive).
+
 ## Next: Phase 1 (identity, tenancy, RBAC, audit). Waiting for owner's "proceed".
