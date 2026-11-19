@@ -20,6 +20,14 @@ dev = [
   "mypy>=1.11",
 ]
 
+# GIS import pipeline only (not deployed): `uv run --group geo python -m hydrosight_api.geoimport ...`
+geo = [
+  "geopandas>=1.0",
+  "pyogrio>=0.9",
+  "shapely>=2.0",
+  "pyproj>=3.6",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -40,6 +48,10 @@ select = ["E", "F", "I", "B", "UP", "S"]
 [tool.mypy]
 strict = true
 python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = ["geopandas.*", "shapely.*", "pyogrio.*", "pyproj.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
