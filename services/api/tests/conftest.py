@@ -31,6 +31,8 @@ def _bootstrap(url: str) -> None:
         available = {r[0] for r in conn.execute("select name from pg_available_extensions")}
         for path in sorted(MIGRATIONS.glob("*.sql")):
             sql = path.read_text()
+            if "-- requires: postgis" in sql[:200] and "postgis" not in available:
+                continue  # spatial migrations need PostGIS; CI and Supabase have it
             # Local pgserver has no PostGIS/pgcrypto. The security logic under test does not use
             # them, so drop only those CREATE EXTENSION lines when the server cannot provide them.
             for ext in ("postgis", "pgcrypto"):
@@ -162,3 +164,25 @@ def world(db: Db) -> World:
             (org, users[name], role),
         )
     return World(db, org_a, org_b, users)
+
+
+@pytest.fixture(scope="session")
+def postgis(db_url: str) -> bool:
+    """Spatial tests need PostGIS. Locally (pgserver) they skip loudly; CI sets REQUIRE_POSTGIS=1
+    so a missing PostGIS there is a failure, never a silent skip."""
+    with psycopg.connect(db_url) as conn:
+        has = conn.execute("select 1 from pg_extension where extname = 'postgis'").fetchone()
+    if has:
+        return True
+    if os.environ.get("REQUIRE_POSTGIS"):
+        pytest.fail("REQUIRE_POSTGIS is set but PostGIS is not installed in the test database")
+    pytest.skip("PostGIS not available in this database (spatial tests run in CI)")
+
+
+SEED = REPO_ROOT / "db" / "seed" / "demo_stations.sql"
+
+
+@pytest.fixture
+def geo_world(world: World, postgis: bool) -> World:
+    """`world` plus the migration-0003 schema; demo seed is applied by tests that need it."""
+    return world
