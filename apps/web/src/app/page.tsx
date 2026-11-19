@@ -1,39 +1,89 @@
+import Link from "next/link";
+import { Hydrograph } from "@/components/hydrograph";
 import { MaturityBanner } from "@/components/maturity-banner";
-import { SourceBadge, SOURCE_TYPES } from "@/components/source-badge";
-import { BASE_PATH, IS_STATIC_PREVIEW } from "@/lib/base-path";
+import { SiteFooter, SiteHeader } from "@/components/shell";
+import { SOURCE_TYPES, SourceBadge } from "@/components/source-badge";
 import { t } from "@/lib/i18n";
+
+const WORKS = [
+  "Sign in with two-factor verification for approvers and administrators",
+  "Organisations, roles and invitations, with every organisation's data kept separate",
+  "An audit trail of who changed what, which nobody can edit or delete",
+];
+const NOT_YET = [
+  "Live river, rain and weather readings",
+  "Flood forecasts and risk maps",
+  "Warnings and alerts to the public",
+];
 
 export default function Home() {
   return (
     <>
       <MaturityBanner status="prototype" />
-      {IS_STATIC_PREVIEW && (
-        <div role="note" className="w-full bg-surface-raised px-4 py-2 text-center text-sm">
-          Static progress preview: no API, database, live data or sensors are connected here.
-        </div>
-      )}
-      <main className="mx-auto max-w-3xl px-6 py-12">
-        <header className="mb-8 flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`${BASE_PATH}/brand/hydrosight-logo.png`}
-            alt="HydroSight"
-            width={160}
-            height={160}
-            className="h-16 w-auto rounded bg-white"
-          />
-          <p className="text-lg text-[var(--text-muted)]">{t("en", "app.tagline")}</p>
-        </header>
+      <SiteHeader />
+      <main>
+        <section className="mx-auto grid max-w-5xl items-center gap-10 px-6 py-14 md:grid-cols-[1.05fr_1fr] md:py-20">
+          <div>
+            <h1 className="max-w-[16ch] text-5xl font-extrabold md:text-6xl">
+              Flood risk and early warning for East Africa
+            </h1>
+            <p className="mt-6 max-w-[44ch] text-xl text-muted">
+              HydroSight brings river and rain readings, forecasts and community reports into one
+              place, and labels every number with where it came from.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/login"
+                className="rounded-md bg-ocean px-5 py-2.5 font-semibold text-white hover:bg-ocean-deep"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/invite"
+                className="rounded-md border border-[#b9cad8] px-5 py-2.5 font-semibold hover:border-ocean"
+              >
+                Accept an invitation
+              </Link>
+            </div>
+          </div>
+          <Hydrograph />
+        </section>
 
-        <section className="rounded border border-ocean p-5" aria-labelledby="status-title">
-          <h1 id="status-title" className="mb-2 text-xl font-semibold">
-            {t("en", "status.title")}
-          </h1>
-          <p className="mb-4">{t("en", "status.foundations")}</p>
-          <p className="mb-2 text-sm text-[var(--text-muted)]">
-            Every value in HydroSight carries one of these source labels:
+        <section className="border-y border-line bg-mist">
+          <div className="mx-auto grid max-w-5xl gap-10 px-6 py-12 md:grid-cols-2">
+            <div>
+              <h2 className="text-2xl font-bold">Working today</h2>
+              <ul className="mt-4 space-y-3">
+                {WORKS.map((w) => (
+                  <li key={w} className="flex gap-3">
+                    <span aria-hidden className="mt-2 h-2 w-2 shrink-0 rounded-full bg-leaf" />
+                    {w}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Not connected yet</h2>
+              <ul className="mt-4 space-y-3">
+                {NOT_YET.map((w) => (
+                  <li key={w} className="flex gap-3">
+                    <span aria-hidden className="mt-2 h-2 w-2 shrink-0 rounded-full border-2 border-muted" />
+                    {w}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-muted">{t("en", "status.foundations")}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-6 py-12">
+          <h2 className="text-2xl font-bold">Every value shows its source</h2>
+          <p className="mt-2 max-w-[60ch] text-muted">
+            Nothing in HydroSight appears without one of these labels, so a forecast is never read as
+            a measurement and a community report is never read as verified.
           </p>
-          <ul className="flex flex-wrap gap-2">
+          <ul className="mt-5 flex flex-wrap gap-2">
             {SOURCE_TYPES.map((s) => (
               <li key={s}>
                 <SourceBadge source={s} />
@@ -42,6 +92,7 @@ export default function Home() {
           </ul>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }

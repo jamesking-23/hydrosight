@@ -5,11 +5,11 @@ export const SOURCE_TYPES = ["measured", "estimated", "forecast", "community", "
 export type SourceType = (typeof SOURCE_TYPES)[number];
 
 const STYLES: Record<SourceType, string> = {
-  measured: "border-src-measured text-src-measured",
-  estimated: "border-src-estimated text-src-estimated",
-  forecast: "border-src-forecast text-src-forecast",
-  community: "border-src-community text-src-community",
-  synthetic: "border-src-synthetic text-src-synthetic",
+  measured: "border-src-measured/40 bg-src-measured/10 text-src-measured",
+  estimated: "border-src-estimated/40 bg-src-estimated/10 text-src-estimated",
+  forecast: "border-src-forecast/40 bg-src-forecast/10 text-src-forecast",
+  community: "border-src-community/40 bg-src-community/10 text-src-community",
+  synthetic: "border-src-synthetic/40 bg-src-synthetic/10 text-src-synthetic",
 };
 
 export function SourceBadge({ source, locale = "en" }: { source: SourceType; locale?: Locale }) {
@@ -17,7 +17,7 @@ export function SourceBadge({ source, locale = "en" }: { source: SourceType; loc
   return (
     <span
       data-source-type={source}
-      className={`inline-block rounded border px-1.5 py-0.5 font-mono text-xs font-semibold tracking-wide ${STYLES[source]}`}
+      className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${STYLES[source]}`}
     >
       {label}
     </span>

@@ -65,7 +65,7 @@ export function MfaPanel({ next }: { next: string | null }) {
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={enrol.qr} alt="Two-factor QR code" width={192} height={192} className="bg-white p-2" />
-          <p className="text-xs text-[var(--text-muted)]">
+          <p className="text-xs text-muted">
             Cannot scan? Enter this key manually: <code className="break-all">{enrol.secret}</code>
           </p>
         </div>

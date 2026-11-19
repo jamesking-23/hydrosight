@@ -1,54 +1,68 @@
 @import "tailwindcss";
+@import "@fontsource-variable/source-sans-3/wght.css";
 
 /*
- * HydroSight design tokens.
- * Starting palette derived from the logo (globe blues/greens) per build prompt §9.
- * Warning levels use colour + icon + text label: colour is never the only signal.
+ * HydroSight design tokens: white theme, palette taken from the logo globe.
+ * Warning levels (later phases) use colour + icon + text label: colour is never the only signal.
  * Check local conventions with the relevant authorities before finalising warning colours.
  */
 @theme {
   --color-ink: #0b1f33;
   --color-ocean: #1b5e9b;
-  --color-teal: #0e8f8a;
-  --color-leaf: #3e8e41;
-  --color-sky: #e6f1f8;
+  --color-ocean-deep: #134a7c;
+  --color-teal: #0e7f7a;
+  --color-leaf: #2f7a33;
+  --color-mist: #f3f7fa;
+  --color-line: #d5e1ea;
+  --color-muted: #4a6176;
 
-  /* Source-type badge colours (rule 2) */
-  --color-src-measured: #3e8e41;
+  /* Source-type badge colours (rule 2), all >= 4.5:1 on white */
+  --color-src-measured: #2f7a33;
   --color-src-forecast: #1b5e9b;
   --color-src-estimated: #8a6d0e;
   --color-src-community: #7a4aa8;
   --color-src-synthetic: #b3261e;
 
-  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-sans: "Source Sans 3 Variable", "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  color-scheme: dark light;
-  --surface: #0b1f33;
-  --surface-raised: #112c47;
-  --text: #e6f1f8;
-  --text-muted: #9db6cc;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --surface: #ffffff;
-    --surface-raised: #e6f1f8;
-    --text: #0b1f33;
-    --text-muted: #3d5a73;
-  }
-}
-
-@theme inline {
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
+html {
+  background: #fff;
 }
 
 body {
-  background: var(--surface);
-  color: var(--text);
+  background: #fff;
+  color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
   font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ocean);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .draw-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 1.6s ease-out 0.2s forwards;
+  }
+  @keyframes draw {
+    to { stroke-dashoffset: 0; }
+  }
 }

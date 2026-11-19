@@ -27,9 +27,9 @@ export default async function Dashboard() {
       ) : null}
       <ul className="space-y-3">
         {active.map((m) => (
-          <li key={m.id} className="rounded border border-ocean p-4">
+          <li key={m.id} className="rounded-lg border border-line p-4 hover:border-ocean">
             <p className="font-semibold">{orgName.get(m.org_id) ?? "Organisation"}</p>
-            <p className="text-sm text-[var(--text-muted)]">
+            <p className="text-sm text-muted">
               Role: {label.get(m.role_key) ?? m.role_key}
             </p>
             <Link className="mt-2 inline-block underline" href={`/org/${m.org_id}`}>

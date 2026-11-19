@@ -17,7 +17,7 @@ export function MaturityBanner({
     <div
       role="status"
       data-service-status={status}
-      className="w-full border-b border-src-estimated bg-surface-raised px-4 py-2 text-center text-sm font-semibold"
+      className="w-full border-b border-[#e8d48a] bg-[#fff6d6] px-4 py-1.5 text-center text-sm font-semibold text-[#5c4a05]"
     >
       {t(locale, `maturity.${status}` as MessageKey)}
     </div>

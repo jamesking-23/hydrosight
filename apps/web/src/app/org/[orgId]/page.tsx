@@ -47,7 +47,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
             <thead><tr><th>Email</th><th>Role</th><th>Status</th>{canManage ? <th>Actions</th> : null}</tr></thead>
             <tbody>
               {members.data.map((m) => (
-                <tr key={m.id} className="border-t border-ocean/40">
+                <tr key={m.id} className="border-t border-line">
                   <td className="py-2">{email.get(m.user_id) ?? m.user_id.slice(0, 8)}</td>
                   <td>{a.roleDefs.find((r) => r.key === m.role_key)?.label ?? m.role_key}</td>
                   <td>{m.status}</td>
@@ -68,7 +68,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
               {(invites.data ?? []).map((i) => {
                 const state = i.accepted_at ? "accepted" : i.revoked_at ? "revoked" : new Date(i.expires_at) < new Date() ? "expired" : "pending";
                 return (
-                  <tr key={i.id} className="border-t border-ocean/40">
+                  <tr key={i.id} className="border-t border-line">
                     <td className="py-2">{i.email}</td><td>{i.role_key}</td><td>{fmt(i.expires_at)}</td><td>{state}</td>
                     <td>{state === "pending" ? <RevokeButton kind="invitation" id={i.id} /> : null}</td>
                   </tr>
@@ -88,7 +88,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
               {(keys.data ?? []).map((k) => {
                 const state = k.revoked_at ? "revoked" : k.expires_at && new Date(k.expires_at) < new Date() ? "expired" : "active";
                 return (
-                  <tr key={k.id} className="border-t border-ocean/40">
+                  <tr key={k.id} className="border-t border-line">
                     <td className="py-2">{k.name}</td><td><code>hsk_{k.key_prefix}…</code></td>
                     <td>{k.scopes.join(", ")}</td><td>{fmt(k.last_used_at)}</td><td>{state}</td>
                     <td>{state === "active" ? <RevokeButton kind="api_key" id={k.id} /> : null}</td>
@@ -101,7 +101,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
       ) : null}
 
       {!members && !invites && !keys ? (
-        <p className="text-[var(--text-muted)]">Your role has no administrative screens in this organisation.</p>
+        <p className="text-muted">Your role has no administrative screens in this organisation.</p>
       ) : null}
     </Shell>
   );

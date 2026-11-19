@@ -5,7 +5,7 @@ export default async function Mfa({ searchParams }: { searchParams: Promise<{ ne
   const { next } = await searchParams;
   return (
     <Shell title="Two-factor verification">
-      <p className="mb-4 max-w-prose text-[var(--text-muted)]">
+      <p className="mb-4 max-w-prose text-muted">
         Your role can approve, publish or administer. HydroSight requires a verified second factor
         for these roles; without it the system grants you no access.
       </p>

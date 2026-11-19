@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/browser";
 /** Shows a secret exactly once; it cannot be retrieved again (only a hash is stored). */
 function SecretOnce({ label, value, onDone }: { label: string; value: string; onDone: () => void }) {
   return (
-    <div role="status" className="mt-3 rounded border border-teal p-3 text-sm">
+    <div role="status" className="mt-3 rounded border border-teal/40 bg-teal/5 rounded-md p-3 text-sm">
       <p className="mb-1 font-semibold">{label} (shown once, copy it now):</p>
       <code className="block break-all">{value}</code>
       <GhostButton className="mt-2" onClick={onDone}>I have copied it</GhostButton>
@@ -67,7 +67,7 @@ export function InviteForm({ orgId, roles }: { orgId: string; roles: { key: stri
       <ErrorNote>{error}</ErrorNote>
       <Button type="submit" disabled={working || busy}>Create invitation</Button>
       {secret ? <SecretOnce label="Invitation link" value={secret} onDone={() => setSecret("")} /> : null}
-      <p className="text-xs text-[var(--text-muted)]">
+      <p className="text-xs text-muted">
         HydroSight does not send email yet (prototype). Share the link with the invitee yourself.
         The invitee must sign in with exactly this email address.
       </p>

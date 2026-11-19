@@ -60,18 +60,18 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next: strin
         autoComplete={mode === "login" ? "current-password" : "new-password"} value={password}
         onChange={(e) => setPassword(e.target.value)} />
       <ErrorNote>{error}</ErrorNote>
-      {info ? <p role="status" className="rounded border border-teal p-3 text-sm">{info}</p> : null}
+      {info ? <p role="status" className="rounded border border-teal/40 bg-teal/5 rounded-md p-3 text-sm">{info}</p> : null}
       <Button type="submit" disabled={busy}>
         {mode === "login" ? "Sign in" : "Create account"}
       </Button>
-      <p className="text-sm text-[var(--text-muted)]">
+      <p className="text-sm text-muted">
         {mode === "login" ? "No account? " : "Already registered? "}
         <Link className="underline" href={`${other}?next=${encodeURIComponent(target)}`}>
           {mode === "login" ? "Create one" : "Sign in"}
         </Link>
       </p>
       {mode === "signup" ? (
-        <p className="text-xs text-[var(--text-muted)]">
+        <p className="text-xs text-muted">
           An account alone gives no access. You need an invitation from an organisation
           administrator.
         </p>

@@ -12,6 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@fontsource-variable/source-sans-3": "^5.3.1",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.1",
     "next": "16.4.6",

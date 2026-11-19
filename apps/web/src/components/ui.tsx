@@ -1,13 +1,13 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 export const inputCls =
-  "w-full rounded border border-ocean bg-transparent px-3 py-2 text-[var(--text)]";
+  "w-full rounded-md border border-[#b9cad8] bg-white px-3 py-2 text-ink placeholder:text-muted/60 hover:border-ocean";
 
 export function Button({ className = "", ...p }: ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...p}
-      className={`rounded bg-ocean px-4 py-2 font-semibold text-white disabled:opacity-50 ${className}`}
+      className={`rounded-md bg-ocean px-4 py-2 font-semibold text-white hover:bg-ocean-deep disabled:opacity-50 ${className}`}
     />
   );
 }
@@ -16,7 +16,7 @@ export function GhostButton({ className = "", ...p }: ButtonHTMLAttributes<HTMLB
   return (
     <button
       {...p}
-      className={`rounded border border-ocean px-3 py-1 text-sm disabled:opacity-50 ${className}`}
+      className={`rounded-md border border-[#b9cad8] bg-white px-3 py-1 text-sm font-semibold text-ink hover:border-ocean disabled:opacity-50 ${className}`}
     />
   );
 }
@@ -27,7 +27,7 @@ export function Field({
 }: { label: string } & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm">{label}</span>
+      <span className="mb-1 block text-sm font-semibold">{label}</span>
       <input {...p} className={inputCls} />
     </label>
   );
@@ -35,7 +35,7 @@ export function Field({
 
 export function ErrorNote({ children }: { children: ReactNode }) {
   return children ? (
-    <p role="alert" className="rounded border border-src-synthetic p-3 text-sm">
+    <p role="alert" className="rounded-md border border-src-synthetic/50 bg-src-synthetic/5 p-3 text-sm text-src-synthetic">
       {children}
     </p>
   ) : null;
@@ -43,8 +43,8 @@ export function ErrorNote({ children }: { children: ReactNode }) {
 
 export function Card({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mb-6 rounded border border-ocean p-5">
-      <h2 className="mb-3 text-lg font-semibold">{title}</h2>
+    <section className="mb-8 border-t border-line pt-6">
+      <h2 className="mb-4 text-xl font-bold">{title}</h2>
       {children}
     </section>
   );
