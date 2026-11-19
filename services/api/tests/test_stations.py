@@ -114,7 +114,9 @@ def test_status_and_source_type_cannot_be_set_by_app_roles(geo_world: World) -> 
     fails(w.db, psycopg.errors.InsufficientPrivilege,
           "insert into public.stations (org_id, code, name, geom, source_type, status) values "
           f"(%s, 'Z-1', 'z', {POINT}, 'measured', 'validated')", (w.org_a, 32.0, 0.0))  # fmt: skip
-    assert w.db.one("select status::text from public.stations where id = %s", (sid,)) == "unvalidated"
+    assert (
+        w.db.one("select status::text from public.stations where id = %s", (sid,)) == "unvalidated"
+    )
 
 
 def test_station_writes_need_devices_manage_and_mfa(geo_world: World) -> None:
