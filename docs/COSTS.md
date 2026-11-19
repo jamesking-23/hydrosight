@@ -9,3 +9,7 @@ Phase 0 has no paid services. Local development only (Docker, Postgres/PostGIS c
 | Supabase (org `trial-ERA`) | Database | Free-plan project limit is 2 (confirmed by the error message); price of paid tier NOT checked | UNVERIFIED |
 
 Entries are added, with a verified source for each price, as services are introduced.
+
+## Phase 3
+- MET Norway forecasts: free. GitHub Actions scheduled job: free within the included minutes (about 8 short runs a day). No new paid service added.
+- Supabase free plan storage: readings grow with fleet size; revisit before the first real device fleet.

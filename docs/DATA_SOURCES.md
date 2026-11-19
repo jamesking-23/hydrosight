@@ -12,3 +12,7 @@ Rule 12: verify licence and commercial-use terms **before** integrating. Record 
 | Uganda National Meteorological Authority / Ministry of Water and Environment | Official observations/warnings | Access NOT assumed | UNVERIFIED |
 
 Status after Phase 2: nothing external is integrated. OSM raster tiles are used only as a basemap (attribution shown). No river/catchment/OSM/DEM data is loaded; demo stations are synthetic.
+
+## Phase 3 update
+| MET Norway Locationforecast 2.0 | Hourly rain forecast (`forecast`) | CC BY 4.0, commercial use allowed per MET Norway FAQ; needs User-Agent with contact details; attribution shown in UI | Adapter built; live calls UNVERIFIED |
+| Open-Meteo | (not used) | Free API is non-commercial only; paid plan needed | Rejected for commercial product |

@@ -21,3 +21,8 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-GEO-003 | `status` and `source_type` not writable by app roles (no self-promotion) | `0003` column grants | `test_stations.py` |
 | HS-GEO-004 | Import pipeline requires CRS, source and licence; records file hash; skips bad features and counts them | `services/api/src/hydrosight_api/geoimport.py` | `services/api/tests/test_geoimport.py` |
 | HS-GEO-005 | Map with layer toggles, filters, search, station panel, source badges, attribution, explicit tile failure | `apps/web/src/components/station-map.tsx`, `app/map/page.tsx` | `apps/web/tests/stations.test.ts` (logic only; rendering checked by hand) |
+| HS-ING-001 | Readings enter only via API key with `readings.write`; per-item results; idempotent; conflicts never overwrite | `0005` `ingest_readings`, `services/api/src/hydrosight_api/ingest.py` | `tests/test_readings.py`, `tests/test_ingest_api.py` |
+| HS-ING-002 | Readings inherit the sensor's source type; quality starts unchecked; no universal thresholds | `0005` | `tests/test_readings.py` |
+| HS-ING-003 | Freshness (live/stale/offline/never reported) from expected interval; stale never shown as live | `0005` `sensor_status`, `apps/web/src/lib/stations.ts` | `tests/test_readings.py`, `apps/web/tests/stations.test.ts` |
+| HS-ING-004 | Cross-tenant: keys, readings and forecasts isolated; no direct writes by app roles | `0005` RLS and grants | `tests/test_readings.py` |
+| HS-ING-005 | Forecasts typed `forecast`, carry model and licence, latest run wins; MET Norway adapter fails loudly | `0005`, `forecast_met.py`, `.github/workflows/forecast.yml` | `tests/test_readings.py`, `tests/test_forecast_met.py` (fixture hand-written; live UNVERIFIED) |

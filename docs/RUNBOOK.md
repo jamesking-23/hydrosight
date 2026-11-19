@@ -18,3 +18,12 @@ Only with a file whose licence you have checked. Needs the geo group: `cd servic
 `DATABASE_URL=... uv run --group geo python -m hydrosight_api.geoimport rivers FILE --name-field NAME --source "Where it came from" --licence "Licence name" --source-type measured [--layer L] [--assume-crs EPSG:4326] [--dry-run]`
 Use `--dry-run` first. Same command with `catchments`. The map shows `rivers_geo` once rows exist (map layer for river lines is not yet drawn).
 The web build copies the MapLibre worker automatically (`apps/web/scripts/copy-maplibre-worker.mjs`).
+
+## Sending readings (Phase 3)
+1. As an org admin (with MFA), create an API key with scope `readings.write` on the organisation page. Copy it once; it is never shown again.
+2. `curl -X POST $API/v1/readings -H "X-API-Key: hsk_..." -H "Content-Type: application/json" -d '{"readings":[{"sensor_id":"<uuid>","observed_at":"2026-11-20T09:00:00Z","value":1.42}]}'`
+3. The answer lists each item as accepted, duplicate or rejected with a reason. HTTP 401 = bad/expired/revoked key, 403 = missing scope, 422 = bad batch size, 503 = database unreachable (nothing stored).
+4. The station panel on `/map` shows the sensor as Live until two expected intervals pass without a new reading.
+
+## Forecast job
+Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contact email). Run manually from Actions > Forecast ingestion > Run workflow. Locally: `cd services/api && FORECAST_USER_AGENT=... DATABASE_URL=... uv run python -m hydrosight_api.forecast_met --dry-run`.

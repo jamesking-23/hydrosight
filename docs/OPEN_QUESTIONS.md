@@ -44,3 +44,15 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - Promotion of `status` (unvalidated to higher) needs a database function with an evidence link and a different approver; not built, so nothing can be promoted.
 - Demo station coordinates are hand-placed approximations, not surveyed.
 - Supabase hosted PostGIS is 3.3.7; CI image may differ. Re-check spatial tests if behaviour diverges.
+
+## Ingestion and forecasts (Phase 3)
+- **To switch on forecasts the owner must set** GitHub secret `DATABASE_URL` (Supabase connection string) and variable `FORECAST_USER_AGENT` (for example `HydroSight/1.0 (contact: your-real-email)`). MET Norway requires real contact details; I did not invent any.
+- The API service needs `DATABASE_URL` in its Vercel environment before `/v1/readings` can store anything (`/ready` shows 503 until then). Use the connection pooler string.
+- No rate limiting on `/v1/readings` yet (serverless is stateless). Options: Vercel firewall rules or a database-side per-key counter. Decide before onboarding customers.
+- Readings are one plain table. Partitioning and retention (for example monthly partitions, rollups) are needed before large fleets.
+- 30-day cutoff for late data and 2x/10x freshness multipliers are my defaults, not validated against real telemetry. Review per device type.
+- No admin UI to register stations or sensors, or to create the first API key for a device. Currently SQL/API only.
+- MET Norway: confirm their Locationforecast FAQ on request caching/If-Modified-Since and add conditional requests if call volume grows. Live response shape UNVERIFIED from the build environment.
+- Satellite rainfall (CHIRPS, NASA GPM IMERG) not integrated; licences and access not yet verified.
+- Quality control beyond plausibility flags (spike, flatline, cross-station checks) is not built, so every reading stays `unchecked`.
+- Demo stations have no readings (shown honestly as "No data received"). A clearly labelled synthetic data generator for sales demos is possible if wanted.

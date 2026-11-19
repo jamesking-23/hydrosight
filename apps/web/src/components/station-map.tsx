@@ -17,12 +17,18 @@ import { SOURCE_TYPES, SourceBadge, type SourceType } from "@/components/source-
 import { inputCls } from "@/components/ui";
 import { createClient } from "@/lib/supabase/browser";
 import {
+  FRESHNESS_LABELS,
   SENSOR_LABELS,
   boundsOf,
+  classifyFreshness,
+  describeAge,
   filterStations,
+  forecastTotalMm,
   geojsonCollection,
   riverNames,
   stationsToGeoJSON,
+  type ForecastRow,
+  type Freshness,
   type StationRow,
 } from "@/lib/stations";
 
@@ -34,12 +40,57 @@ export interface GeoImportInfo {
   source_type: string;
 }
 interface SensorRow {
-  id: string;
+  sensor_id: string;
   kind: string;
   unit: string;
   expected_interval_s: number;
   source_type: SourceType;
-  status: string;
+  last_observed_at: string | null;
+  last_value: number | null;
+}
+
+const FRESHNESS_STYLE: Record<Freshness, string> = {
+  live: "border-[#9ccf9f] bg-[#e8f6e9] text-[#1f5a23]",
+  stale: "border-[#e8d48a] bg-[#fff6d6] text-[#5c4a05]",
+  offline: "border-[#e3a3a3] bg-[#fdeaea] text-[#8a1f1f]",
+  never_reported: "border-line bg-[#f3f5f7] text-muted",
+};
+
+function FreshnessChip({ sensor, now }: { sensor: SensorRow; now: number }) {
+  const f = classifyFreshness(sensor.last_observed_at, sensor.expected_interval_s, now);
+  return (
+    <span className={`rounded-full border px-2 py-0.5 text-xs font-bold ${FRESHNESS_STYLE[f]}`} data-freshness={f}>
+      {FRESHNESS_LABELS[f]}
+    </span>
+  );
+}
+
+/** A value is shown as current only while the sensor is live; otherwise it is labelled as the
+ * last reading with its age (rule 6). */
+function latestValue(s: SensorRow, now: number): string {
+  if (s.last_observed_at === null || s.last_value === null) return "—";
+  const f = classifyFreshness(s.last_observed_at, s.expected_interval_s, now);
+  const v = `${s.last_value} ${s.unit}`;
+  return f === "live" ? v : `${v} (last reading, ${describeAge(s.last_observed_at, now)}; not current)`;
+}
+
+function ForecastBlock({ state, now }: { state: { rows: ForecastRow[]; error: string } | null; now: number }) {
+  if (!state) return <p className="mt-4 text-sm text-muted" role="status">Loading forecast…</p>;
+  if (state.error) return <p role="alert" className="mt-4 text-sm text-src-synthetic">Could not load forecast: {state.error}</p>;
+  const total = forecastTotalMm(state.rows, now, 24);
+  const first = state.rows[0];
+  if (total === null || !first) return <p className="mt-4 text-sm text-muted">No forecast has been loaded for this station.</p>;
+  return (
+    <div className="mt-4 rounded-lg border border-line p-3 text-sm">
+      <div className="flex items-center gap-2">
+        <SourceBadge source="forecast" />
+        <strong>Rain forecast, next 24 h: {total} mm</strong>
+      </div>
+      <p className="mt-1 text-muted">
+        {first.model}, issued {describeAge(first.issued_at, now)}. Weather data: MET Norway ({first.provider_licence}). Advisory only until validated for this area.
+      </p>
+    </div>
+  );
 }
 
 const COLORS: Record<SourceType, string> = {
@@ -76,6 +127,13 @@ export function StationMap({
   const visible = useMemo(() => filterStations(stations, { query, sources, river }), [stations, query, sources, river]);
   const selected = stations.find((s) => s.id === selectedId) ?? null;
   // results for a previously selected station are ignored, so a stale list is never shown
+  const [forecastResult, setForecastResult] = useState<{ id: string; rows: ForecastRow[]; error: string } | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(t);
+  }, []);
+  const forecastState = forecastResult && forecastResult.id === selectedId ? forecastResult : null;
   const sensorState = sensorResult && sensorResult.id === selectedId ? sensorResult : null;
   const sensors = sensorState && !sensorState.error ? sensorState.rows : null;
   const sensorError = sensorState?.error ?? "";
@@ -184,14 +242,22 @@ export function StationMap({
     }
     if (!selectedId) return;
     let cancelled = false;
-    createClient()
-      .from("sensors")
-      .select("id, kind, unit, expected_interval_s, source_type, status")
+    const sb = createClient();
+    sb.from("sensor_status")
+      .select("sensor_id, kind, unit, expected_interval_s, source_type, last_observed_at, last_value")
       .eq("station_id", selectedId)
       .order("kind")
       .then(({ data, error }) => {
         if (cancelled) return;
         setSensorResult({ id: selectedId, rows: (data ?? []) as SensorRow[], error: error?.message ?? "" });
+      });
+    sb.from("forecast_latest")
+      .select("valid_at, value, issued_at, model, provider_licence")
+      .eq("station_id", selectedId)
+      .order("valid_at")
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        setForecastResult({ id: selectedId, rows: (data ?? []) as ForecastRow[], error: error?.message ?? "" });
       });
     return () => {
       cancelled = true;
@@ -329,12 +395,13 @@ export function StationMap({
             {sensors && sensors.length === 0 ? <p className="text-sm text-muted">No sensors registered for this station.</p> : null}
             {sensors && sensors.length > 0 ? (
               <table className="w-full text-left text-sm">
-                <thead><tr><th className="py-1">Sensor</th><th>Unit</th><th>Expected every</th><th>Source</th></tr></thead>
+                <thead><tr><th className="py-1">Sensor</th><th>Status</th><th>Latest value</th><th>Expected every</th><th>Source</th></tr></thead>
                 <tbody>
                   {sensors.map((s) => (
-                    <tr key={s.id} className="border-t border-line">
+                    <tr key={s.sensor_id} className="border-t border-line">
                       <td className="py-2">{SENSOR_LABELS[s.kind] ?? s.kind}</td>
-                      <td>{s.unit}</td>
+                      <td><FreshnessChip sensor={s} now={now} /></td>
+                      <td>{latestValue(s, now)}</td>
                       <td>{Math.round(s.expected_interval_s / 60)} min</td>
                       <td><SourceBadge source={s.source_type} /></td>
                     </tr>
@@ -342,7 +409,10 @@ export function StationMap({
                 </tbody>
               </table>
             ) : null}
-            <p className="mt-4 text-sm text-muted">No readings are connected yet, so no current value is shown.</p>
+            {sensors && sensors.length > 0 && sensors.every((s) => !s.last_observed_at) ? (
+              <p className="mt-3 text-sm text-muted">No readings have been received for this station, so no value is shown.</p>
+            ) : null}
+            <ForecastBlock state={forecastState} now={now} />
           </section>
         ) : (
           <p className="text-sm text-muted">Select a station on the map or in the results list to see its details.</p>

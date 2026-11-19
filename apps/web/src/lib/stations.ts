@@ -80,3 +80,56 @@ export function geojsonCollection(
     })),
   };
 }
+
+export type Freshness = "live" | "stale" | "offline" | "never_reported";
+
+/** Mirrors `public.sensor_status` (live <= 2x interval, stale <= 10x, else offline) so a panel
+ * left open keeps ageing instead of showing a last-known value as live (rule 6). */
+export function classifyFreshness(
+  lastObservedAt: string | null,
+  expectedIntervalS: number,
+  now: number,
+): Freshness {
+  if (!lastObservedAt) return "never_reported";
+  const t = Date.parse(lastObservedAt);
+  if (!Number.isFinite(t)) return "never_reported";
+  const ageS = Math.max(0, (now - t) / 1000);
+  if (ageS <= expectedIntervalS * 2) return "live";
+  if (ageS <= expectedIntervalS * 10) return "stale";
+  return "offline";
+}
+
+export const FRESHNESS_LABELS: Record<Freshness, string> = {
+  live: "Live",
+  stale: "Stale",
+  offline: "Offline",
+  never_reported: "No data received",
+};
+
+export function describeAge(lastObservedAt: string, now: number): string {
+  const s = Math.max(0, Math.round((now - Date.parse(lastObservedAt)) / 1000));
+  if (s < 90) return "just now";
+  const m = Math.round(s / 60);
+  if (m < 90) return `${m} min ago`;
+  const h = Math.round(m / 60);
+  if (h < 48) return `${h} h ago`;
+  return `${Math.round(h / 24)} days ago`;
+}
+
+export interface ForecastRow {
+  valid_at: string;
+  value: number;
+  issued_at: string;
+  model: string;
+  provider_licence: string;
+}
+
+/** Total forecast rain (mm) for hours starting in [now, now + hours); null if no hours are available. */
+export function forecastTotalMm(rows: ForecastRow[], now: number, hours: number): number | null {
+  const inWindow = rows.filter((r) => {
+    const t = Date.parse(r.valid_at);
+    return t >= now - 30 * 60 * 1000 && t < now + hours * 3600 * 1000;
+  });
+  if (inWindow.length === 0) return null;
+  return Math.round(inWindow.reduce((a, r) => a + r.value, 0) * 10) / 10;
+}

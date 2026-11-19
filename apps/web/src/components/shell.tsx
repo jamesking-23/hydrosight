@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { MaturityBanner } from "@/components/maturity-banner";
 import { SignOutButton } from "@/components/sign-out-button";
 
 export function Logo({ className = "h-12" }: { className?: string }) {

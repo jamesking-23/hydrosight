@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   boundsOf,
+  classifyFreshness,
+  describeAge,
+  forecastTotalMm,
   filterStations,
   geojsonCollection,
   riverNames,
@@ -51,5 +54,37 @@ describe("geo helpers", () => {
   it("wraps imported geometry as features", () => {
     const fc = geojsonCollection([{ id: "r", name: "Test", geojson: { type: "LineString", coordinates: [[0, 0], [1, 1]] } }]);
     expect(fc.features[0]?.properties).toEqual({ name: "Test" });
+  });
+});
+
+describe("freshness (rule 6: never show a last-known value as live)", () => {
+  const now = Date.parse("2026-11-20T12:00:00Z");
+  const ago = (s: number) => new Date(now - s * 1000).toISOString();
+  it("classifies by the sensor's expected interval", () => {
+    expect(classifyFreshness(null, 900, now)).toBe("never_reported");
+    expect(classifyFreshness("garbage", 900, now)).toBe("never_reported");
+    expect(classifyFreshness(ago(60), 900, now)).toBe("live");
+    expect(classifyFreshness(ago(1800), 900, now)).toBe("live");
+    expect(classifyFreshness(ago(1801), 900, now)).toBe("stale");
+    expect(classifyFreshness(ago(9000), 900, now)).toBe("stale");
+    expect(classifyFreshness(ago(9001), 900, now)).toBe("offline");
+  });
+  it("describes age in plain words", () => {
+    expect(describeAge(ago(30), now)).toBe("just now");
+    expect(describeAge(ago(600), now)).toBe("10 min ago");
+    expect(describeAge(ago(3 * 3600), now)).toBe("3 h ago");
+    expect(describeAge(ago(5 * 86400), now)).toBe("5 days ago");
+  });
+});
+
+describe("forecastTotalMm", () => {
+  const now = Date.parse("2026-11-20T12:00:00Z");
+  const row = (h: number, value: number) => ({
+    valid_at: new Date(now + h * 3600e3).toISOString(), value, issued_at: "x", model: "m", provider_licence: "l",
+  });
+  it("sums the next hours only and returns null when none", () => {
+    expect(forecastTotalMm([], now, 24)).toBeNull();
+    expect(forecastTotalMm([row(1, 0.4), row(2, 1.1), row(30, 9)], now, 24)).toBe(1.5);
+    expect(forecastTotalMm([row(-5, 3)], now, 24)).toBeNull();
   });
 });
