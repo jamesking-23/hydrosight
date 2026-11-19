@@ -213,7 +213,7 @@ def test_spatial_queries_use_gist_indexes(geo_world: World) -> None:
     w.db.run(
         "insert into public.stations (org_id, code, name, geom, source_type) "
         "select %s, 'G-' || g, 'g' || g, extensions.st_setsrid(extensions.st_makepoint("
-        "29.5 + (g % 50) * 0.1, -1.4 + (g / 50) * 0.01), 4326), 'synthetic' from generate_series(1, 5000) g",
+        "29.5 + (g %% 50) * 0.1, -1.4 + (g / 50) * 0.01), 4326), 'synthetic' from generate_series(1, 5000) g",
         (w.org_a,),
     )
     w.db.run("analyze public.stations")
