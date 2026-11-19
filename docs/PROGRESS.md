@@ -36,4 +36,13 @@ Migration `0002_identity_tenancy_rbac_audit.sql` is applied to Supabase and cove
 - Supabase security advisor after applying: 1 INFO (`platform_memberships` has RLS and no policy: intentional, service role only) and 5 WARN (the five `authenticated`-callable SECURITY DEFINER functions: intentional entry points that check permission inside and are covered by tests). No ERROR.
 - NOT done yet (Phase 1b): login screens, MFA enrolment UI, invitation-acceptance UI, admin screens, API-key UI, FastAPI API-key endpoint. Nothing in the web app uses this layer yet.
 
-## Next: Phase 1b (Supabase Auth UI + admin screens). Waiting for owner's "proceed".
+## Phase 1b: auth UI and admin screens (built 2026-11-19; live sign-in NOT yet exercised)
+Web app now has: `/login`, `/signup`, `/auth/callback`, `/mfa` (TOTP enrol + verify), `/invite` (token read from the URL fragment, never sent to a server), `/dashboard`, `/org/[orgId]` (members, invitations, API keys). `src/proxy.ts` refreshes the session and sends signed-out visitors to `/login`; it is a convenience only, all authorisation is the database's (RLS + MFA gate).
+- Verified: lint, typecheck, 13 unit tests (access logic, safe redirects, token parsing), production build, local run (signed-out redirects, explicit "could not reach sign-in service" error, safe callback fallback).
+- **NOT verified:** a real sign-in, email confirmation, TOTP enrolment/verification and the admin actions against live Supabase Auth. The build environment cannot reach supabase.co. The owner must do the first run (see RUNBOOK "First sign-in").
+- Removed the GitHub Pages workflow: a static export cannot host sign-in (it was already failing because Pages was not enabled).
+- UI text is English only for these screens (en/lg/sw message files not yet extended).
+- No email is sent (prototype): the invitation link is shown once for the admin to share manually.
+- The web project is behind Vercel Authentication, so only people logged in to the owner's Vercel team can open it. Invitees cannot use it until that is changed (owner decision).
+
+## Next: Phase 2 (data model for stations/sensors/readings). Waiting for owner's "proceed" (and the first-sign-in check above).

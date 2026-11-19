@@ -31,3 +31,6 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - Offboarding: the last-org_admin guard blocks deleting such a user; a procedure is needed.
 - The FastAPI service connects as a bypass-RLS role; a non-bypass role plus per-request identity is required before tenant endpoints (see ADR-002).
 - Transaction pooler (Vercel) limits session features; re-test per-request `set_config`/`SET LOCAL` patterns against it.
+- Web project is behind Vercel Authentication: invitees outside the owner's Vercel team cannot reach it. Decide when to open it (and whether to use a custom domain).
+- Invitation email delivery is not implemented (needs an email provider choice; tests must never send real email).
+- Password policy / sign-up abuse protection (captcha, rate limits) not reviewed; Supabase defaults apply.

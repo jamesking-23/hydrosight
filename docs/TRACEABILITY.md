@@ -15,3 +15,4 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-IAM-003 | Invitations: hashed, single-use, expiring, email-bound, revocable | `0002` (`create/accept/revoke_invitation`) | `services/api/tests/test_invitations.py` |
 | HS-IAM-004 | API keys: hashed, never privileged, never exceed creator, expiring, revocable | `0002` (`create/revoke/verify_api_key`) | `services/api/tests/test_api_keys.py` |
 | HS-AUD-001 | Append-only audit log of privileged changes; outlives organisations; last org_admin protected | `0002` (`audit_row_change`, `audit_log_immutable`, `guard_last_org_admin`) | `services/api/tests/test_audit.py` |
+| HS-UI-003 | Sign-in, TOTP MFA gate, invitation acceptance, member/invitation/API-key admin screens; secrets shown once; no open redirects | `apps/web/src/{proxy.ts,lib/access.ts,components/,app/}` | `apps/web/tests/access.test.ts` (logic only; live flow UNVERIFIED) |

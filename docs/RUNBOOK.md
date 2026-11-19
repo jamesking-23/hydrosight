@@ -5,3 +5,10 @@ Stub. Expanded in Phase 10 (backups, restore drill, incident response).
 ## Local checks
 - `curl localhost:3000/health` and `/ready`; `curl localhost:8000/health` and `/ready`.
 - `/ready` returns HTTP 503 with an explicit reason when a dependency is down.
+
+## First sign-in (one-off, owner)
+1. Supabase dashboard > Authentication > URL Configuration: set Site URL to the web URL (https://hydrosight-kkingg.vercel.app) and add `https://hydrosight-kkingg.vercel.app/auth/callback` to Redirect URLs.
+2. Authentication > Sign In / Providers > Email: make sure "Confirm email" is ON. Check Authentication > Multi-Factor that TOTP is enabled.
+3. Open the web URL (log in to Vercel first), go to /signup, create an account with your real email, click the confirmation email.
+4. Ask Claude to create your organisation: it runs `select public.admin_create_organization(name, slug, your_email)` and gives you a one-time invitation link.
+5. Open the link, sign in with the same email, accept; you will be sent to /mfa to enrol an authenticator app, then /org/<id>.

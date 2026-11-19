@@ -14,6 +14,10 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next: strin
   const [info, setInfo] = useState("");
   const [busy, setBusy] = useState(false);
   const target = sanitizeNext(next);
+  const explain = (m: string) =>
+    m === "Failed to fetch"
+      ? "Could not reach the sign-in service. Check your connection and try again."
+      : m;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,7 +27,7 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next: strin
     const supabase = createClient();
     if (mode === "login") {
       const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-      if (err) setError(err.message);
+      if (err) setError(explain(err.message));
       else {
         router.push(target);
         router.refresh();
@@ -36,7 +40,7 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next: strin
           emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(target)}`,
         },
       });
-      if (err) setError(err.message);
+      if (err) setError(explain(err.message));
       else if (data.session) {
         router.push(target);
         router.refresh();
