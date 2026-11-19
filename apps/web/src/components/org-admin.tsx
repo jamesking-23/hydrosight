@@ -68,7 +68,7 @@ export function InviteForm({ orgId, roles }: { orgId: string; roles: { key: stri
       <Button type="submit" disabled={working || busy}>Create invitation</Button>
       {secret ? <SecretOnce label="Invitation link" value={secret} onDone={() => setSecret("")} /> : null}
       <p className="text-xs text-muted">
-        HydroSight does not send email yet (prototype). Share the link with the invitee yourself.
+        Email delivery is not set up yet. Share the link with the invitee yourself.
         The invitee must sign in with exactly this email address.
       </p>
     </form>

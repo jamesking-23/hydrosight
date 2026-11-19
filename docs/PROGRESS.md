@@ -42,7 +42,7 @@ Web app now has: `/login`, `/signup`, `/auth/callback`, `/mfa` (TOTP enrol + ver
 - **NOT verified:** a real sign-in, email confirmation, TOTP enrolment/verification and the admin actions against live Supabase Auth. The build environment cannot reach supabase.co. The owner must do the first run (see RUNBOOK "First sign-in").
 - Removed the GitHub Pages workflow: a static export cannot host sign-in (it was already failing because Pages was not enabled).
 - UI text is English only for these screens (en/lg/sw message files not yet extended).
-- No email is sent (prototype): the invitation link is shown once for the admin to share manually.
+- No email is sent yet: the invitation link is shown once for the admin to share manually.
 - The web project is behind Vercel Authentication, so only people logged in to the owner's Vercel team can open it. Invitees cannot use it until that is changed (owner decision).
 
 ## Phase 2: locations, hydrography and map - BUILT 2026-11-19 (partly deferred, see below)
@@ -50,8 +50,12 @@ Web app now has: `/login`, `/signup`, `/auth/callback`, `/mfa` (TOTP enrol + ver
 Migration `0003_hydrography_stations_sensors.sql` is applied to Supabase (PostGIS 3.3.7) and the demo seed `db/seed/demo_stations.sql` is loaded. Design: `docs/DECISIONS/ADR-003-geography.md`.
 - Built: rivers, catchments (global reference geography), locations, stations, sensors (tenant tables, RLS, audit triggers), GiST indexes, geo views, `/map` page (MapLibre: layer panel, filter by river/source/status, search, station detail panel, time-slider scaffold, OSM attribution, explicit tile-failure alert), GeoPandas import CLI (`python -m hydrosight_api.geoimport`) that refuses imports without a stated source and licence.
 - Verified: 19 spatial DB tests and 3 import DB tests pass on real PostGIS in CI (run 029f40d); GiST used for nearest-station query on the hosted database (seq scan disabled, tiny table); anon has no grants; security advisor shows nothing new.
-- Synthetic: 6 demo stations (hand-placed, approximate) and 12 sensors in org `hydrosight-demo`, all `synthetic` + `prototype`. Rivers are names only: NO river geometry exists yet.
+- Synthetic: 6 demo stations (hand-placed, approximate) and 12 sensors in org `hydrosight-demo`, all `synthetic` + `unvalidated`. Rivers are names only: NO river geometry exists yet.
 - **Deferred (not faked):** OSM roads/health facilities/schools layers and DEM elevation sampling. Both need data downloads the build environment cannot make and a licence review. Logged in OPEN_QUESTIONS and DATA_SOURCES. The import pipeline is ready for licensed river/catchment files.
 - **NOT verified:** the live `/map` data fetch from the deployed site (sandbox cannot reach supabase.co), and OSM public tile use in production.
+
+## Product posture change (2026-11-19, owner instruction)
+HydroSight is built as a commercial product, not a prototype. Removed the site-wide PROTOTYPE banner and all "prototype" wording from UI, README, CLAUDE.md and new docs. Migration `0004` renames the lifecycle state `prototype` to `unvalidated` (applied to Supabase). Earlier entries above keep their original wording as history.
+What did NOT change, because a commercial flood-warning product needs it: nothing is labelled validated or operational without a human admin's evidence record, source badges stay, offline/stale states stay explicit, and no public warning goes out without a second person's approval. Records and forecasts show "Not yet validated" until promoted.
 
 ## Next: Phase 3 (ingestion and real-time monitoring). Waiting for owner's "proceed".

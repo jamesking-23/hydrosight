@@ -307,7 +307,7 @@ export function StationMap({
               <div className="flex flex-wrap gap-2">
                 <SourceBadge source={selected.source_type} />
                 <span className="rounded-full border border-[#e8d48a] bg-[#fff6d6] px-2.5 py-0.5 text-xs font-bold text-[#5c4a05]">
-                  {selected.status === "prototype" ? "Prototype" : selected.status}
+                  {selected.status === "unvalidated" ? "Not yet validated" : selected.status}
                 </span>
               </div>
             </div>

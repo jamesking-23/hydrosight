@@ -1,7 +1,7 @@
 {
   "app.name": "HydroSight",
   "app.tagline": "Flood risk intelligence and early warning",
-  "maturity.prototype": "PROTOTYPE — not for operational decisions",
+  "maturity.unvalidated": "NOT YET VALIDATED — advisory only",
   "maturity.validated": "VALIDATED — see evidence record",
   "maturity.operational": "OPERATIONAL",
   "source.measured": "MEASURED",

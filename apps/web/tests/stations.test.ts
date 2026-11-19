@@ -9,7 +9,7 @@ import {
 } from "@/lib/stations";
 
 const base = {
-  org_id: "o", elevation_m: null, elevation_source_type: null, status: "prototype" as const, notes: null,
+  org_id: "o", elevation_m: null, elevation_source_type: null, status: "unvalidated" as const, notes: null,
 };
 const S: StationRow[] = [
   { ...base, id: "1", code: "DEMO-NILE-01", name: "Nile, Jinja area (demo)", lat: 0.42, lon: 33.2, river_name: "Nile", source_type: "synthetic" },

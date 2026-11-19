@@ -2,8 +2,9 @@
 
 AI-assisted flood risk intelligence and early warning platform, starting in Uganda and East Africa.
 
-> **Status: PROTOTYPE (Phase 0 foundations).** No live data, sensors or forecasts are connected.
-> Nothing here is validated or approved for operational decisions.
+> **Status: in active development toward commercial launch.** Live data, sensors and forecasts
+> are not connected yet (see `docs/PROGRESS.md`). Nothing is validated for operational
+> decisions until a human admin promotes it with an evidence record.
 
 ## Run it
 

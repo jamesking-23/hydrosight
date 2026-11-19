@@ -1,7 +1,7 @@
 -- Demo seed: SYNTHETIC stations near named Ugandan rivers. Idempotent. Not a migration.
 -- Coordinates are APPROXIMATE, placed by hand for demonstration only. They are not surveyed
 -- station locations and do not represent real monitoring equipment. Everything here is
--- source_type = 'synthetic' and status = 'prototype'. River geometry is NOT included: it must
+-- source_type = 'synthetic' and status = 'unvalidated'. River geometry is NOT included: it must
 -- come from a licensed import (see docs/DATA_SOURCES.md).
 
 insert into public.organizations (name, slug, is_demo)

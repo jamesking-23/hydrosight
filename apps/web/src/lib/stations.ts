@@ -12,7 +12,7 @@ export interface StationRow {
   elevation_m: number | null;
   elevation_source_type: SourceType | null;
   source_type: SourceType;
-  status: "prototype" | "validated" | "operational";
+  status: "unvalidated" | "validated" | "operational";
   notes: string | null;
 }
 

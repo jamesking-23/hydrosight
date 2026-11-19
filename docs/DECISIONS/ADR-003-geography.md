@@ -1,6 +1,6 @@
 # ADR-003: Geography model, demo data and map
 
-Status: accepted (prototype), 2026-11-19
+Status: accepted, 2026-11-19
 
 ## Decisions
 1. **Reference geography is global; stations are tenant data.** `rivers` and `catchments` are readable by any signed-in user and writable only by the service role (via the import CLI). `locations`, `stations`, `sensors` carry `org_id` with RLS (`sensors.read` to read, `devices.manage` to write).

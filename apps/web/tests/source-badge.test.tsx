@@ -25,9 +25,9 @@ describe("SourceBadge (HS-UI-001: every value shows its source type)", () => {
   });
 });
 
-describe("MaturityBanner (HS-UI-002: prototype by default)", () => {
-  it("defaults to the prototype warning", () => {
+describe("MaturityBanner (HS-UI-002: unvalidated by default)", () => {
+  it("defaults to the not-yet-validated notice", () => {
     render(<MaturityBanner />);
-    expect(screen.getByRole("status").textContent).toContain("not for operational decisions");
+    expect(screen.getByRole("status").textContent).toContain("advisory only");
   });
 });

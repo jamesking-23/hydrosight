@@ -1,4 +1,4 @@
-"""HS-GEO-001..004: stations/sensors are tenant-isolated, prototype-only, provenance-carrying,
+"""HS-GEO-001..004: stations/sensors are tenant-isolated, unvalidated-by-default, provenance-carrying,
 and spatially indexed. Needs PostGIS (CI); skipped locally with an explicit reason."""
 
 import psycopg
@@ -78,7 +78,7 @@ def test_demo_stations_readable_by_any_signed_in_user_but_not_writable(geo_world
     assert w.db.one("select count(*) from public.stations") == 6
 
 
-def test_demo_data_is_synthetic_prototype_and_labelled(geo_world: World) -> None:
+def test_demo_data_is_synthetic_unvalidated_and_labelled(geo_world: World) -> None:
     w = geo_world
     _seed_demo(w)
     w.db.su()
@@ -86,7 +86,7 @@ def test_demo_data_is_synthetic_prototype_and_labelled(geo_world: World) -> None
         "select source_type::text, status::text, notes from public.stations where code like 'DEMO-%'"
     )
     assert len(rows) == 6
-    assert {r[0] for r in rows} == {"synthetic"} and {r[1] for r in rows} == {"prototype"}
+    assert {r[0] for r in rows} == {"synthetic"} and {r[1] for r in rows} == {"unvalidated"}
     assert all(r[2].startswith("SYNTHETIC DEMO") for r in rows)
     assert w.db.one("select count(*) from public.sensors where source_type <> 'synthetic'") == 0
     assert (
@@ -114,7 +114,7 @@ def test_status_and_source_type_cannot_be_set_by_app_roles(geo_world: World) -> 
     fails(w.db, psycopg.errors.InsufficientPrivilege,
           "insert into public.stations (org_id, code, name, geom, source_type, status) values "
           f"(%s, 'Z-1', 'z', {POINT}, 'measured', 'validated')", (w.org_a, 32.0, 0.0))  # fmt: skip
-    assert w.db.one("select status::text from public.stations where id = %s", (sid,)) == "prototype"
+    assert w.db.one("select status::text from public.stations where id = %s", (sid,)) == "unvalidated"
 
 
 def test_station_writes_need_devices_manage_and_mfa(geo_world: World) -> None:

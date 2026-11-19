@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Hydrograph } from "@/components/hydrograph";
-import { MaturityBanner } from "@/components/maturity-banner";
 import { SiteFooter, SiteHeader } from "@/components/shell";
 import { SOURCE_TYPES, SourceBadge } from "@/components/source-badge";
 import { t } from "@/lib/i18n";
@@ -19,7 +18,6 @@ const NOT_YET = [
 export default function Home() {
   return (
     <>
-      <MaturityBanner status="prototype" />
       <SiteHeader />
       <main>
         <section className="mx-auto grid max-w-5xl items-center gap-10 px-6 py-14 md:grid-cols-[1.05fr_1fr] md:py-20">

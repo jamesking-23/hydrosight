@@ -11,7 +11,7 @@ describe("i18n scaffold (HS-I18N-001)", () => {
   });
 
   it("falls back to English and flags untranslated text for human review", () => {
-    const key: MessageKey = "maturity.prototype";
+    const key: MessageKey = "maturity.unvalidated";
     expect(t("lg", key)).toBe(en[key]);
     expect(isPendingTranslation("lg", key)).toBe(true);
     expect(isPendingTranslation("en", key)).toBe(false);

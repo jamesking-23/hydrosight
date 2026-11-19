@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "HydroSight",
-  description: "Flood risk intelligence and early warning (prototype)",
+  description: "Flood risk intelligence and early warning for East Africa",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

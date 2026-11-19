@@ -1,6 +1,6 @@
 # ADR-002: Identity, tenancy, RBAC and audit (Phase 1)
 
-Status: accepted (prototype). Date: 2026-11-19.
+Status: accepted. Date: 2026-11-19.
 
 ## Decision
 - **Authentication** is Supabase Auth. The database only reads `auth.uid()` / `auth.jwt()`.
