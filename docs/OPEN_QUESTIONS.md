@@ -34,3 +34,13 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - Web project is behind Vercel Authentication: invitees outside the owner's Vercel team cannot reach it. Decide when to open it (and whether to use a custom domain).
 - Invitation email delivery is not implemented (needs an email provider choice; tests must never send real email).
 - Password policy / sign-up abuse protection (captcha, rate limits) not reviewed; Supabase defaults apply.
+
+## Geography and map (Phase 2)
+- **Demo stations are visible to every signed-in user** (demo org policy). Owner to confirm that is acceptable.
+- OSM roads, health facilities and schools layers NOT built: need a licensed extract (ODbL, attribution) and a place to host tiles/data. UNVERIFIED.
+- DEM elevation sampling NOT built: Copernicus DEM / NASADEM access and licence NOT verified. Station `elevation_m` stays empty until sampled with a stated source.
+- No real river or catchment geometry yet. Source and licence must be chosen (e.g. national or HydroSHEDS-type datasets; none verified). The import tool refuses files without a stated licence.
+- OSM public tile servers have a usage policy that may not allow production traffic; choose a tile provider before public launch. UNVERIFIED.
+- Promotion of `status` (prototype to higher) needs a database function with an evidence link and a different approver; not built, so nothing can be promoted.
+- Demo station coordinates are hand-placed approximations, not surveyed.
+- Supabase hosted PostGIS is 3.3.7; CI image may differ. Re-check spatial tests if behaviour diverges.

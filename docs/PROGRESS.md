@@ -45,4 +45,13 @@ Web app now has: `/login`, `/signup`, `/auth/callback`, `/mfa` (TOTP enrol + ver
 - No email is sent (prototype): the invitation link is shown once for the admin to share manually.
 - The web project is behind Vercel Authentication, so only people logged in to the owner's Vercel team can open it. Invitees cannot use it until that is changed (owner decision).
 
-## Next: Phase 2 (data model for stations/sensors/readings). Waiting for owner's "proceed" (and the first-sign-in check above).
+## Phase 2: locations, hydrography and map - BUILT 2026-11-19 (partly deferred, see below)
+(Earlier notes called Phase 2 "data model for stations/sensors/readings"; that was a mislabel. Readings and ingestion are Phase 3.)
+Migration `0003_hydrography_stations_sensors.sql` is applied to Supabase (PostGIS 3.3.7) and the demo seed `db/seed/demo_stations.sql` is loaded. Design: `docs/DECISIONS/ADR-003-geography.md`.
+- Built: rivers, catchments (global reference geography), locations, stations, sensors (tenant tables, RLS, audit triggers), GiST indexes, geo views, `/map` page (MapLibre: layer panel, filter by river/source/status, search, station detail panel, time-slider scaffold, OSM attribution, explicit tile-failure alert), GeoPandas import CLI (`python -m hydrosight_api.geoimport`) that refuses imports without a stated source and licence.
+- Verified: 19 spatial DB tests and 3 import DB tests pass on real PostGIS in CI (run 029f40d); GiST used for nearest-station query on the hosted database (seq scan disabled, tiny table); anon has no grants; security advisor shows nothing new.
+- Synthetic: 6 demo stations (hand-placed, approximate) and 12 sensors in org `hydrosight-demo`, all `synthetic` + `prototype`. Rivers are names only: NO river geometry exists yet.
+- **Deferred (not faked):** OSM roads/health facilities/schools layers and DEM elevation sampling. Both need data downloads the build environment cannot make and a licence review. Logged in OPEN_QUESTIONS and DATA_SOURCES. The import pipeline is ready for licensed river/catchment files.
+- **NOT verified:** the live `/map` data fetch from the deployed site (sandbox cannot reach supabase.co), and OSM public tile use in production.
+
+## Next: Phase 3 (ingestion and real-time monitoring). Waiting for owner's "proceed".

@@ -11,4 +11,4 @@ Rule 12: verify licence and commercial-use terms **before** integrating. Record 
 | NASA GPM IMERG | Satellite rainfall (`estimated`) | NO | UNVERIFIED |
 | Uganda National Meteorological Authority / Ministry of Water and Environment | Official observations/warnings | Access NOT assumed | UNVERIFIED |
 
-Nothing is integrated yet in Phase 0.
+Status after Phase 2: nothing external is integrated. OSM raster tiles are used only as a basemap (attribution shown). No river/catchment/OSM/DEM data is loaded; demo stations are synthetic.

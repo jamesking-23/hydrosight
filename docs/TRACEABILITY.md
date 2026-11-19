@@ -16,3 +16,8 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-IAM-004 | API keys: hashed, never privileged, never exceed creator, expiring, revocable | `0002` (`create/revoke/verify_api_key`) | `services/api/tests/test_api_keys.py` |
 | HS-AUD-001 | Append-only audit log of privileged changes; outlives organisations; last org_admin protected | `0002` (`audit_row_change`, `audit_log_immutable`, `guard_last_org_admin`) | `services/api/tests/test_audit.py` |
 | HS-UI-003 | Sign-in, TOTP MFA gate, invitation acceptance, member/invitation/API-key admin screens; secrets shown once; no open redirects | `apps/web/src/{proxy.ts,lib/access.ts,components/,app/}` | `apps/web/tests/access.test.ts` (logic only; live flow UNVERIFIED) |
+| HS-GEO-001 | Rivers, catchments, locations, stations, sensors with PostGIS geometry and GiST indexes | `db/migrations/0003_hydrography_stations_sensors.sql` | `services/api/tests/test_stations.py` (EXPLAIN GiST test; runs in CI) |
+| HS-GEO-002 | Stations/locations/sensors tenant-isolated; demo org readable by signed-in users, never writable | `0003` | `test_stations.py` |
+| HS-GEO-003 | `status` and `source_type` not writable by app roles (no self-promotion) | `0003` column grants | `test_stations.py` |
+| HS-GEO-004 | Import pipeline requires CRS, source and licence; records file hash; skips bad features and counts them | `services/api/src/hydrosight_api/geoimport.py` | `services/api/tests/test_geoimport.py` |
+| HS-GEO-005 | Map with layer toggles, filters, search, station panel, source badges, attribution, explicit tile failure | `apps/web/src/components/station-map.tsx`, `app/map/page.tsx` | `apps/web/tests/stations.test.ts` (logic only; rendering checked by hand) |
