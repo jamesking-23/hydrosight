@@ -1,0 +1,31 @@
+name: Forecast ingestion
+# Every 3 hours. Runs only when the owner has configured the secret and variable below;
+# otherwise it says so explicitly and does nothing (never silently "green").
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      FORECAST_USER_AGENT: ${{ vars.FORECAST_USER_AGENT }}
+    steps:
+      - name: Check configuration
+        id: cfg
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$FORECAST_USER_AGENT" ]; then
+            echo "::warning::Forecast ingestion NOT configured (need secret DATABASE_URL and variable FORECAST_USER_AGENT). Nothing was fetched."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.run == 'true'
+      - uses: astral-sh/setup-uv@v5
+        if: steps.cfg.outputs.run == 'true'
+      - name: Fetch and store forecasts
+        if: steps.cfg.outputs.run == 'true'
+        working-directory: services/api
+        run: uv run python -m hydrosight_api.forecast_met

@@ -6,8 +6,10 @@ from fastapi.responses import JSONResponse
 from hydrosight_api import __version__
 from hydrosight_api.config import Settings, get_settings
 from hydrosight_api.db import check_database
+from hydrosight_api.ingest import router as ingest_router
 
 app = FastAPI(title="HydroSight API", version=__version__)
+app.include_router(ingest_router)
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 
