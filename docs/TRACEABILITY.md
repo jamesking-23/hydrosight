@@ -9,3 +9,9 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-I18N-001 | en/lg/sw message keys present; untranslated text falls back and is flagged | `apps/web/src/lib/i18n.ts`, `apps/web/src/messages/` | `apps/web/tests/i18n.test.ts` |
 | HS-OPS-001 | `/health` and `/ready` on web and API; readiness reports failures explicitly | `apps/web/src/app/{health,ready}`, `services/api/src/hydrosight_api/main.py` | `services/api/tests/test_health.py` |
 | HS-DB-001 | Shared enums for source_type, quality_flag, service_status, alert_level, alert_status | `db/migrations/0001_foundations.sql` | (migration applied in Phase 1 RLS tests) |
+| HS-TEN-001 | A user in org A cannot read or write org B data; anonymous has no table access (RLS on every table) | `db/migrations/0002_identity_tenancy_rbac_audit.sql` | `services/api/tests/test_tenant_isolation.py` |
+| HS-IAM-001 | Roles holding privileged permissions need MFA (JWT `aal2`); invariant trigger-enforced | `0002` (`private.has_permission`, `enforce_mfa_for_privileged`) | `services/api/tests/test_mfa_and_roles.py` |
+| HS-IAM-002 | Roles and permissions are data, not code (13 roles, 18 permissions; matrix is DRAFT) | `0002` | `services/api/tests/test_mfa_and_roles.py` |
+| HS-IAM-003 | Invitations: hashed, single-use, expiring, email-bound, revocable | `0002` (`create/accept/revoke_invitation`) | `services/api/tests/test_invitations.py` |
+| HS-IAM-004 | API keys: hashed, never privileged, never exceed creator, expiring, revocable | `0002` (`create/revoke/verify_api_key`) | `services/api/tests/test_api_keys.py` |
+| HS-AUD-001 | Append-only audit log of privileged changes; outlives organisations; last org_admin protected | `0002` (`audit_row_change`, `audit_log_immutable`, `guard_last_org_admin`) | `services/api/tests/test_audit.py` |

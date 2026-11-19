@@ -25,7 +25,7 @@ Owner: James (civil engineer, not a full-time software engineer). Brand: "HydroS
 ## Commands
 - Install: `pnpm install` and `cd services/api && uv sync`
 - Web: `pnpm dev:web`, `pnpm check:web` (lint + typecheck + tests)
-- API: `cd services/api && uv run uvicorn hydrosight_api.main:app --reload`, `pnpm check:api`
+- API: `cd services/api && uv run uvicorn hydrosight_api.main:app --reload`, `pnpm check:api` (DB tests need Postgres: locally `uv run --python 3.12 pytest` uses pgserver; CI uses `TEST_DATABASE_URL`)
 - All checks: `pnpm check`
 - Full stack: `cp .env.example .env && docker compose up --build`
 

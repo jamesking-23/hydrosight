@@ -31,4 +31,9 @@ It is a **static preview only**: no API, database, `/health` or `/ready`. It is 
 - Note for Phase 1+: the transaction pooler does not support session features such as prepared statements held across queries, so long-lived code should be tested against it.
 - Serverless caveats: Vercel Functions are stateless and time-limited. Long-running workers, scheduled scientific jobs and an MQTT broker will need a different host later (ADR needed when Phase 3/6 arrive).
 
-## Next: Phase 1 (identity, tenancy, RBAC, audit). Waiting for owner's "proceed".
+## Phase 1a: identity, tenancy, RBAC, audit (database layer) - DONE 2026-11-19
+Migration `0002_identity_tenancy_rbac_audit.sql` is applied to Supabase and covered by 75 passing tests against real PostgreSQL (`services/api/tests`). Design: `docs/DECISIONS/ADR-002-identity-tenancy-rbac.md`.
+- Supabase security advisor after applying: 1 INFO (`platform_memberships` has RLS and no policy: intentional, service role only) and 5 WARN (the five `authenticated`-callable SECURITY DEFINER functions: intentional entry points that check permission inside and are covered by tests). No ERROR.
+- NOT done yet (Phase 1b): login screens, MFA enrolment UI, invitation-acceptance UI, admin screens, API-key UI, FastAPI API-key endpoint. Nothing in the web app uses this layer yet.
+
+## Next: Phase 1b (Supabase Auth UI + admin screens). Waiting for owner's "proceed".

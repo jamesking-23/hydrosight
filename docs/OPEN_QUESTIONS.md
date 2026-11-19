@@ -21,3 +21,13 @@ Anything unknown is listed here rather than assumed.
 
 ## Real datasets needed for any model work
 Historical river stage/discharge, rain-gauge records, flood-event records with dates/extents, impact reports. How to obtain: via the owner's contacts at the relevant authorities. Access is **not assumed**.
+
+## Identity, tenancy and RBAC (Phase 1a)
+- **The role -> permission matrix in `0002` is a DRAFT.** It needs review by the owner / a domain expert (who may approve and publish warnings, what emergency officers and enterprise customers may see). UNVERIFIED.
+- Confirm Supabase Auth "Confirm email" is ON; invitation acceptance relies on a verified email matching the invitation.
+- Custom per-organisation roles are not supported yet (roles are global).
+- How platform admins should access tenant data (support access) is undecided; today it is service role only.
+- An API key keeps working if its creator later loses permissions; decide whether keys should be revoked or re-validated on role change.
+- Offboarding: the last-org_admin guard blocks deleting such a user; a procedure is needed.
+- The FastAPI service connects as a bypass-RLS role; a non-bypass role plus per-request identity is required before tenant endpoints (see ADR-002).
+- Transaction pooler (Vercel) limits session features; re-test per-request `set_config`/`SET LOCAL` patterns against it.
