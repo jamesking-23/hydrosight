@@ -22,6 +22,9 @@ export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
             <Link href="/dashboard" className="font-semibold hover:text-ocean">
               Dashboard
             </Link>
+            <Link href="/map" className="font-semibold hover:text-ocean">
+              Map
+            </Link>
             <span className="hidden text-muted sm:inline">{signedInAs}</span>
             <SignOutButton />
           </nav>
@@ -52,16 +55,18 @@ export function Shell({
   children,
   signedInAs,
   title,
+  wide = false,
 }: {
   children: ReactNode;
   signedInAs?: string;
   title?: string;
+  wide?: boolean;
 }) {
   return (
     <>
       <MaturityBanner status="prototype" />
       <SiteHeader signedInAs={signedInAs} />
-      <main className="mx-auto max-w-5xl px-6 py-10">
+      <main className={`mx-auto ${wide ? "max-w-7xl" : "max-w-5xl"} px-6 py-10`}>
         {title ? <h1 className="mb-8 text-3xl font-extrabold">{title}</h1> : null}
         {children}
       </main>

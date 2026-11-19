@@ -23,3 +23,5 @@ coverage/
 # misc
 .DS_Store
 *.log
+apps/web/public/vendor/
+*.tsbuildinfo

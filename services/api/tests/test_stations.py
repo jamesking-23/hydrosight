@@ -220,7 +220,7 @@ def test_spatial_queries_use_gist_indexes(geo_world: World) -> None:
     plan = "\n".join(
         r[0]
         for r in w.db.q(
-            "explain select id from public.stations where geom && "
+            "explain select id from public.stations where geom OPERATOR(extensions.&&) "
             "extensions.st_makeenvelope(30.0, -1.0, 30.2, -0.9, 4326)"
         )
     )
@@ -228,7 +228,7 @@ def test_spatial_queries_use_gist_indexes(geo_world: World) -> None:
     plan2 = "\n".join(
         r[0]
         for r in w.db.q(
-            "explain select id from public.stations order by geom <-> "
+            "explain select id from public.stations order by geom OPERATOR(extensions.<->) "
             "extensions.st_setsrid(extensions.st_makepoint(30.0, -1.0), 4326) limit 5"
         )
     )
