@@ -321,14 +321,14 @@ def test_stale_sensor_never_triggers_from_last_known_value(geo_world: World) -> 
     assert res["skipped_not_live"] == 1 and res["created"] == 0
 
 
-def test_suspect_and_bad_quality_readings_are_ignored(geo_world: World) -> None:
+def test_bad_quality_readings_are_ignored_by_the_engine(geo_world: World) -> None:
     w = geo_world
     _, s = _sensor(w, w.org_a)
     _rule(w, s)
     w.db.su()
     w.db.run(
         "insert into public.readings (org_id, sensor_id, observed_at, value, source_type, quality)"
-        " values (%s, %s, now() - interval '1 minute', 9.0, 'measured', 'suspect')",
+        " values (%s, %s, now() - interval '1 minute', 9.0, 'measured', 'bad')",
         (w.org_a, s),
     )
     assert _evaluate(w, [s])["evaluated"] == 0
