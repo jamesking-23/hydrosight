@@ -44,6 +44,9 @@ select = ["E", "F", "I", "B", "UP", "S"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "E501", "S608"]
+# SQL strings read better unwrapped
+"src/hydrosight_api/alerts_public.py" = ["E501"]
+"src/hydrosight_api/notifications.py" = ["E501"]
 
 [tool.mypy]
 strict = true

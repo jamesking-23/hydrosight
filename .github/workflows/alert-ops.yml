@@ -1,0 +1,32 @@
+name: Alert housekeeping
+# Every 15 minutes: catch-up threshold evaluation, expiry, escalation, notification dispatch.
+# Notifications stay DRY RUN unless the repository variable NOTIFY_MODE is set to "live" AND
+# an organisation is switched to live by a platform admin AND a verified provider exists.
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+jobs:
+  ops:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      NOTIFY_MODE: ${{ vars.NOTIFY_MODE || 'dry_run' }}
+    steps:
+      - name: Check configuration
+        id: cfg
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::warning::Alert housekeeping NOT configured (need secret DATABASE_URL). Nothing was done."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.run == 'true'
+      - uses: astral-sh/setup-uv@v5
+        if: steps.cfg.outputs.run == 'true'
+      - name: Run housekeeping
+        if: steps.cfg.outputs.run == 'true'
+        working-directory: services/api
+        run: uv run python -m hydrosight_api.alert_ops

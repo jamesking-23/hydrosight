@@ -23,6 +23,30 @@ class ReadingsBatch(BaseModel):
     readings: list[Any] = Field(min_length=1, max_length=1000)
 
 
+def evaluate_alerts(conn: Any, readings: list[Any], result: dict[str, Any]) -> dict[str, Any]:
+    """Run the threshold engine for the sensors that just received accepted readings.
+    Failure never undoes stored readings (savepoint) and is reported in the response, not hidden."""
+    sensors = sorted(
+        {
+            str(readings[r["index"]].get("sensor_id"))
+            for r in result.get("results", [])
+            if r.get("status") == "accepted" and isinstance(readings[r["index"]], dict)
+        }
+    )
+    if not sensors:
+        result["alerts"] = {"evaluated": 0, "created": 0}
+        return result
+    try:
+        with conn.transaction():
+            row = conn.execute(
+                "select public.evaluate_thresholds_for(%s::uuid[])", (sensors,)
+            ).fetchone()
+        result["alerts"] = dict(row[0]) if row and isinstance(row[0], dict) else {}
+    except psycopg.Error:
+        result["alerts"] = {"error": "threshold evaluation failed; readings were stored"}
+    return result
+
+
 def db_ingestor(settings: Annotated[Settings, Depends(get_settings)]) -> Ingestor:
     def run(api_key: str, readings: list[Any]) -> dict[str, Any]:
         if not settings.database_url:
@@ -34,6 +58,8 @@ def db_ingestor(settings: Annotated[Settings, Depends(get_settings)]) -> Ingesto
                 row = conn.execute(
                     "select public.ingest_readings(%s, %s)", (api_key, Jsonb(readings))
                 ).fetchone()
+                if row is not None and isinstance(row[0], dict):
+                    row = (evaluate_alerts(conn, readings, dict(row[0])),)
         except psycopg.errors.InvalidAuthorizationSpecification as exc:
             raise HTTPException(401, detail="invalid, expired or revoked API key") from exc
         except psycopg.errors.InsufficientPrivilege as exc:

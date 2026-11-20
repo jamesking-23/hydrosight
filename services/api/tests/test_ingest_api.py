@@ -69,3 +69,45 @@ def test_database_errors_map_to_http_codes(monkeypatch: pytest.MonkeyPatch) -> N
         with pytest.raises(Exception) as info:  # noqa: PT011 - HTTPException
             run("k", [{}])
         assert info.value.status_code == code  # type: ignore[attr-defined]
+
+
+class _Conn:
+    def __init__(self, fail: bool = False) -> None:
+        self.fail, self.calls = fail, []
+
+    def transaction(self) -> Any:
+        import contextlib
+
+        return contextlib.nullcontext()
+
+    def execute(self, sql: str, params: tuple[Any, ...]) -> Any:
+        self.calls.append(params)
+        if self.fail:
+            raise psycopg.errors.DatabaseError("boom")
+        return type("R", (), {"fetchone": lambda _s: ({"evaluated": 1, "created": 1},)})()
+
+
+def test_alert_engine_runs_only_for_accepted_sensors() -> None:
+    from hydrosight_api.ingest import evaluate_alerts
+
+    readings = [{"sensor_id": "s1"}, {"sensor_id": "s2"}, {"sensor_id": "s1"}, "junk"]
+    result = {"results": [
+        {"index": 0, "status": "accepted"}, {"index": 1, "status": "rejected"},
+        {"index": 2, "status": "accepted"}, {"index": 3, "status": "rejected"},
+    ]}  # fmt: skip
+    conn = _Conn()
+    out = evaluate_alerts(conn, readings, result)
+    assert conn.calls == [(["s1"],)] and out["alerts"]["created"] == 1
+
+
+def test_alert_engine_failure_is_reported_and_does_not_hide_stored_readings() -> None:
+    from hydrosight_api.ingest import evaluate_alerts
+
+    out = evaluate_alerts(
+        _Conn(fail=True), [{"sensor_id": "s1"}], {"results": [{"index": 0, "status": "accepted"}]}
+    )
+    assert "failed" in out["alerts"]["error"] and "stored" in out["alerts"]["error"]
+    nothing = evaluate_alerts(
+        _Conn(), [{"sensor_id": "s1"}], {"results": [{"index": 0, "status": "duplicate"}]}
+    )
+    assert nothing["alerts"] == {"evaluated": 0, "created": 0}

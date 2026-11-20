@@ -10,6 +10,8 @@ class Settings(BaseSettings):
 
     api_env: str = "development"
     database_url: str = ""
+    # CAP "sender" is <org-slug>@<this domain>; placeholder until an official ID is registered.
+    cap_sender_domain: str = "hydrosight.example"
 
 
 @lru_cache

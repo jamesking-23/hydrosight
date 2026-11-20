@@ -424,7 +424,7 @@ select a.id, a.org_id, a.station_id, a.location_text, a.origin, a.level, a.audie
        a.published_at, a.expires_at, a.confidence,
        case a.origin when 'official_warning' then 0 when 'human_emergency' then 1 else 2 end as origin_rank,
        count(*) over w as active_count,
-       (count(distinct a.level) over w > 1 or count(distinct a.origin) over w > 1) as has_conflict
+       (min(a.level) over w <> max(a.level) over w or min(a.origin) over w <> max(a.origin) over w) as has_conflict
 from public.alerts a
 where a.status = 'published' and (a.expires_at is null or a.expires_at > now())
 window w as (partition by a.org_id, coalesce(a.station_id::text, a.location_text));
