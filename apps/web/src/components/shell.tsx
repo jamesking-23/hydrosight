@@ -24,6 +24,12 @@ export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
             <Link href="/map" className="font-semibold hover:text-ocean">
               Map
             </Link>
+            <Link href="/alerts" className="font-semibold hover:text-ocean">
+              Alerts
+            </Link>
+            <Link href="/rules" className="font-semibold hover:text-ocean">
+              Rules
+            </Link>
             <span className="hidden text-muted sm:inline">{signedInAs}</span>
             <SignOutButton />
           </nav>

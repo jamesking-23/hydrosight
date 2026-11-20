@@ -27,3 +27,11 @@ The web build copies the MapLibre worker automatically (`apps/web/scripts/copy-m
 
 ## Forecast job
 Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contact email). Run manually from Actions > Forecast ingestion > Run workflow. Locally: `cd services/api && FORECAST_USER_AGENT=... DATABASE_URL=... uv run python -m hydrosight_api.forecast_met --dry-run`.
+
+## Alerts, rules and notifications (Phase 4)
+- Rules: sign in as a user with `thresholds.draft`, open `/rules`, draft with rationale and evidence; a different user with `thresholds.approve` activates it.
+- Alerts: automatic drafts appear in `/alerts`. A person edits (adopts), submits, a different approver approves, someone with `warnings.publish` publishes.
+- Scheduled job: add GitHub secret `DATABASE_URL` (the same database URL the API uses); `alert-ops.yml` then runs every 15 minutes. Without it the job skips and says so.
+- Manual run: `cd services/api && uv run python -m hydrosight_api.alert_ops`.
+- Notifications stay in dry-run unless `NOTIFY_MODE=live` AND the organisation row in `notification_settings` is `live` AND a provider is verified. Do not enable live until providers are verified.
+- Public CAP feed: `/v1/cap/alerts` (list) and `/v1/cap/alerts/{id}.xml`.

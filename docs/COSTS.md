@@ -13,3 +13,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 3
 - MET Norway forecasts: free. GitHub Actions scheduled job: free within the included minutes (about 8 short runs a day). No new paid service added.
 - Supabase free plan storage: readings grow with fleet size; revisit before the first real device fleet.
+
+## Phase 4
+- No new paid service. `alert-ops` GitHub job runs every 15 minutes (about 96 short runs a day); minutes included in the plan are UNVERIFIED.
+- SMS/email/push: not enabled. Real sending will add per-message costs once a provider is chosen and its prices verified.

@@ -56,3 +56,16 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - Satellite rainfall (CHIRPS, NASA GPM IMERG) not integrated; licences and access not yet verified.
 - Quality control beyond plausibility flags (spike, flatline, cross-station checks) is not built, so every reading stays `unchecked`.
 - Demo stations have no readings (shown honestly as "No data received"). A clearly labelled synthetic data generator for sales demos is possible if wanted.
+
+## Phase 4
+- CAP output is not validated against the official CAP 1.2 XSD. Validate before any partner consumes the feed.
+- CAP sender identifier uses placeholder domain `hydrosight.example` (setting `cap_sender_domain`). Needs a real domain and, for official use, the authority's registered identifier.
+- Severity and certainty mapping (advisory to Minor, watch to Moderate, warning to Severe, severe warning to Extreme; confidence to certainty; urgency Unknown) is my proposal. Needs review by the issuing authority.
+- SMS provider not chosen. Africa's Talking pricing, sender-ID registration and Uganda Communications Commission rules are UNVERIFIED. Email and Web Push providers also unchosen. Adapters fail explicitly until verified.
+- Luganda and Swahili alert text needs human translation and review; English is used as the fallback.
+- Escalation has no recipients yet (it raises the level and records an event). Cancellation notices to subscribers are not sent.
+- Area polygons or circles are not exported to CAP (no verified geometry for alert areas).
+- Public CAP feed has no rate limiting yet.
+- No platform-admin tool to put an organisation into live notification mode.
+- GitHub Actions minutes for the 15-minute `alert-ops` job are UNVERIFIED against the owner's plan.
+- Thresholds: none are shipped. Each customer must supply and document their own.

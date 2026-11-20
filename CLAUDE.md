@@ -33,5 +33,7 @@ Owner: James (civil engineer, not a full-time software engineer). Brand: "HydroS
 Plan (<=15 lines) -> build small -> test -> actually run it -> report -> STOP and wait for the owner's "proceed" before the next phase.
 Keep `docs/PROGRESS.md`, `docs/TRACEABILITY.md`, `docs/COSTS.md` and this file current.
 
+Alert governance is enforced in the database (migration 0006); never add a path that lets an engine or app role approve/publish, and never ship default thresholds. Notifications stay dry-run until a provider is verified.
+
 ## Current state
 See `docs/PROGRESS.md`.

@@ -26,3 +26,12 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-ING-003 | Freshness (live/stale/offline/never reported) from expected interval; stale never shown as live | `0005` `sensor_status`, `apps/web/src/lib/stations.ts` | `tests/test_readings.py`, `apps/web/tests/stations.test.ts` |
 | HS-ING-004 | Cross-tenant: keys, readings and forecasts isolated; no direct writes by app roles | `0005` RLS and grants | `tests/test_readings.py` |
 | HS-ING-005 | Forecasts typed `forecast`, carry model and licence, latest run wins; MET Norway adapter fails loudly | `0005`, `forecast_met.py`, `.github/workflows/forecast.yml` | `tests/test_readings.py`, `tests/test_forecast_met.py` (fixture hand-written; live UNVERIFIED) |
+| HS-ALT-001 | Rule cannot be active without rationale, evidence and a different approver; active rules immutable | `0006` constraint `rule_active_needs_documented_basis`, `rules_guard` | `tests/test_alerts.py` |
+| HS-ALT-002 | Engine creates internal drafts only; cannot approve or publish; hysteresis, cooldown, dedup, maintenance, stale skip | `0006` `evaluate_thresholds_for` | `tests/test_alerts.py` |
+| HS-ALT-003 | No public warning without human approval; drafter differs from approver (constraint, trigger, function) | `0006` | `tests/test_alerts.py` |
+| HS-ALT-004 | Required alert content before review; approved content immutable, changes are new versions | `0006` `submit_alert`, `alerts_guard`, `new_alert_version` | `tests/test_alerts.py` |
+| HS-ALT-005 | Append-only alert history; acknowledgement, escalation, false-alarm tagging, expiry | `0006` | `tests/test_alerts.py` |
+| HS-ALT-006 | Conflicting alerts shown together, official first | `0006` `alerts_active_ranked`, `/alerts` | `tests/test_alerts.py`, `apps/web/tests/alerts.test.ts` |
+| HS-ALT-007 | Notifications consented, capped, dry-run by default, never for unpublished/internal alerts | `0006`, `notifications.py` | `tests/test_alerts.py`, `tests/test_notifications.py` |
+| HS-ALT-008 | CAP 1.2 only for published public alerts; demo exports as Exercise (XSD validation UNVERIFIED) | `cap.py`, `alerts_public.py` | `tests/test_cap.py` |
+| HS-ALT-009 | Alert and rule tables tenant-isolated; no direct writes by app roles | `0006` RLS and grants | `tests/test_alerts.py` |
