@@ -2,6 +2,7 @@
 gaps and interpolation, device health. Needs PostGIS (CI); skipped locally with a reason."""
 
 import json
+import uuid
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -39,7 +40,7 @@ def _device(w: World, kinds: tuple[str, ...] = ("water_level",), interval: int =
         "select public.provision_device(%s, %s, %s, %s, %s::uuid[], null)",
         (w.org_a, name, st, interval, sensors),
     )
-    return st, sensors, res["device_id"], res["api_key"]
+    return st, sensors, uuid.UUID(res["device_id"]), res["api_key"]
 
 
 def _batch(w: World, key: str, readings: list[dict[str, Any]], **meta: Any) -> dict[str, Any]:
