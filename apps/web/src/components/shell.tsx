@@ -24,8 +24,14 @@ export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
             <Link href="/map" className="font-semibold hover:text-ocean">
               Map
             </Link>
+            <Link href="/monitor" className="font-semibold hover:text-ocean">
+              Monitor
+            </Link>
             <Link href="/alerts" className="font-semibold hover:text-ocean">
               Alerts
+            </Link>
+            <Link href="/devices" className="font-semibold hover:text-ocean">
+              Devices
             </Link>
             <Link href="/rules" className="font-semibold hover:text-ocean">
               Rules

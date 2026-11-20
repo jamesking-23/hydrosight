@@ -50,3 +50,5 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run mypy src
       - run: uv run --group geo pytest -q
+      - name: Fleet latency (measured on the CI runner, database only)
+        run: uv run --group geo pytest -q -s tests/test_fleet_sim.py -k fifty | grep FLEET_LATENCY
