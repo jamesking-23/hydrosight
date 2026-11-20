@@ -20,6 +20,7 @@ def main() -> int:
         print("DATABASE_URL is not set; nothing was done.")
         return 2
     with psycopg.connect(url, prepare_threshold=None) as conn:
+        quality = conn.execute("select public.run_qc(null)").fetchone()
         evaluated = conn.execute("select public.evaluate_thresholds_for(null)").fetchone()
         expired = conn.execute("select public.expire_alerts()").fetchone()
         escalated = conn.execute("select public.escalate_alerts()").fetchone()
@@ -31,6 +32,7 @@ def main() -> int:
     print(
         json.dumps(
             {
+                "quality": quality[0] if quality else None,
                 "evaluate": evaluated[0] if evaluated else None,
                 "expired": expired[0] if expired else None,
                 "escalated": escalated[0] if escalated else None,

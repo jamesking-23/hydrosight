@@ -47,6 +47,7 @@ select = ["E", "F", "I", "B", "UP", "S"]
 # SQL strings read better unwrapped
 "src/hydrosight_api/alerts_public.py" = ["E501"]
 "src/hydrosight_api/notifications.py" = ["E501"]
+"src/hydrosight_api/simulator.py" = ["E501", "BLE001", "S608", "S310", "S311"]
 
 [tool.mypy]
 strict = true

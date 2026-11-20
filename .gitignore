@@ -25,3 +25,6 @@ coverage/
 *.log
 apps/web/public/vendor/
 *.tsbuildinfo
+
+# simulator fleet files hold device keys
+fleet*.json
