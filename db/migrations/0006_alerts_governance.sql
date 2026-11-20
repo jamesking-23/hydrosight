@@ -597,13 +597,13 @@ begin
   if a.drafted_by is not null and a.drafted_by <> auth.uid() then
     raise exception 'only the drafter can submit this draft' using errcode = '42501';
   end if;
-  if length(btrim(coalesce(a.expected_timing, ''))) = 0 then v_missing := v_missing || 'expected_timing'; end if;
-  if length(btrim(coalesce(a.duration_text, ''))) = 0 then v_missing := v_missing || 'duration'; end if;
-  if length(btrim(coalesce(a.recommended_action, ''))) = 0 then v_missing := v_missing || 'recommended_action'; end if;
-  if length(btrim(coalesce(a.issuing_authority, ''))) = 0 then v_missing := v_missing || 'issuing_authority'; end if;
-  if jsonb_array_length(a.evidence) = 0 then v_missing := v_missing || 'supporting_evidence'; end if;
-  if a.expires_at is null and a.review_at is null then v_missing := v_missing || 'expiry_or_review_time'; end if;
-  if a.expires_at is not null and a.expires_at <= now() then v_missing := v_missing || 'expiry_in_future'; end if;
+  if length(btrim(coalesce(a.expected_timing, ''))) = 0 then v_missing := v_missing || 'expected_timing'::text; end if;
+  if length(btrim(coalesce(a.duration_text, ''))) = 0 then v_missing := v_missing || 'duration'::text; end if;
+  if length(btrim(coalesce(a.recommended_action, ''))) = 0 then v_missing := v_missing || 'recommended_action'::text; end if;
+  if length(btrim(coalesce(a.issuing_authority, ''))) = 0 then v_missing := v_missing || 'issuing_authority'::text; end if;
+  if jsonb_array_length(a.evidence) = 0 then v_missing := v_missing || 'supporting_evidence'::text; end if;
+  if a.expires_at is null and a.review_at is null then v_missing := v_missing || 'expiry_or_review_time'::text; end if;
+  if a.expires_at is not null and a.expires_at <= now() then v_missing := v_missing || 'expiry_in_future'::text; end if;
   if cardinality(v_missing) > 0 then
     raise exception 'alert is incomplete: %', array_to_string(v_missing, ', ') using errcode = '22023';
   end if;

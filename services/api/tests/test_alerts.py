@@ -281,8 +281,9 @@ def test_cooldown_suppresses_a_quick_repeat_then_allows_a_new_event(geo_world: W
     _rule(w, s, value=5.0, hyst=0.0, cooldown=3600)
     _reading(w, s, 6.0, age_s=600)
     assert _evaluate(w, [s])["created"] == 1
+    alert = _first_open(w)
     w.as_("eve")
-    w.db.q("select public.cancel_alert(%s, 'false trigger, checked on site')", (_first_open(w),))
+    w.db.q("select public.cancel_alert(%s, 'false trigger, checked on site')", (alert,))
     _reading(w, s, 1.0, age_s=500)
     _evaluate(w, [s])  # re-arms
     _reading(w, s, 6.5, age_s=100)
