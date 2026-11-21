@@ -16,3 +16,8 @@ Status after Phase 2: nothing external is integrated. OSM raster tiles are used 
 ## Phase 3 update
 | MET Norway Locationforecast 2.0 | Hourly rain forecast (`forecast`) | CC BY 4.0, commercial use allowed per MET Norway FAQ; needs User-Agent with contact details; attribution shown in UI | Adapter built; live calls UNVERIFIED |
 | Open-Meteo | (not used) | Free API is non-commercial only; paid plan needed | Rejected for commercial product |
+
+## Phase 6 update
+| HEC-HMS, HEC-RAS (US Army Corps of Engineers) | Hydrological/hydraulic model outputs via the external adapter interface | NO | UNVERIFIED; interface only |
+| LISFLOOD / GloFAS (Copernicus) | River discharge forecasts | NO | UNVERIFIED; interface only |
+| Google Flood Hub | Flood forecasts | NO; access and terms unknown | UNVERIFIED; interface only |

@@ -60,3 +60,18 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-COM-012 | Offline queue: order, retry, failed kept, safe resend | `community.ts` | `tests/community.test.ts` |
 | HS-COM-013 | Unverified reports on map with plain trust signals | `station-map.tsx`, `0008` | `tests/community.test.ts`, `tests/test_community.py` |
 | HS-COM-014 | Safe places need a second person and evidence to publish | `0008` | `tests/test_community.py` |
+| HS-PRD-001 | Verification scores correct (POD, FAR, CSI, Brier, reliability, lead time); undefined is null | `metrics.py` | `tests/test_forecasting.py` |
+| HS-PRD-002 | Model never sees data after the issue time; fit stops at train_end | `series.py`, `harness.py` | `tests/test_forecasting.py` |
+| HS-PRD-003 | Backtest refuses missing threshold basis, bad split, short hold-out | `harness.py` | `tests/test_forecasting.py` |
+| HS-PRD-004 | Four baselines run; synthetic input marks the run synthetic with a fixed note | `baselines.py`, `harness.py` | `tests/test_forecasting.py` |
+| HS-PRD-005 | ML training refused on synthetic or unconfirmed data | `ml_gate.py`, `0009` | `tests/test_forecasting.py`, `tests/test_prediction_engine.py` |
+| HS-PRD-006 | External adapters need a recorded licence check | `external.py` | `tests/test_forecasting.py` |
+| HS-PRD-007 | Predictions are forecast/synthetic, unvalidated, with input snapshot; no extent/depth/impact | `0009` | `tests/test_prediction_engine.py` |
+| HS-PRD-008 | Predictions and backtests immutable; only the engine role appends | `0009` | `tests/test_prediction_engine.py` |
+| HS-PRD-009 | Promotion: human, not registrant, evidence, real data and real backtest, in order | `0009` | `tests/test_prediction_engine.py` |
+| HS-PRD-010 | Status and identity of a model cannot be edited directly | `0009` guard | `tests/test_prediction_engine.py` |
+| HS-PRD-011 | Backtest rows internally consistent; synthetic flag follows data origin | `0009` | `tests/test_prediction_engine.py` |
+| HS-PRD-012 | Tenant isolation for models, predictions, backtests, flood events | `0009` RLS | `tests/test_prediction_engine.py` |
+| HS-PRD-013 | Flood events need evidence and honest origin | `0009` | `tests/test_prediction_engine.py` |
+| HS-PRD-014 | Engine needs an approved documented threshold; skips stale input; ignores bad readings | `engine.py` | `tests/test_prediction_engine.py` |
+| HS-PRD-015 | Forecast screen: no false precision, undefined shown as not defined, ages out | `forecast.ts`, `forecast-view.tsx` | `tests/forecast.test.ts` |

@@ -90,3 +90,17 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - The web project has Vercel Authentication on, so ordinary community members cannot open `/community` until you turn it off or add a custom domain.
 - The PWA install, service worker, camera capture, geolocation and offline sync have been tested only in code and unit tests, not on a real phone.
 - `reports.read` and `community.moderate` role mapping is still the DRAFT matrix; who moderates in each organisation is your decision.
+
+## Phase 6: real datasets needed (no model skill can be claimed without them)
+Everything measured so far is synthetic. To produce a real backtest the owner must supply, and confirm as real:
+1. **Historical water levels** for each station: hourly or finer, at least several flood seasons, with gauge datum and any rating or calibration notes. Sources to approach: Directorate of Water Resources Management (Ministry of Water and Environment), district water offices, university or NGO gauges. Access NOT assumed.
+2. **Rainfall records** matching the same period: station gauges (Uganda National Meteorological Authority) or satellite estimates (CHIRPS, IMERG; licences UNVERIFIED).
+3. **Flood-event records**: dates, locations, peak levels, with an evidence reference (district disaster reports, Uganda Red Cross, news with date). Enter them with `record_flood_event`.
+4. **Impact reports**: needed only before any impact target is attempted.
+- Which water level counts as an event at each station must be set by the owner with local hydrologists; the backtest requires it to be stated with a written basis.
+- Baseline settings (rate-of-rise lookback, antecedent decay and window, bins, warning probability) are untuned placeholders chosen for fixtures.
+- What score thresholds distinguish unvalidated, validated and operational is for the owner and local experts to set. None is invented.
+- Prediction jobs are not scheduled. Decide the schedule once a real, approved threshold rule exists for a station.
+- No learned model exists; gradient boosting waits for confirmed real data and the extra dependency (not on Vercel).
+- Backtests currently score one station at a time with a single temporal hold-out; spatial hold-out needs several stations with real data.
+- The forecast screen has not been viewed with live sign-in. The engine has been tested against the CI database, not run against the hosted database (no connection string available to this session).

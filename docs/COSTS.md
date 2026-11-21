@@ -25,3 +25,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 5
 - No new paid service. Photos add database storage (max 1 MB each, usually under 350 KB). Supabase free plan limits are UNVERIFIED for your project; check before real use.
 - Pillow (open source) added to the API.
+
+## Phase 6
+- No new paid service and no new runtime dependency (the harness uses the Python standard library). A learned model would add scikit-learn or similar, outside Vercel.
+- Storage: one prediction row per model per station per run. At 4 models, hourly, that is about 35,000 small rows a year per station: monitor against the Supabase free plan before scheduling.

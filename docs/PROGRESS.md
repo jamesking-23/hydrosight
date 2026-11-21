@@ -86,4 +86,10 @@ Migration `0008_community_reports.sql` applied to Supabase. Design: `docs/DECISI
 - Verified: CI green (296 API tests on real PostGIS including tenant isolation, 54 web tests), production build; on the hosted database a rolled-back run showed demo area open, report stored as unvalidated/community, nearby report grouped, EXIF photo refused.
 - **NOT verified:** a real phone (install, camera, geolocation, background sync), live sign-in on the new screens, Luganda and Kiswahili text (empty, falls back to English), anonymous endpoint abuse resistance, consent wording legally.
 
-## Next: waiting for owner's "proceed" (Phase 6).
+## Phase 6: prediction engine and validation harness - BUILT 2026-11-21
+Migration `0009_prediction_engine.sql` applied to Supabase. Design: `docs/DECISIONS/ADR-008-prediction-engine.md`.
+- Built: scoring harness (POD, FAR, CSI, Brier, reliability, lead time, extreme events) with temporal hold-out and no-lookahead; four baselines; gate refusing learned models on non-real data; external-model interface (nothing integrated); model registry, immutable predictions and backtests, promotion governance in the database; engine that predicts only from approved thresholds and fresh data; `/forecasts` screen with uncertainty band, model version, input provenance, ageing.
+- Verified: CI green (database tests on real PostGIS incl. tenant isolation); hosted database rolled-back check refused a measured-source prediction, prediction edits, direct status change, learned model on synthetic data, and extent target.
+- **NOT verified:** any skill on real data (none supplied; every score so far is on labelled synthetic fixtures), the engine run against the hosted database, the forecast screen with a live sign-in, scheduling. No learned model trained.
+
+## Next: waiting for owner's "proceed" (Phase 7).

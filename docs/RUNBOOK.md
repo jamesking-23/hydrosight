@@ -47,3 +47,10 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - Community app: `/community` (installable; Add to Home screen). Moderators use `/moderation` (needs `community.moderate`).
 - Web env: `NEXT_PUBLIC_API_URL` (API base). API env: `CORS_ALLOW_ORIGINS` (comma-separated web origins).
 - To remove a report on request: signed-in reporters use withdraw; otherwise an admin deletes it in the database and the action is recorded by the database audit trail.
+
+## Forecasts and backtests (Phase 6)
+- Register a model: `select public.register_model_version(org, name, version, kind, target)` by a person with `models.manage`. Demo baselines: `db/seed/demo_models.sql`.
+- Issue predictions: `DATABASE_URL=... uv run python -m hydrosight_api.forecasting.engine predict 6` (needs an approved threshold rule per station and fresh readings; says why it skipped otherwise). Not scheduled.
+- Backtest: `engine.backtest_station(conn, org, station, model_id, horizon_hours=..., warn_probability=..., holdout_fraction=..., run_by=...)`.
+- Promotion: `select public.promote_model_version(id, 'validated', '<evidence link>')` by a different person holding `models.promote`; refused for synthetic data.
+- Screen: `/forecasts` (needs readings.read or models.read).
