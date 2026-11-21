@@ -73,4 +73,11 @@ Migration `0006_alerts_governance.sql` is applied to Supabase. Design: `docs/DEC
 - **Not built:** escalation recipients and cancellation notices to subscribers; automatic model-risk and community-origin alerts; alert area polygons in CAP; Luganda/Swahili message text (falls back to English, needs human translation); subscription and maintenance-window screens; rate limiting of the public CAP feed; a platform-admin switch to put an organisation into live sending.
 - **Phase 3 gap, stated plainly:** Phase 3 as specified in the build prompt was only partly built (see below). Recommend a "Phase 3b" before field deployment.
 
-## Next: waiting for owner's "proceed" (Phase 3b recommended, then Phase 5).
+## Phase 3b: devices, QC, calibration, health, realtime - BUILT 2026-11-21 (completes Phase 3)
+Migration `0007_devices_qc_calibration_health.sql` is applied to Supabase. Design: `docs/DECISIONS/ADR-006-devices-qc-calibration-health.md`.
+- Built: device registry and provisioning with per-device keys; `/v1/ingest/readings`; sequence, battery, signal, clock-skew and delayed-upload handling; immutable raw readings; QC pipeline with flags; calibration (read-time, append-only); gap detection and explicit interpolation (estimated); device health; realtime publication; synthetic device simulator with injected faults; screens `/monitor`, `/devices`, Dashboard v1.
+- Verified: 247 tests pass on real PostGIS in CI (run 44803362267), 39 web tests, production build, Vercel deployment READY. On the hosted database: migration applied, security advisor shows only the intended SECURITY DEFINER warnings (each function checks permission inside), and a rolled-back 50-device run accepted 1,200 of 1,200 readings.
+- Latency (database only, no HTTP/network, not an SLA): CI runner, per-batch ingest p50 3.6 ms, p95 4.08 ms, p99 4.5 ms, max 15.9 ms over 1,186 batches (274 batches/s). Hosted Supabase, one 50-device round (50 batches): ingest p50 45.9 ms, p95 51.7 ms, max 63.6 ms; QC pass p50 34.3 ms, p95 36.5 ms; engine p50 0.1 ms (no active rules exist, so this is not representative).
+- **NOT verified:** live sign-in with the new screens; Realtime in a browser; real devices; HTTP-path latency; drift detection (not built); offline-device alerting (not built).
+
+## Next: waiting for owner's "proceed" (Phase 5).

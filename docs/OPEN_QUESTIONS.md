@@ -69,3 +69,13 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - No platform-admin tool to put an organisation into live notification mode.
 - GitHub Actions minutes for the 15-minute `alert-ops` job are UNVERIFIED against the owner's plan.
 - Thresholds: none are shipped. Each customer must supply and document their own.
+
+## Phase 3b
+- QC limits are customer-supplied per sensor; none are shipped. Until set, readings stay `unchecked`.
+- Device health defaults (20 % battery, -100 dBm, offline after 3x interval, clock skew 300 s) are UNVERIFIED heuristics; confirm against real hardware.
+- Sequence numbers are per sensor by my definition. Confirm what real loggers send before first deployment.
+- Drift detection is not built (the simulator injects drift; no check flags it yet). Cross-sensor limits need real co-located sensors.
+- Offline devices do not raise alerts yet (a device going silent during a storm is visible on the monitor only).
+- Supabase Realtime behaviour with real sessions is UNVERIFIED.
+- Latency figures are database-side only: no HTTP, network or pooler. Not an SLA.
+- Simulator works only in demo organisations by design.

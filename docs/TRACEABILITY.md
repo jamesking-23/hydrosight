@@ -35,3 +35,14 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-ALT-007 | Notifications consented, capped, dry-run by default, never for unpublished/internal alerts | `0006`, `notifications.py` | `tests/test_alerts.py`, `tests/test_notifications.py` |
 | HS-ALT-008 | CAP 1.2 only for published public alerts; demo exports as Exercise (XSD validation UNVERIFIED) | `cap.py`, `alerts_public.py` | `tests/test_cap.py` |
 | HS-ALT-009 | Alert and rule tables tenant-isolated; no direct writes by app roles | `0006` RLS and grants | `tests/test_alerts.py` |
+| HS-ING-006 | Device registry; per-device keys shown once, hashed, rotatable, revoked on retire; device key limited to its sensors | `0007` `provision_device`, `rotate_device_key`, `retire_device` | `tests/test_devices_qc.py` |
+| HS-ING-007 | `/v1/ingest/readings` with sequence, battery, signal; org keys refused | `ingest.py`, `0007` `ingest_device_batch` | `tests/test_devices_qc.py`, `tests/test_ingest_api.py` |
+| HS-ING-008 | Clock skew corrected over 60 s, original kept, over 30 days refused; delayed uploads flagged | `0007` | `tests/test_devices_qc.py` |
+| HS-ING-009 | Raw readings immutable; only quality may change | `0007` `readings_guard` | `tests/test_devices_qc.py` |
+| HS-ING-010 | QC checks (range, spike, flatline, duplicate, cross-sensor, stale, sequence); no config means unchecked | `0007` `run_qc` | `tests/test_devices_qc.py` |
+| HS-ING-011 | Calibration append-only, applied at read time, raw retained, used by engine | `0007` `calibrations`, `calibrated_value` | `tests/test_devices_qc.py` |
+| HS-ING-012 | Missing data stays missing; interpolation explicit, stored as estimated, never rainfall, never drives status or alerts | `0007` `sensor_gaps`, `interpolate_gap` | `tests/test_devices_qc.py` |
+| HS-ING-013 | Device health online/degraded/offline with reasons | `0007` `device_status` | `tests/test_devices_qc.py` |
+| HS-ING-014 | Engine evaluates suspect, ignores bad and estimated | `0007` `evaluate_thresholds_for` | `tests/test_devices_qc.py`, `tests/test_alerts.py` |
+| HS-ING-015 | Device tables tenant-isolated, no direct writes | `0007` RLS and grants | `tests/test_devices_qc.py` |
+| HS-ING-016 | 50-device fleet with injected faults detected; latency measured | `simulator.py` | `tests/test_fleet_sim.py` |

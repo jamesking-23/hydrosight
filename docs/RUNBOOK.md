@@ -35,3 +35,9 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - Manual run: `cd services/api && uv run python -m hydrosight_api.alert_ops`.
 - Notifications stay in dry-run unless `NOTIFY_MODE=live` AND the organisation row in `notification_settings` is `live` AND a provider is verified. Do not enable live until providers are verified.
 - Public CAP feed: `/v1/cap/alerts` (list) and `/v1/cap/alerts/{id}.xml`.
+
+## Devices, QC and simulator (Phase 3b)
+- Provision a device: `/devices` (needs `devices.manage` and MFA). The device key is shown once; copy it into the device. Rotate or retire from the same screen.
+- Devices post to `POST /v1/ingest/readings` with `Authorization` set to the device key (org keys are refused there).
+- Set QC limits and calibrations per sensor (`devices.manage`); with no limits readings stay `unchecked`.
+- Simulator (demo organisation only): `cd services/api && uv run python -m hydrosight_api.simulator --help`. Fleet files hold keys and are gitignored (`fleet*.json`).

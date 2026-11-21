@@ -17,3 +17,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 4
 - No new paid service. `alert-ops` GitHub job runs every 15 minutes (about 96 short runs a day); minutes included in the plan are UNVERIFIED.
 - SMS/email/push: not enabled. Real sending will add per-message costs once a provider is chosen and its prices verified.
+
+## Phase 3b
+- No new paid service. Supabase Realtime usage and limits on the owner's plan are UNVERIFIED. Readings storage grows with fleet size (50 devices at 15 min = about 4,800 rows a day).
+- CI gained one short latency step (seconds).
