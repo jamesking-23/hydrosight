@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     database_url: str = ""
     # CAP "sender" is <org-slug>@<this domain>; placeholder until an official ID is registered.
     cap_sender_domain: str = "hydrosight.example"
+    # Comma-separated web origins allowed to call the API from a browser (e.g. the community app).
+    cors_allow_origins: str = ""
 
 
 @lru_cache
