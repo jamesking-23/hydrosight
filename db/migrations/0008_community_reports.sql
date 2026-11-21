@@ -139,6 +139,7 @@ declare
   v_root  uuid;
   v_rows  integer;
   v_recent integer;
+  v_cap    integer := case when p_user is null then 120 else 30 end;
 begin
   if not exists (select 1 from public.organizations where id = p_org and community_reports_open) then
     raise exception 'this organisation is not accepting community reports' using errcode = '42501';
@@ -181,7 +182,7 @@ begin
   select count(*) into v_recent from public.community_reports
    where org_id = p_org and created_at > now() - interval '1 hour'
      and (case when p_user is null then reporter_user_id is null else reporter_user_id = p_user end);
-  if v_recent >= case when p_user is null then 120 else 30 end then
+  if v_recent >= v_cap then
     raise exception 'too many reports received; try again later' using errcode = '54000';
   end if;
 
