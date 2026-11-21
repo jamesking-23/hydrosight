@@ -16,7 +16,7 @@ BadInput = psycopg.errors.InvalidParameterValue
 Check = psycopg.errors.CheckViolation
 
 ADD = (
-    "select public.add_asset(%s, %s, %s, %s, %s, %s::public.source_type, %s, %s, %s, null,"
+    "select public.add_asset(%s, %s, %s, %s, %s::numeric, %s::public.source_type, %s::numeric, %s, %s, null,"
     " 'estimated'::public.source_type)"
 )
 ZONE = "select public.add_hazard_zone(%s, %s, %s, %s, %s, 'estimated'::public.source_type, %s)"
@@ -278,11 +278,11 @@ def test_station_analytics_summarise_what_is_stored(geo_world: World) -> None:
     kinds = {s["kind"]: s for s in out["sensors"]}
     assert set(kinds) == {"water_level", "rainfall"}
     lvl = kinds["water_level"]["summary"]
-    assert lvl["readings"] == 720 and lvl["quality_bad"] == 23
-    assert lvl["used_in_statistics"] == 720 - 23 and lvl["completeness"] == 1.0
+    assert lvl["readings"] == 720 and lvl["quality_bad"] == 24
+    assert lvl["used_in_statistics"] == 720 - 24 and lvl["completeness"] == 1.0
     assert lvl["min"] <= lvl["mean"] <= lvl["max"]
     assert kinds["water_level"]["source_type"] == "synthetic"
-    assert sum(m["readings"] for m in kinds["water_level"]["monthly"]) == 720 - 23
+    assert sum(m["readings"] for m in kinds["water_level"]["monthly"]) == 720 - 24
     assert sum(x["received"] for x in kinds["water_level"]["weekly_performance"]) == 720
     assert kinds["water_level"]["days_at_or_above_level"] is not None
     assert (
