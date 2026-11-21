@@ -180,7 +180,7 @@ describe("map layer (HS-COM-013)", () => {
       status: "unvalidated", source_type: "community", corroborations: 0, has_photo: false, trust_signals: {},
     };
     const g = reportsToGeoJSON([r]);
-    expect(g.features[0].geometry.coordinates).toEqual([32.5, 0.3]);
-    expect(g.features[0].properties).toEqual({ id: "r1", status: "unvalidated" });
+    expect(g.features[0]?.geometry.coordinates).toEqual([32.5, 0.3]);
+    expect(g.features[0]?.properties).toEqual({ id: "r1", status: "unvalidated" });
   });
 });
