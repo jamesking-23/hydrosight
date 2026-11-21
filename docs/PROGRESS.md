@@ -80,4 +80,10 @@ Migration `0007_devices_qc_calibration_health.sql` is applied to Supabase. Desig
 - Latency (database only, no HTTP/network, not an SLA): CI runner, per-batch ingest p50 3.6 ms, p95 4.08 ms, p99 4.5 ms, max 15.9 ms over 1,186 batches (274 batches/s). Hosted Supabase, one 50-device round (50 batches): ingest p50 45.9 ms, p95 51.7 ms, max 63.6 ms; QC pass p50 34.3 ms, p95 36.5 ms; engine p50 0.1 ms (no active rules exist, so this is not representative).
 - **NOT verified:** live sign-in with the new screens; Realtime in a browser; real devices; HTTP-path latency; drift detection (not built); offline-device alerting (not built).
 
-## Next: waiting for owner's "proceed" (Phase 5).
+## Phase 5: community intelligence - BUILT 2026-11-21
+Migration `0008_community_reports.sql` applied to Supabase. Design: `docs/DECISIONS/ADR-007-community-intelligence.md`.
+- Built: installable community app (`/community`: report form with geolocation, depth, photo; offline queue with safe retry; warnings with confirm/dispute; safe places; language switcher; settings), public report API with server-side photo re-encoding, moderation screen (`/moderation`), duplicate grouping, unverified reports on the map with plain trust signals, safe places published only by a second person.
+- Verified: CI green (296 API tests on real PostGIS including tenant isolation, 54 web tests), production build; on the hosted database a rolled-back run showed demo area open, report stored as unvalidated/community, nearby report grouped, EXIF photo refused.
+- **NOT verified:** a real phone (install, camera, geolocation, background sync), live sign-in on the new screens, Luganda and Kiswahili text (empty, falls back to English), anonymous endpoint abuse resistance, consent wording legally.
+
+## Next: waiting for owner's "proceed" (Phase 6).

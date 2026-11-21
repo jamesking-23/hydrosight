@@ -46,3 +46,17 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-ING-014 | Engine evaluates suspect, ignores bad and estimated | `0007` `evaluate_thresholds_for` | `tests/test_devices_qc.py`, `tests/test_alerts.py` |
 | HS-ING-015 | Device tables tenant-isolated, no direct writes | `0007` RLS and grants | `tests/test_devices_qc.py` |
 | HS-ING-016 | 50-device fleet with injected faults detected; latency measured | `simulator.py` | `tests/test_fleet_sim.py` |
+| HS-COM-001 | Community reports always `community` + `unvalidated`; submitter cannot set status or source | `0008` | `tests/test_community.py`, `tests/test_community_api.py` |
+| HS-COM-002 | Anonymous reports store no user id; consent recorded | `0008` | `tests/test_community.py` |
+| HS-COM-003 | Public submit is service-role only; org must open reports; rate cap | `0008`, `community.py` | `tests/test_community.py` |
+| HS-COM-004 | Submitted content immutable; moderation fields only via function | `0008` guard | `tests/test_community.py` |
+| HS-COM-005 | Idempotent by client id; old offline reports keep observed time | `0008` | `tests/test_community.py`, `tests/community.test.ts` |
+| HS-COM-006 | Duplicate grouping by proximity and time, nothing dropped | `0008` | `tests/test_community.py` |
+| HS-COM-007 | Photo EXIF stripped (client, API, database refusal); photos moderator-only | `photo.ts`, `community.py`, `0008` | `tests/test_community_api.py`, `tests/test_community.py` |
+| HS-COM-008 | Moderation needs evidence, not own report, append-only history | `0008` | `tests/test_community.py` |
+| HS-COM-009 | Tenant isolation for reports, photos, queue, map, resources | `0008` RLS | `tests/test_community.py` |
+| HS-COM-010 | Alert confirm/dispute: feedback only, public published alerts only | `0008` | `tests/test_community.py` |
+| HS-COM-011 | Report form validation | `community.ts` | `tests/community.test.ts` |
+| HS-COM-012 | Offline queue: order, retry, failed kept, safe resend | `community.ts` | `tests/community.test.ts` |
+| HS-COM-013 | Unverified reports on map with plain trust signals | `station-map.tsx`, `0008` | `tests/community.test.ts`, `tests/test_community.py` |
+| HS-COM-014 | Safe places need a second person and evidence to publish | `0008` | `tests/test_community.py` |

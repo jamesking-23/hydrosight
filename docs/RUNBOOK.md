@@ -41,3 +41,9 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - Devices post to `POST /v1/ingest/readings` with `Authorization` set to the device key (org keys are refused there).
 - Set QC limits and calibrations per sensor (`devices.manage`); with no limits readings stay `unchecked`.
 - Simulator (demo organisation only): `cd services/api && uv run python -m hydrosight_api.simulator --help`. Fleet files hold keys and are gitignored (`fleet*.json`).
+
+## Community reports (Phase 5)
+- Open an organisation to public reports: an `org_admin` runs `select public.set_community_reports_open('<org id>', true)` (a screen for this is not built yet). Demo organisation is already open.
+- Community app: `/community` (installable; Add to Home screen). Moderators use `/moderation` (needs `community.moderate`).
+- Web env: `NEXT_PUBLIC_API_URL` (API base). API env: `CORS_ALLOW_ORIGINS` (comma-separated web origins).
+- To remove a report on request: signed-in reporters use withdraw; otherwise an admin deletes it in the database and the action is recorded by the database audit trail.

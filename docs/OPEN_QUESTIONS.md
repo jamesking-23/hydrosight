@@ -79,3 +79,14 @@ Historical river stage/discharge, rain-gauge records, flood-event records with d
 - Supabase Realtime behaviour with real sessions is UNVERIFIED.
 - Latency figures are database-side only: no HTTP, network or pooler. Not an SLA.
 - Simulator works only in demo organisations by design.
+
+## Phase 5
+- Duplicate distance (200 m), time window (60 min), rate caps (120 anonymous / 30 signed-in per hour), 14-day offline window and photo limits are UNVERIFIED defaults; tune with real usage.
+- Anonymous endpoint has only a database-side hourly cap per organisation; there is no per-IP rate limit or bot protection. Add before a public launch (provider choice is yours).
+- Photos are stored in the database (1 MB max each). Supabase free storage is small; move to object storage if volume grows. Retention and deletion policy for reports and photos is not decided.
+- Consent wording (`community-report-2026-11`) is my draft and needs legal review for Uganda's data protection law before launch.
+- Luganda and Kiswahili need a human translator; the app currently falls back to English and says so.
+- Alert preferences: SMS and push are off (notifications are dry-run), so the settings screen only says that. Nothing is subscribed.
+- The web project has Vercel Authentication on, so ordinary community members cannot open `/community` until you turn it off or add a custom domain.
+- The PWA install, service worker, camera capture, geolocation and offline sync have been tested only in code and unit tests, not on a real phone.
+- `reports.read` and `community.moderate` role mapping is still the DRAFT matrix; who moderates in each organisation is your decision.

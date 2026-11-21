@@ -35,6 +35,7 @@ Keep `docs/PROGRESS.md`, `docs/TRACEABILITY.md`, `docs/COSTS.md` and this file c
 
 Alert governance is enforced in the database (migration 0006); never add a path that lets an engine or app role approve/publish, and never ship default thresholds. Notifications stay dry-run until a provider is verified.
 Raw readings are immutable (trigger); calibration is applied at read time; QC limits are customer-supplied, never defaulted; interpolated values are `estimated` and never drive status or alerts.
+Community reports are always `community` + `unvalidated` until a moderator validates with evidence; no IP or device data is stored; photos must have no EXIF; safe places need a second person to publish.
 
 ## Current state
 See `docs/PROGRESS.md`.

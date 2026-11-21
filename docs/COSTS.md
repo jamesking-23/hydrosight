@@ -21,3 +21,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 3b
 - No new paid service. Supabase Realtime usage and limits on the owner's plan are UNVERIFIED. Readings storage grows with fleet size (50 devices at 15 min = about 4,800 rows a day).
 - CI gained one short latency step (seconds).
+
+## Phase 5
+- No new paid service. Photos add database storage (max 1 MB each, usually under 350 KB). Supabase free plan limits are UNVERIFIED for your project; check before real use.
+- Pillow (open source) added to the API.
