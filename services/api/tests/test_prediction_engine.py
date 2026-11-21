@@ -226,12 +226,16 @@ def test_predictions_and_backtests_are_immutable(geo_world: World) -> None:
     mid = _register(w, "carol")
     _prediction(w, mid, st)
     _backtest(w, w.org_a, mid, st, origin="synthetic")
-    for who in ("su", "service"):
-        getattr(w.db, who)()
-        fails(w.db, BadState, "update public.predictions set probability = 0.99")
-        fails(w.db, BadState, "delete from public.predictions")
-        fails(w.db, BadState, "update public.backtest_runs set pod = 1")
-        fails(w.db, BadState, "delete from public.backtest_runs")
+    w.db.su()  # even the table owner cannot rewrite history (trigger)
+    fails(w.db, BadState, "update public.predictions set probability = 0.99")
+    fails(w.db, BadState, "delete from public.predictions")
+    fails(w.db, BadState, "update public.backtest_runs set pod = 1")
+    fails(w.db, BadState, "delete from public.backtest_runs")
+    w.db.service()  # the engine role can only append (no grant)
+    fails(w.db, NoPerm, "update public.predictions set probability = 0.99")
+    fails(w.db, NoPerm, "delete from public.predictions")
+    fails(w.db, NoPerm, "update public.backtest_runs set pod = 1")
+    fails(w.db, NoPerm, "delete from public.backtest_runs")
 
 
 def test_only_the_engine_role_appends(geo_world: World) -> None:
@@ -241,7 +245,7 @@ def test_only_the_engine_role_appends(geo_world: World) -> None:
     w.as_("alice")  # no app role can write predictions or backtests
     fails(w.db, NoPerm, PRED_SQL, _pred_args(w, mid, st))
     fails(w.db, NoPerm, "delete from public.predictions")
-    w.anon()
+    w.db.anon()
     fails(w.db, NoPerm, "select * from public.predictions")
 
 
