@@ -2,6 +2,7 @@ import { Shell } from "@/components/shell";
 import { StationMapLoader } from "@/components/station-map-loader";
 import { ErrorNote } from "@/components/ui";
 import { loadAccess } from "@/lib/load-access";
+import type { CommunityMapReport } from "@/lib/community";
 import type { StationRow } from "@/lib/stations";
 
 export default async function MapPage() {
@@ -13,7 +14,12 @@ export default async function MapPage() {
     s.from("catchments_geo").select("id, name, geojson"),
     s.from("geo_imports").select("kind, source, licence, source_type"),
   ]);
-  const errors = [a.loadError, st.error, rv.error, ca.error, im.error]
+  const orgIds = [...new Set(((st.data ?? []) as { org_id?: string }[]).map((x) => x.org_id).filter(Boolean))] as string[];
+  const reportSets = await Promise.all(
+    orgIds.map((org) => s.rpc("community_reports_on_map", { p_org: org } as never)),
+  );
+  const reports = reportSets.flatMap((r) => (r.data ?? []) as unknown as CommunityMapReport[]);
+  const errors = [a.loadError, st.error, rv.error, ca.error, im.error, ...reportSets.map((r) => r.error)]
     .filter(Boolean)
     .map((e) => e!.message)
     .join("; ");
@@ -34,6 +40,7 @@ export default async function MapPage() {
         rivers={(rv.data ?? []) as never}
         catchments={(ca.data ?? []) as never}
         imports={im.data ?? []}
+        reports={reports}
       />
     </Shell>
   );

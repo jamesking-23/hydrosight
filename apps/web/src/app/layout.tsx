@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  manifest: "/manifest.webmanifest",
   title: "HydroSight",
   description: "Flood risk intelligence and early warning for East Africa",
 };

@@ -16,6 +16,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { SOURCE_TYPES, SourceBadge, type SourceType } from "@/components/source-badge";
 import { inputCls } from "@/components/ui";
 import { createClient } from "@/lib/supabase/browser";
+import { describeSignals, reportsToGeoJSON, type CommunityMapReport } from "@/lib/community";
 import {
   FRESHNESS_LABELS,
   SENSOR_LABELS,
@@ -107,7 +108,9 @@ export function StationMap({
   rivers,
   catchments,
   imports,
+  reports = [],
 }: {
+  reports?: CommunityMapReport[];
   stations: StationRow[];
   rivers: Geo;
   catchments: Geo;
@@ -120,7 +123,8 @@ export function StationMap({
   const [query, setQuery] = useState("");
   const [river, setRiver] = useState("");
   const [sources, setSources] = useState<Set<SourceType>>(new Set());
-  const [layers, setLayers] = useState({ basemap: true, stations: true, rivers: true, catchments: true });
+  const [layers, setLayers] = useState({ basemap: true, stations: true, rivers: true, catchments: true, reports: true });
+  const [selectedReport, setSelectedReport] = useState<CommunityMapReport | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sensorResult, setSensorResult] = useState<{ id: string; rows: SensorRow[]; error: string } | null>(null);
 
@@ -194,6 +198,25 @@ export function StationMap({
         filter: ["==", ["get", "id"], ""],
         paint: { "circle-radius": 14, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#0b1f33", "circle-stroke-width": 3 },
       });
+      map.addSource("reports", { type: "geojson", data: reportsToGeoJSON(reports) });
+      // Community reports: purple ring, hollow centre, so they never look like a station measurement.
+      map.addLayer({
+        id: "reports-circle",
+        type: "circle",
+        source: "reports",
+        paint: {
+          "circle-radius": 8,
+          "circle-color": "rgba(255,255,255,0.85)",
+          "circle-stroke-color": COLORS.community,
+          "circle-stroke-width": 3,
+        },
+      });
+      map.on("click", "reports-circle", (e) => {
+        const id = e.features?.[0]?.properties?.id as string | undefined;
+        setSelectedReport(reports.find((r) => r.id === id) ?? null);
+      });
+      map.on("mouseenter", "reports-circle", () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", "reports-circle", () => (map.getCanvas().style.cursor = ""));
       map.on("click", "stations-circle", (e) => {
         const id = e.features?.[0]?.properties?.id as string | undefined;
         if (id) setSelectedId(id);
@@ -231,6 +254,7 @@ export function StationMap({
     map.setLayoutProperty("rivers-line", "visibility", vis(layers.rivers));
     map.setLayoutProperty("catchments-fill", "visibility", vis(layers.catchments));
     map.setLayoutProperty("catchments-line", "visibility", vis(layers.catchments));
+    map.setLayoutProperty("reports-circle", "visibility", vis(layers.reports));
   }, [layers, ready]);
 
   // selection -> highlight, fly, load sensors
@@ -310,6 +334,7 @@ export function StationMap({
             ["stations", `Stations (${visible.length} of ${stations.length})`],
             ["rivers", rivers.length ? `Rivers (${rivers.length})` : "Rivers: no geometry loaded yet"],
             ["catchments", catchments.length ? `Catchments (${catchments.length})` : "Catchments: none loaded yet"],
+            ["reports", `Community reports, unverified (${reports.length}, last 72 h)`],
           ] as const).map(([key, label]) => (
             <label key={key} className="flex items-center gap-2 py-0.5 text-sm">
               <input type="checkbox" checked={layers[key]} onChange={(e) => setLayers({ ...layers, [key]: e.target.checked })} />
@@ -324,6 +349,25 @@ export function StationMap({
             </ul>
           ) : null}
         </fieldset>
+        {selectedReport ? (
+          <section aria-label="Selected community report" className="rounded-lg border border-line p-3 text-sm">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
+              <span className="font-bold">{selectedReport.kind.replaceAll("_", " ")}</span>
+              <SourceBadge source="community" />
+            </div>
+            <p>
+              {selectedReport.status === "validated"
+                ? "A moderator checked this report."
+                : "Not checked by anyone yet. Treat it as a hint, not a measurement."}
+            </p>
+            <p className="text-muted">Seen {new Date(selectedReport.observed_at).toLocaleString()}</p>
+            {selectedReport.water_depth_cm !== null ? (
+              <p className="text-muted">Depth {selectedReport.water_depth_cm} cm (reporter&apos;s own estimate)</p>
+            ) : null}
+            <p className="text-muted">{describeSignals(selectedReport.trust_signals).join(", ")}</p>
+            <button className="mt-1 underline" onClick={() => setSelectedReport(null)}>Close</button>
+          </section>
+        ) : null}
 
         <div>
           <label htmlFor="time-slider" className="mb-1 block text-sm font-semibold">Time</label>

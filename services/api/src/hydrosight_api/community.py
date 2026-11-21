@@ -175,12 +175,18 @@ def list_areas(settings: SettingsDep) -> dict[str, Any]:
     """Organisations currently accepting community reports (name and slug only)."""
     with _connect(settings) as conn:
         rows = conn.execute(
-            "select slug, name, is_demo from public.organizations"
+            "select id, slug, name, is_demo from public.organizations"
             " where community_reports_open order by name"
         ).fetchall()
     return {
         "areas": [
-            {"slug": r["slug"], "name": r["name"], "exercise": bool(r["is_demo"])} for r in rows
+            {
+                "id": str(r["id"]),
+                "slug": r["slug"],
+                "name": r["name"],
+                "exercise": bool(r["is_demo"]),
+            }
+            for r in rows
         ]
     }
 

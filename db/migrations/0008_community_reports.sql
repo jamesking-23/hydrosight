@@ -324,8 +324,8 @@ begin
            r.observed_at, r.created_at, r.status, r.anonymous,
            exists (select 1 from public.report_photos ph where ph.report_id = r.id),
            r.duplicate_of,
-           1 + (select count(*)::integer from public.community_reports d where d.duplicate_of = coalesce(r.duplicate_of, r.id)
-                 and d.id <> r.id) + case when r.duplicate_of is null then 0 else 0 end
+           (select count(*)::integer from public.community_reports g
+             where g.id = coalesce(r.duplicate_of, r.id) or g.duplicate_of = coalesce(r.duplicate_of, r.id))
       from public.community_reports r
      where r.org_id = p_org and r.status = p_status
      order by r.created_at;

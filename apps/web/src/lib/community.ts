@@ -207,3 +207,29 @@ export function base64ToHex(b64: string): string {
   for (let i = 0; i < bin.length; i++) hex += bin.charCodeAt(i).toString(16).padStart(2, "0");
   return hex;
 }
+
+/** One row of public.community_reports_on_map(): an unverified report, never a measurement. */
+export interface CommunityMapReport {
+  id: string;
+  kind: string;
+  lon: number;
+  lat: number;
+  water_depth_cm: number | null;
+  observed_at: string;
+  status: string;
+  source_type: "community";
+  corroborations: number;
+  has_photo: boolean;
+  trust_signals: Parameters<typeof describeSignals>[0];
+}
+
+export function reportsToGeoJSON(reports: CommunityMapReport[]) {
+  return {
+    type: "FeatureCollection" as const,
+    features: reports.map((r) => ({
+      type: "Feature" as const,
+      geometry: { type: "Point" as const, coordinates: [r.lon, r.lat] },
+      properties: { id: r.id, status: r.status },
+    })),
+  };
+}

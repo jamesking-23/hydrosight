@@ -170,3 +170,17 @@ describe("images and display helpers", () => {
     expect(lines.join(" ")).not.toMatch(/score|trusted|reliable/i);
   });
 });
+
+import { reportsToGeoJSON, type CommunityMapReport } from "@/lib/community";
+
+describe("map layer (HS-COM-013)", () => {
+  it("turns unverified reports into points that carry only id and status", () => {
+    const r: CommunityMapReport = {
+      id: "r1", kind: "flooding", lon: 32.5, lat: 0.3, water_depth_cm: null, observed_at: "2026-11-21T09:00:00Z",
+      status: "unvalidated", source_type: "community", corroborations: 0, has_photo: false, trust_signals: {},
+    };
+    const g = reportsToGeoJSON([r]);
+    expect(g.features[0].geometry.coordinates).toEqual([32.5, 0.3]);
+    expect(g.features[0].properties).toEqual({ id: "r1", status: "unvalidated" });
+  });
+});
