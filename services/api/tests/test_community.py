@@ -38,6 +38,11 @@ def _leader(w: World) -> None:
     _add_user(w, "mia", "community_leader")
 
 
+def _ids(res: dict[str, Any]) -> dict[str, Any]:
+    """jsonb returns ids as text; tests compare them with uuid columns."""
+    return {k: (uuid.UUID(v) if k in ("id", "grouped_with") and v else v) for k, v in res.items()}
+
+
 def _submit(w: World, who: str | None = "dave", *, kind: str = "flooding", dlat: float = 0.0,
             observed: timedelta = timedelta(minutes=-5), anonymous: bool = False,
             photo: bytes | None = None, consent: str | None = CONSENT,
@@ -48,16 +53,20 @@ def _submit(w: World, who: str | None = "dave", *, kind: str = "flooding", dlat:
     ptype = "image/jpeg" if photo is not None else None
     if who is None:
         w.db.service()
-        return w.db.one(
-            "select public.submit_public_community_report(%s, %s, %s, 'water in the road', 40, %s, %s, 15,"
-            " %s::timestamptz, %s, %s::bytea, %s)",
-            (org, cid, kind, LON, LAT + dlat, _iso(observed), consent, photo, ptype),
+        return _ids(
+            w.db.one(
+                "select public.submit_public_community_report(%s, %s, %s, 'water in the road', 40, %s, %s, 15,"
+                " %s::timestamptz, %s, %s::bytea, %s)",
+                (org, cid, kind, LON, LAT + dlat, _iso(observed), consent, photo, ptype),
+            )
         )
     w.as_(who)
-    return w.db.one(
-        "select public.submit_community_report(%s, %s, %s, 'water in the road', 40, %s, %s, 15,"
-        " %s::timestamptz, %s, %s, %s::bytea, %s)",
-        (org, cid, kind, LON, LAT + dlat, _iso(observed), consent, anonymous, photo, ptype),
+    return _ids(
+        w.db.one(
+            "select public.submit_community_report(%s, %s, %s, 'water in the road', 40, %s, %s, 15,"
+            " %s::timestamptz, %s, %s, %s::bytea, %s)",
+            (org, cid, kind, LON, LAT + dlat, _iso(observed), consent, anonymous, photo, ptype),
+        )
     )
 
 

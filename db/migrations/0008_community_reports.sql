@@ -79,11 +79,11 @@ language plpgsql set search_path = ''
 as $$
 begin
   if (new.id, new.org_id, new.client_id, new.reporter_user_id, new.anonymous, new.kind, new.description,
-      new.water_depth_cm, new.location, new.location_accuracy_m, new.observed_at, new.created_at,
+      new.water_depth_cm, extensions.st_asewkb(new.location), new.location_accuracy_m, new.observed_at, new.created_at,
       new.source_type, new.consent_version, new.consent_at)
      is distinct from
      (old.id, old.org_id, old.client_id, old.reporter_user_id, old.anonymous, old.kind, old.description,
-      old.water_depth_cm, old.location, old.location_accuracy_m, old.observed_at, old.created_at,
+      old.water_depth_cm, extensions.st_asewkb(old.location), old.location_accuracy_m, old.observed_at, old.created_at,
       old.source_type, old.consent_version, old.consent_at) then
     raise exception 'a submitted report cannot be edited; only moderation fields change' using errcode = '55000';
   end if;
