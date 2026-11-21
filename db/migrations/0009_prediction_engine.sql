@@ -155,13 +155,13 @@ create table public.backtest_runs (
 create index backtest_runs_model_idx on public.backtest_runs (model_version_id, created_at desc);
 
 -- Immutability: predictions and backtest runs are never edited or deleted.
-create function private.forbid_change() returns trigger
+create function private.forbid_row_change() returns trigger
 language plpgsql set search_path = ''
 as $$ begin raise exception '% rows are immutable', tg_table_name using errcode = '55000'; end $$;
 create trigger predictions_immutable before update or delete on public.predictions
-  for each row execute function private.forbid_change();
+  for each row execute function private.forbid_row_change();
 create trigger backtest_runs_immutable before update or delete on public.backtest_runs
-  for each row execute function private.forbid_change();
+  for each row execute function private.forbid_row_change();
 
 -- model_versions: only promote_model_version() may change status fields; the rest never changes.
 create function private.model_versions_guard() returns trigger
@@ -325,7 +325,7 @@ grant execute on function public.register_model_version(uuid, text, text, text, 
 -- DOWN:
 --   drop function public.record_flood_event, public.promote_model_version, public.register_model_version;
 --   drop table public.backtest_runs, public.predictions, public.flood_events, public.model_versions;
---   drop function private.model_versions_guard, private.forbid_change;
+--   drop function private.model_versions_guard, private.forbid_row_change;
 --   drop type public.data_origin;
 --   delete from public.role_permissions where permission_key in ('models.read','models.manage','models.promote');
 --   delete from public.permissions where key in ('models.read','models.manage','models.promote');
