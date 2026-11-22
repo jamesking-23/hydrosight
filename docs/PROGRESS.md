@@ -92,4 +92,8 @@ Migration `0009_prediction_engine.sql` applied to Supabase. Design: `docs/DECISI
 - Verified: CI green (database tests on real PostGIS incl. tenant isolation); hosted database rolled-back check refused a measured-source prediction, prediction edits, direct status change, learned model on synthetic data, and extent target.
 - **NOT verified:** any skill on real data (none supplied; every score so far is on labelled synthetic fixtures), the engine run against the hosted database, the forecast screen with a live sign-in, scheduling. No learned model trained.
 
-## Next: waiting for owner's "proceed" (Phase 7).
+## Phase 7: analytics, reporting and asset risk - BUILT 2026-11-22
+Built: migration `0010` (assets, hazard zones, export log, exposure and analytics functions, forecast verification); `/analytics` and `/assets` screens; CSV, XLSX and PDF reports from one Report object; asset registration form; ADR-009. Not built: a hazard-zone loading screen (SQL function only), river and DEM imports, return periods, asset editing/retire UI.
+Applied to Supabase: yes. CI: green.
+
+## Next: waiting for owner's "proceed" (Phase 8).

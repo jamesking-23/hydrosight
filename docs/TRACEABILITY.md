@@ -75,3 +75,12 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-PRD-013 | Flood events need evidence and honest origin | `0009` | `tests/test_prediction_engine.py` |
 | HS-PRD-014 | Engine needs an approved documented threshold; skips stale input; ignores bad readings | `engine.py` | `tests/test_prediction_engine.py` |
 | HS-PRD-015 | Forecast screen: no false precision, undefined shown as not defined, ages out | `forecast.ts`, `forecast-view.tsx` | `tests/forecast.test.ts` |
+| HS-ANA-001 | Analytics only summarise stored readings; poor/estimated readings are counted and excluded from statistics; completeness shown | `0010` `analytics_station` | `tests/test_analytics_assets.py` |
+| HS-ANA-002 | No return periods are estimated; annual maxima labelled as such | `report.ts` | `tests/report.test.ts` |
+| HS-ANA-003 | Forecast verification needs an explicit warning probability; synthetic is flagged | `0010` `prediction_verification` | `tests/test_analytics_assets.py` |
+| HS-AST-001 | Asset registry (point/polygon), validated geometry, tenant isolation | `0010` | `tests/test_analytics_assets.py` |
+| HS-AST-002 | Elevation, waterway and hazard indicators say "not assessed" when no data exists; outside a loaded zone is never "safe" | `0010` `asset_exposure` | `tests/test_analytics_assets.py`, `tests/report.test.ts` |
+| HS-AST-003 | Value only with amount, currency and written basis; exposure reports supplied value, no loss estimate | `0010`, `asset-input.ts` | `tests/test_analytics_assets.py`, `tests/asset-input.test.ts` |
+| HS-RPT-001 | CSV, XLSX and PDF are rendered from the same Report object as the screen; each states window, sources, maturity, assumptions | `report.ts`, `report-format.ts` | `tests/report.test.ts` |
+| HS-RPT-002 | CSV-injection guard; XLSX cells are text, never formulas | `report-format.ts` | `tests/report.test.ts` |
+| HS-RPT-003 | Every export is logged with SHA-256 (append-only); an unlogged export is not delivered | `0010` `report_exports`, `api/reports/[kind]/route.ts` | `tests/test_analytics_assets.py` |

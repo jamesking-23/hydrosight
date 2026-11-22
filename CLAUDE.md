@@ -37,6 +37,7 @@ Alert governance is enforced in the database (migration 0006); never add a path 
 Raw readings are immutable (trigger); calibration is applied at read time; QC limits are customer-supplied, never defaulted; interpolated values are `estimated` and never drive status or alerts.
 Community reports are always `community` + `unvalidated` until a moderator validates with evidence; no IP or device data is stored; photos must have no EXIF; safe places need a second person to publish.
 Predictions are `forecast`/`synthetic` and `unvalidated`, immutable, with an input snapshot; the event threshold always comes from an approved documented rule; learned models train only on owner-confirmed real data; synthetic backtests never support a skill claim or promotion; no extent/depth/impact outputs.
+Assets: elevation, waterway distance and hazard intersection come only from supplied or loaded data with source and licence, else "not assessed" (never "safe"); values need amount, currency and basis, and no loss is estimated; no return periods; every export is logged with a hash and screen and exports share one Report object.
 
 ## Current state
 See `docs/PROGRESS.md`.

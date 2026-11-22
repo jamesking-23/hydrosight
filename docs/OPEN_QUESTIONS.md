@@ -104,3 +104,13 @@ Everything measured so far is synthetic. To produce a real backtest the owner mu
 - No learned model exists; gradient boosting waits for confirmed real data and the extra dependency (not on Vercel).
 - Backtests currently score one station at a time with a single temporal hold-out; spatial hold-out needs several stations with real data.
 - The forecast screen has not been viewed with live sign-in. The engine has been tested against the CI database, not run against the hosted database (no connection string available to this session).
+
+## Phase 7
+- No river geometry has been imported, so distance to waterways reads "not assessed". Needs a licensed river network (source and licence recorded on import).
+- No hazard layers are loaded. Each needs its source, licence and scenario label. There is no screen for loading zones yet; use `add_hazard_zone` (permission `hazard.manage`) until one is built.
+- No elevation dataset (DEM) is integrated; elevation is user-supplied with a measured/estimated label. Choose a DEM and check its licence before integrating.
+- Asset values are only what customers supply, with a written basis. No damage curves exist or are proposed.
+- Return-period estimation is deliberately absent. Decide with local hydrologists whether and how (record length, method) before adding it.
+- Report wording, templates and branding for customers are drafts.
+- The analytics and assets screens and the three download formats have not been seen with a live sign-in; database functions are tested in CI only.
+- Reference material supplied by the owner (FastFlood, OpenLISEM papers): see DATA_SOURCES. Their speed and accuracy figures are the authors' claims on their own tests; none is a HydroSight claim. FastFlood commercial-use terms are UNVERIFIED (the site lists free, educational and paid tiers; no licence text was found).

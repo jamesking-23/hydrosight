@@ -29,3 +29,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 6
 - No new paid service and no new runtime dependency (the harness uses the Python standard library). A learned model would add scikit-learn or similar, outside Vercel.
 - Storage: one prediction row per model per station per run. At 4 models, hourly, that is about 35,000 small rows a year per station: monitor against the Supabase free plan before scheduling.
+
+## Phase 7
+- Two new open-source web dependencies: exceljs (Excel) and pdf-lib (PDF). No paid service. Reports are built on the web server on request.
+- Storage: assets, hazard zones and the export log are small. Hazard polygons can be large; simplify before loading and watch the Supabase free-plan size.

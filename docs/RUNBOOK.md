@@ -54,3 +54,9 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - Backtest: `engine.backtest_station(conn, org, station, model_id, horizon_hours=..., warn_probability=..., holdout_fraction=..., run_by=...)`.
 - Promotion: `select public.promote_model_version(id, 'validated', '<evidence link>')` by a different person holding `models.promote`; refused for synthetic data.
 - Screen: `/forecasts` (needs readings.read or models.read).
+
+## Analytics, assets and reports (Phase 7)
+- Screens: `/analytics` (station, window, optional warning probability) and `/assets`. Downloads: `/api/reports/analytics?station=..&from=..&to=..&format=csv|xlsx|pdf` and `/api/reports/assets?org=..&format=..`.
+- Register assets on `/assets` (needs `assets.manage`). Load a hazard zone: `select public.add_hazard_zone(org, name, scenario, source, licence, 'estimated', '<GeoJSON polygon>')` (needs `hazard.manage`).
+- Every download is logged in `report_exports` (who, what, window, SHA-256). If logging fails the download is refused.
+- Rule of thumb for support: an indicator reading "not assessed" means the data layer is missing, not that the asset is safe.
