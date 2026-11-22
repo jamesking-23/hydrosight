@@ -84,3 +84,11 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-RPT-001 | CSV, XLSX and PDF are rendered from the same Report object as the screen; each states window, sources, maturity, assumptions | `report.ts`, `report-format.ts` | `tests/report.test.ts` |
 | HS-RPT-002 | CSV-injection guard; XLSX cells are text, never formulas | `report-format.ts` | `tests/report.test.ts` |
 | HS-RPT-003 | Every export is logged with SHA-256 (append-only); an unlogged export is not delivered | `0010` `report_exports`, `api/reports/[kind]/route.ts` | `tests/test_analytics_assets.py` |
+| HS-AI-001 | Assistant is off until an org admin switches it on and sets a daily token cap; no default cap | `0011` `assistant_begin` | `tests/test_assistant.py` |
+| HS-AI-002 | Per-organisation daily cap blocks further questions; per-question budget shrinks to what is left | `0011`, `engine.ts` | `tests/test_assistant.py`, `tests/assistant.test.ts` |
+| HS-AI-003 | Every prompt, tool call and token count is logged, append-only; users see own turns, admins all, nobody cross-tenant | `0011` `assistant_turns` | `tests/test_assistant.py` |
+| HS-AI-004 | Tools are read-only and run as the signed-in person (RLS applies); organisation fixed by the server; ids validated | `tools.ts`, `supabase-data.ts` | `tests/assistant.test.ts` |
+| HS-AI-005 | Answers are Observed / Forecast / Assumptions / Not known; every citation must be a record a tool returned this turn; times come from the records | `answer.ts` | `tests/assistant.test.ts` |
+| HS-AI-006 | Stale, offline or missing data is stated; empty tool results lead to "not known", not a guess | `answer.ts`, `tools.ts` | `tests/assistant.test.ts` |
+| HS-AI-007 | No warnings, evacuation advice or safety claims; no tool can create, approve or publish alerts | `answer.ts`, `tools.ts` | `tests/assistant.test.ts` |
+| HS-AI-008 | Community text is sanitised, wrapped, flagged and logged; an obeying model is still stopped by the validator | `untrusted.ts`, `answer.ts` | `tests/assistant.test.ts` |

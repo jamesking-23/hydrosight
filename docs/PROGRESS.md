@@ -96,4 +96,7 @@ Migration `0009_prediction_engine.sql` applied to Supabase. Design: `docs/DECISI
 Built: migration `0010` (assets, hazard zones, export log, exposure and analytics functions, forecast verification); `/analytics` and `/assets` screens; CSV, XLSX and PDF reports from one Report object; asset registration form; ADR-009. Not built: a hazard-zone loading screen (SQL function only), river and DEM imports, return periods, asset editing/retire UI.
 Applied to Supabase: yes. CI: green.
 
-## Next: waiting for owner's "proceed" (Phase 8).
+## Phase 8: grounded AI assistant - BUILT 2026-11-22
+Built: migration `0011` (per-org switch and token cap, append-only turn log); eight read-only tools running as the signed-in person; answer validator (Observed / Forecast / Assumptions / Not known, citations must exist, no advice or safety claims); community-text injection defence; Claude adapter; `/api/assistant`; `/assistant` screen with admin limits; ADR-010. Not run against the live Claude API (no key). Not built: fact-level checking of numbers in sentences; spatial "downstream communities" reasoning.
+
+## Next: waiting for owner's "proceed" (Phase 9).

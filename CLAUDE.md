@@ -39,5 +39,7 @@ Community reports are always `community` + `unvalidated` until a moderator valid
 Predictions are `forecast`/`synthetic` and `unvalidated`, immutable, with an input snapshot; the event threshold always comes from an approved documented rule; learned models train only on owner-confirmed real data; synthetic backtests never support a skill claim or promotion; no extent/depth/impact outputs.
 Assets: elevation, waterway distance and hazard intersection come only from supplied or loaded data with source and licence, else "not assessed" (never "safe"); values need amount, currency and basis, and no loss is estimated; no return periods; every export is logged with a hash and screen and exports share one Report object.
 
+Assistant: read-only tools run as the signed-in person; answers use Observed / Forecast / Assumptions / Not known with citations that must exist; it never issues warnings, evacuation advice or "safe" statements; community text is untrusted; off by default with a token cap per organisation; every turn is logged.
+
 ## Current state
 See `docs/PROGRESS.md`.

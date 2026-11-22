@@ -60,3 +60,10 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - Register assets on `/assets` (needs `assets.manage`). Load a hazard zone: `select public.add_hazard_zone(org, name, scenario, source, licence, 'estimated', '<GeoJSON polygon>')` (needs `hazard.manage`).
 - Every download is logged in `report_exports` (who, what, window, SHA-256). If logging fails the download is refused.
 - Rule of thumb for support: an indicator reading "not assessed" means the data layer is missing, not that the asset is safe.
+
+## Data assistant (Phase 8)
+- Screen: `/assistant`. Org admins set the on/off switch and daily token cap there (or `select public.set_assistant_limit(org, true, 200000, 4000)`).
+- Deployment settings (Vercel, web project): `ANTHROPIC_API_KEY` (Sensitive) and `ASSISTANT_MODEL`. Without them questions are logged as `not_configured`.
+- Review what was asked and answered: `select created_at, user_id, question, status, refusal_reason, tool_calls, flags from public.assistant_turns order by created_at desc;` (org admins see all turns). `flags.instruction_like_reports > 0` means a community report tried to instruct the assistant.
+- A refusal reason `advice_not_permitted` means the draft answer contained a warning, evacuation advice or a safety statement and was withheld.
+- Cap resets at 00:00 UTC. To stop the assistant at once, set the switch off.

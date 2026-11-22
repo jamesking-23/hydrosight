@@ -33,3 +33,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 7
 - Two new open-source web dependencies: exceljs (Excel) and pdf-lib (PDF). No paid service. Reports are built on the web server on request.
 - Storage: assets, hazard zones and the export log are small. Hazard polygons can be large; simplify before loading and watch the Supabase free-plan size.
+
+## Phase 8
+- The assistant calls the Claude API, which is paid per token. Nothing is called until an org admin switches it on and sets a daily token cap; there is no default. A typical question may use several thousand tokens (tool results are included); measure before setting caps. No price is assumed anywhere in the code.
+- No new dependency (the model is called with `fetch`). Turn log rows are small.

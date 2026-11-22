@@ -114,3 +114,13 @@ Everything measured so far is synthetic. To produce a real backtest the owner mu
 - Report wording, templates and branding for customers are drafts.
 - The analytics and assets screens and the three download formats have not been seen with a live sign-in; database functions are tested in CI only.
 - Reference material supplied by the owner (FastFlood, OpenLISEM papers): see DATA_SOURCES. Their speed and accuracy figures are the authors' claims on their own tests; none is a HydroSight claim. FastFlood commercial-use terms are UNVERIFIED (the site lists free, educational and paid tiers; no licence text was found).
+
+## Phase 8
+- The assistant has NOT been run against the live Claude API: no API key was available. The adapter follows the public Messages API shape and is tested only with a fake. It needs `ANTHROPIC_API_KEY` and `ASSISTANT_MODEL` (no default model is assumed; choose one you have access to) set as Vercel environment variables. UNVERIFIED.
+- The Claude API is a paid service; there is no free equivalent that meets the brief. Limits are in tokens so no price is assumed. Decide a monthly budget before switching it on for any organisation.
+- Numbers and names inside an answer's sentences are not mechanically checked against the cited records; only the citations are. Until that is added, treat answers as a reading aid and check the cited records. Candidate: require structured values per item and render them from the records.
+- The advice filter is deliberately blunt and may refuse harmless sentences that mention evacuation. Tune with real questions.
+- Free text of community reports reaches the assistant only for roles that may moderate. Whether other roles should see it is a policy decision.
+- The daily cap is checked before a question, so one question can overshoot it. Prompt-injection defences have been tested with scripted models only, not with a real model.
+- The assistant does not answer questions that need spatial reasoning beyond the stored exposure indicators (for example "communities downstream of River X"); no such data layer exists.
+- Questions are logged in full. Confirm the notice to users and a retention period with a data-protection review.

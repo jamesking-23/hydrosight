@@ -30,3 +30,8 @@ Status after Phase 2: nothing external is integrated. OSM raster tiles are used 
 | River network | Distance to waterways | NO data loaded | UNVERIFIED |
 | FastFlood (fastflood.org; van den Bout et al. 2023, Environ. Model. Softw. 168:105787; EGU23-3611) | Reference for a future fast flood-hazard layer | NO | Papers are CC BY 4.0. Site lists free and paid tiers; licence for commercial use UNVERIFIED. Outputs, if ever used, would load as hazard zones with source, licence and `estimated`/`synthetic` labels and need local validation |
 | OpenLISEM (van den Bout and Jetten 2018, J. Hydrol. 556:674-688) | Reference on flow approximations | NO | Paper CC BY-NC-ND (read only). Its finding that kinematic routing can overstate connectivity at coarse resolution is a caution for any future routing choice |
+
+## Phase 8 update
+| Source | Use | Integrated | Status |
+|---|---|---|---|
+| Claude API (Anthropic) | Language model for the data assistant | Adapter built; NOT called live | Needs owner API key and model choice; terms, pricing and data handling UNVERIFIED by this build |
