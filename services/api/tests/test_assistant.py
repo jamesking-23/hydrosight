@@ -10,14 +10,15 @@ from helpers import fails
 NoPerm = psycopg.errors.InsufficientPrivilege
 Check = psycopg.errors.CheckViolation
 
-LOG = (
-    "select public.log_assistant_turn(%s, %s, %s, null, %s::jsonb, %s::jsonb, %s, %s, 'test', 'fake', '{}'::jsonb)"
-)
+LOG = "select public.log_assistant_turn(%s, %s, %s, null, %s::jsonb, %s::jsonb, %s, %s, 'test', 'fake', '{}'::jsonb)"
 
 
 def _log(w: World, who: str, org, status: str = "answered", tin: int = 100, tout: int = 50):  # type: ignore[no-untyped-def]
     w.as_(who)
-    return w.db.one(LOG, (org, "Which stations are stale?", status, json.dumps({"observed": []}), "[]", tin, tout))
+    return w.db.one(
+        LOG,
+        (org, "Which stations are stale?", status, json.dumps({"observed": []}), "[]", tin, tout),
+    )
 
 
 def test_off_by_default_and_reports_why(geo_world: World) -> None:
@@ -39,7 +40,9 @@ def test_only_admins_set_the_cap_and_values_are_bounded(geo_world: World) -> Non
         world.db.run("select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_b,))
     world.db.run("select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_a,))
     r = world.db.one("select public.assistant_begin(%s)", (world.org_a,))
-    assert r["allowed"] is True and r["remaining_tokens"] == 50000 and r["max_tokens_per_turn"] == 4000
+    assert (
+        r["allowed"] is True and r["remaining_tokens"] == 50000 and r["max_tokens_per_turn"] == 4000
+    )
 
 
 def test_cap_blocks_after_usage_and_shrinks_per_turn_budget(geo_world: World) -> None:
@@ -108,4 +111,7 @@ def test_cannot_forge_other_users_or_unknown_status(geo_world: World) -> None:
         world.db.run(LOG, (world.org_a, "q", "approved", "{}", "[]", 1, 1))
     tid = _log(world, "carol", world.org_a)
     world.db.su()
-    assert world.db.one("select user_id from public.assistant_turns where id = %s", (tid,)) == world.users["carol"]
+    assert (
+        world.db.one("select user_id from public.assistant_turns where id = %s", (tid,))
+        == world.users["carol"]
+    )
