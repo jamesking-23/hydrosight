@@ -517,3 +517,194 @@ describe("anthropic adapter (request shape only; live API unverified)", () => {
     ).rejects.toThrow(/429/);
   });
 });
+
+import {
+  fromParts,
+  geminiProvider,
+  geminiSchema,
+  toContents,
+} from "@/lib/assistant/gemini";
+import { providerFromEnv } from "@/lib/assistant/provider";
+
+describe("gemini adapter (request shape only; live API unconfirmed)", () => {
+  it("sends the key in a header, not the URL, strips unsupported schema keywords and reads usage", async () => {
+    let seen: { url: string; init: RequestInit } | undefined;
+    const fetchImpl = (async (url: string, init: RequestInit) => {
+      seen = { url, init };
+      return new Response(
+        JSON.stringify({
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    functionCall: { id: "f1", name: "list_stations", args: {} },
+                    thoughtSignature: "sig",
+                  },
+                ],
+              },
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 10,
+            candidatesTokenCount: 4,
+            thoughtsTokenCount: 6,
+          },
+        }),
+        { status: 200 },
+      );
+    }) as unknown as typeof fetch;
+    const p = geminiProvider({
+      apiKey: "KEY123",
+      model: "gemini-x",
+      fetchImpl,
+    });
+    const r = await p.step({
+      system: "sys",
+      messages: [{ role: "user", content: "q" }],
+      tools: [
+        {
+          name: "t",
+          description: "d",
+          input_schema: {
+            type: "object",
+            properties: { h: { type: "integer", minimum: 1 } },
+            additionalProperties: false,
+          },
+        },
+      ],
+      maxTokens: 99999,
+    });
+    expect(seen!.url).not.toContain("KEY123");
+    expect(
+      (seen!.init.headers as Record<string, string>)["x-goog-api-key"],
+    ).toBe("KEY123");
+    const body = JSON.parse(String(seen!.init.body));
+    expect(body.generationConfig.maxOutputTokens).toBe(4000);
+    expect(JSON.stringify(body.tools)).not.toMatch(
+      /additionalProperties|minimum/,
+    );
+    expect(body.systemInstruction.parts[0].text).toBe("sys");
+    expect(r.usage).toEqual({ input: 10, output: 10 });
+    expect(r.content[0]).toMatchObject({
+      type: "tool_use",
+      id: "f1",
+      name: "list_stations",
+    });
+  });
+  it("returns thought signatures unchanged and answers function calls by name and id", () => {
+    const blocks = fromParts([
+      {
+        functionCall: { id: "f1", name: "get_sensor_status", args: {} },
+        thoughtSignature: "sig",
+      },
+      { functionCall: { name: "list_stations", args: {} } },
+    ]);
+    expect(blocks[1]).toMatchObject({ type: "tool_use", id: "call_0" });
+    const contents = toContents([
+      { role: "user", content: "q" },
+      { role: "assistant", content: blocks },
+      {
+        role: "user",
+        content: [
+          { type: "tool_result", tool_use_id: "f1", content: '{"records":[]}' },
+          {
+            type: "tool_result",
+            tool_use_id: "call_0",
+            content: '{"error":"x"}',
+            is_error: true,
+          },
+        ],
+      },
+    ]);
+    expect(contents[1]?.role).toBe("model");
+    expect(contents[1]?.parts[0]).toMatchObject({ thoughtSignature: "sig" });
+    expect(contents[2]?.parts[0]).toEqual({
+      functionResponse: {
+        id: "f1",
+        name: "get_sensor_status",
+        response: { result: { records: [] } },
+      },
+    });
+    expect(contents[2]?.parts[1]).toMatchObject({
+      functionResponse: {
+        name: "list_stations",
+        response: { error: { error: "x" } },
+      },
+    });
+  });
+  it("skips thought parts, and fails on a blocked or failed request", async () => {
+    expect(
+      fromParts([{ text: "t", thought: true }, { text: "hello" }]),
+    ).toHaveLength(1);
+    const blocked = (async () =>
+      new Response(
+        JSON.stringify({ promptFeedback: { blockReason: "SAFETY" } }),
+        { status: 200 },
+      )) as unknown as typeof fetch;
+    await expect(
+      geminiProvider({ apiKey: "k", model: "m", fetchImpl: blocked }).step({
+        system: "",
+        messages: [],
+        tools: [],
+        maxTokens: 10,
+      }),
+    ).rejects.toThrow(/no content/);
+    const bad = (async () =>
+      new Response("no", { status: 400 })) as unknown as typeof fetch;
+    await expect(
+      geminiProvider({ apiKey: "k", model: "m", fetchImpl: bad }).step({
+        system: "",
+        messages: [],
+        tools: [],
+        maxTokens: 10,
+      }),
+    ).rejects.toThrow(/400/);
+  });
+  it("geminiSchema leaves supported keywords alone", () => {
+    expect(
+      geminiSchema({
+        type: "object",
+        properties: { a: { type: "string", enum: ["x"] } },
+        required: ["a"],
+      }),
+    ).toEqual({
+      type: "object",
+      properties: { a: { type: "string", enum: ["x"] } },
+      required: ["a"],
+    });
+  });
+});
+
+describe("providerFromEnv", () => {
+  it("needs provider, model and the matching key; never guesses a model", () => {
+    expect(providerFromEnv({})).toBeNull();
+    expect(
+      providerFromEnv({ ASSISTANT_PROVIDER: "gemini", GEMINI_API_KEY: "k" }),
+    ).toBeNull();
+    expect(
+      providerFromEnv({ ASSISTANT_PROVIDER: "gemini", ASSISTANT_MODEL: "m" }),
+    ).toBeNull();
+    expect(
+      providerFromEnv({
+        ASSISTANT_PROVIDER: "gemini",
+        ASSISTANT_MODEL: "m",
+        GEMINI_API_KEY: "k",
+      })?.name,
+    ).toBe("gemini");
+    expect(
+      providerFromEnv({
+        ASSISTANT_PROVIDER: "anthropic",
+        ASSISTANT_MODEL: "m",
+        ANTHROPIC_API_KEY: "k",
+      })?.name,
+    ).toBe("anthropic");
+    expect(
+      providerFromEnv({
+        ASSISTANT_PROVIDER: "gemini",
+        ASSISTANT_MODEL: "m",
+        ANTHROPIC_API_KEY: "k",
+      }),
+    ).toBeNull();
+  });
+});

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { anthropicProvider } from "@/lib/assistant/anthropic";
 import { runAssistant } from "@/lib/assistant/engine";
+import { providerFromEnv } from "@/lib/assistant/provider";
 import { supabaseData } from "@/lib/assistant/supabase-data";
 import type { TurnResult } from "@/lib/assistant/types";
 import { createClient } from "@/lib/supabase/server";
@@ -99,21 +99,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY ?? "";
-  const model = process.env.ASSISTANT_MODEL ?? "";
-  if (!apiKey || !model) {
+  const provider = providerFromEnv(process.env);
+  if (!provider) {
     await log("not_configured", "model_not_configured");
     return json(
       {
         status: "not_configured",
         message:
-          "The language model is not configured on this deployment (ANTHROPIC_API_KEY and ASSISTANT_MODEL).",
+          "The language model is not configured on this deployment (ASSISTANT_PROVIDER, ASSISTANT_MODEL and the matching API key).",
       },
       503,
     );
   }
 
-  const provider = anthropicProvider({ apiKey, model });
   const result = await runAssistant({
     provider,
     data: supabaseData(sb),

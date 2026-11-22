@@ -34,4 +34,5 @@ Status after Phase 2: nothing external is integrated. OSM raster tiles are used 
 ## Phase 8 update
 | Source | Use | Integrated | Status |
 |---|---|---|---|
-| Claude API (Anthropic) | Language model for the data assistant | Adapter built; NOT called live | Needs owner API key and model choice; terms, pricing and data handling UNVERIFIED by this build |
+| Gemini API (Google), model `gemini-3.8-flash` | Language model for the data assistant | Adapter built; NOT called live (build environment cannot reach it) | Free tier per Google pricing page; free-tier content used to improve Google products; limits and terms UNVERIFIED |
+| Claude API (Anthropic) | Optional alternative model | Adapter built; not configured | Paid; terms UNVERIFIED |

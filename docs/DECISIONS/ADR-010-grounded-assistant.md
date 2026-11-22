@@ -8,7 +8,7 @@ Status: accepted (Phase 8). Owner review pending.
 - The model must finish by calling `submit_answer` with Observed, Forecast, Assumptions and Not known. The server rejects an answer if a citation was not returned by a tool in the same turn, if a forecast cites a non-prediction or an observation cites a prediction, or if any section contains warning, evacuation or safety language. One correction is allowed. Free text is never shown. Timestamps shown come from the cited records.
 - Community text is sanitised, wrapped in `untrusted_text`, flagged if instruction-like, and logged. Because tools are read-only and the validator is independent of the model, an obeying model still cannot act or publish advice.
 - Off by default per organisation. An org admin must set a daily token cap (no default). Caps are in tokens, not money. Every question, tool call and token count is logged in an append-only table. A turn that cannot be logged is not delivered.
-- The model adapter is a small interface; Anthropic is the only implementation and its model name has no default.
+- The model adapter is a small interface with two implementations, Gemini (chosen by the owner for its free tier) and Anthropic. The provider and model come from deployment settings and have no default. Model parts are kept verbatim in the conversation so Gemini thought signatures are returned unchanged.
 
 ## Alternatives considered
 - Python service with a service-role database connection: rejected; it would bypass RLS and need its own permission checks.

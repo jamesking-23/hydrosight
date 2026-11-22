@@ -46,12 +46,13 @@ export interface ToolResult {
 }
 
 export type Block =
-  | { type: "text"; text: string }
+  | { type: "text"; text: string; raw?: unknown }
   | {
       type: "tool_use";
       id: string;
       name: string;
       input: Record<string, unknown>;
+      raw?: unknown;
     }
   | {
       type: "tool_result";
