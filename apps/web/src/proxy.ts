@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_KEY, SUPABASE_URL, isSupabaseConfigured } from "@/lib/supabase/env";
 
-const PROTECTED = ["/dashboard", "/org", "/mfa", "/invite", "/map", "/alerts", "/rules", "/monitor", "/devices", "/moderation", "/forecasts", "/analytics", "/assets"];
+const PROTECTED = ["/dashboard", "/org", "/mfa", "/invite", "/map", "/alerts", "/rules", "/monitor", "/devices", "/moderation", "/forecasts", "/analytics", "/assets", "/assistant"];
 
 // Refreshes the Supabase session cookie and sends signed-out visitors to /login.
 // This is a convenience only: every real permission check happens in the database (RLS).

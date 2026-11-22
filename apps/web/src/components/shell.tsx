@@ -30,6 +30,9 @@ export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
             <Link href="/forecasts" className="font-semibold hover:text-ocean">
               Forecasts
             </Link>
+            <Link href="/assistant" className="font-semibold hover:text-ocean">
+              Assistant
+            </Link>
             <Link href="/analytics" className="font-semibold hover:text-ocean">
               Analytics
             </Link>
