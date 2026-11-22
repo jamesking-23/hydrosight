@@ -31,13 +31,14 @@ def test_off_by_default_and_reports_why(geo_world: World) -> None:
 def test_only_admins_set_the_cap_and_values_are_bounded(geo_world: World) -> None:
     world = geo_world
     world.as_("carol")
-    with fails(NoPerm):
-        world.db.run("select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_a,))
+    fails(
+        world.db, NoPerm, "select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_a,)
+    )
     world.as_("alice")
-    with fails(Check):
-        world.db.run("select public.set_assistant_limit(%s, true, 10, 4000)", (world.org_a,))
-    with fails(NoPerm):
-        world.db.run("select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_b,))
+    fails(world.db, Check, "select public.set_assistant_limit(%s, true, 10, 4000)", (world.org_a,))
+    fails(
+        world.db, NoPerm, "select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_b,)
+    )
     world.db.run("select public.set_assistant_limit(%s, true, 50000, 4000)", (world.org_a,))
     r = world.db.one("select public.assistant_begin(%s)", (world.org_a,))
     assert (
@@ -73,23 +74,21 @@ def test_roles_without_permission_cannot_use_or_log(geo_world: World) -> None:
     world = geo_world
     for who in ("dave", "frank"):  # community_member, field_technician
         world.as_(who)
-        with fails(NoPerm):
-            world.db.run("select public.assistant_begin(%s)", (world.org_a,))
-        with fails(NoPerm):
-            world.db.run(LOG, (world.org_a, "q", "answered", "{}", "[]", 1, 1))
+        fails(world.db, NoPerm, "select public.assistant_begin(%s)", (world.org_a,))
+        fails(world.db, NoPerm, LOG, (world.org_a, "q", "answered", "{}", "[]", 1, 1))
     world.as_("bob")
-    with fails(NoPerm):  # another organisation's admin
-        world.db.run("select public.assistant_begin(%s)", (world.org_a,))
+    # another organisation's admin
+    fails(world.db, NoPerm, "select public.assistant_begin(%s)", (world.org_a,))
 
 
 def test_log_is_append_only_even_for_superuser(geo_world: World) -> None:
     world = geo_world
     tid = _log(world, "carol", world.org_a)
     world.db.su()
-    with fails(NoPerm):
-        world.db.run("update public.assistant_turns set question = 'x' where id = %s", (tid,))
-    with fails(NoPerm):
-        world.db.run("delete from public.assistant_turns where id = %s", (tid,))
+    fails(
+        world.db, NoPerm, "update public.assistant_turns set question = 'x' where id = %s", (tid,)
+    )
+    fails(world.db, NoPerm, "delete from public.assistant_turns where id = %s", (tid,))
 
 
 def test_turn_visibility_own_for_users_all_for_admin_none_cross_tenant(geo_world: World) -> None:
@@ -107,8 +106,7 @@ def test_turn_visibility_own_for_users_all_for_admin_none_cross_tenant(geo_world
 def test_cannot_forge_other_users_or_unknown_status(geo_world: World) -> None:
     world = geo_world
     world.as_("carol")
-    with fails(Check):
-        world.db.run(LOG, (world.org_a, "q", "approved", "{}", "[]", 1, 1))
+    fails(world.db, Check, LOG, (world.org_a, "q", "approved", "{}", "[]", 1, 1))
     tid = _log(world, "carol", world.org_a)
     world.db.su()
     assert (
