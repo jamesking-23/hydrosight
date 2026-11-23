@@ -167,7 +167,7 @@ def test_missing_limit_means_zero_and_null_means_unlimited(geo_world: World) -> 
     _platform(w)
     _plan(w, "zero", {}, ["map"])
     _plan(w, "open", {"locations": None}, ["map"])
-    ins = f"insert into public.stations (org_id, code, name, geom, source_type) values (%s, 'Z', 'Z', {POINT}, 'measured')"
+    ins = f"insert into public.stations (org_id, code, name, geom, source_type) values (%s, 'ZZ', 'ZZ', {POINT}, 'measured')"
     w.as_("grace")
     w.db.run("select public.assign_plan(%s, 'zero', 'active', null, null)", (w.org_a,))
     w.db.su()

@@ -116,7 +116,7 @@ create table public.invoices (
   created_at        timestamptz not null default now(),
   check (period_end >= period_start),
   check (total = subtotal + tax_amount),
-  check (status = 'draft' or (number is not null and issued_at is not null and jsonb_array_length(lines) > 0)),
+  check (status in ('draft', 'void') or (number is not null and issued_at is not null and jsonb_array_length(lines) > 0)),
   check (status <> 'paid' or (paid_at is not null and length(btrim(coalesce(payment_reference, ''))) >= 3
                               and length(btrim(coalesce(payment_method, ''))) >= 2)),
   check (status <> 'void' or length(btrim(coalesce(void_reason, ''))) >= 5)
