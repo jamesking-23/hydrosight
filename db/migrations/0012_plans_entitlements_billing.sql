@@ -517,6 +517,13 @@ grant execute on function public.update_demo_request(uuid, text, text),
   to authenticated;
 -- assistant_begin keeps its 0011 grants (create or replace preserves them).
 
+-- Lets the web app know whether to show the platform screens (the screens themselves are still gated by RLS).
+create function public.my_platform_access() returns boolean
+language sql stable security definer set search_path = ''
+as $$ select private.is_platform_member(); $$;
+revoke all on function public.my_platform_access() from public, anon, authenticated, service_role;
+grant execute on function public.my_platform_access() to authenticated;
+
 -- DOWN:
 --   drop trigger assets_plan_gate on public.assets; drop trigger memberships_plan_limit on public.memberships;
 --   drop trigger sensors_plan_limit on public.sensors; drop trigger stations_plan_limit on public.stations;
