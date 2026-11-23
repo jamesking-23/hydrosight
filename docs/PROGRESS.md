@@ -99,4 +99,8 @@ Applied to Supabase: yes. CI: green.
 ## Phase 8: grounded AI assistant - BUILT 2026-11-22
 Built: migration `0011` (per-org switch and token cap, append-only turn log); eight read-only tools running as the signed-in person; answer validator (Observed / Forecast / Assumptions / Not known, citations must exist, no advice or safety claims); community-text injection defence; Claude adapter; `/api/assistant`; `/assistant` screen with admin limits; ADR-010. Not run against the live Claude API (no key). Not built: fact-level checking of numbers in sentences; spatial "downstream communities" reasoning.
 
-## Next: waiting for owner's "proceed" (Phase 9).
+## Phase 9: public website, plans and entitlements - BUILT 2026-11-23
+Built: migrations `0012` (demo intake, plans, limits, features, assignments, invoices, entitlements, DB-enforced limits and gates) and `0013` (platform organisation list); public pages (home refreshed, about, capabilities, solutions, industries, technology, plans, contact, demo); demo form and `/api/demo`; `/platform` (demo inbox, plans, assignments, invoices); `/billing` with printable invoices; plan gating on analytics, forecasts, assets and assistant; payment-provider interface with no live provider; ADR-011; `docs/PAYMENTS_RESEARCH.md`.
+Applied to Supabase: `0012` yes; `0013` see report. Not built: a live payment provider, owner email notification, usage history, a header link to `/platform`.
+
+## Next: waiting for owner's "proceed" (Phase 10).

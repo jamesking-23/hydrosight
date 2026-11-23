@@ -67,3 +67,12 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - Review what was asked and answered: `select created_at, user_id, question, status, refusal_reason, tool_calls, flags from public.assistant_turns order by created_at desc;` (org admins see all turns). `flags.instruction_like_reports > 0` means a community report tried to instruct the assistant.
 - A refusal reason `advice_not_permitted` means the draft answer contained a warning, evacuation advice or a safety statement and was withheld.
 - Cap resets at 00:00 UTC. To stop the assistant at once, set the switch off.
+
+## Plans, billing and demo requests (Phase 9)
+- Public pages: `/about`, `/capabilities`, `/solutions`, `/industries`, `/technology`, `/plans`, `/contact`, `/demo`.
+- Make yourself platform staff once (SQL editor, replace the email): `insert into public.platform_memberships (user_id, role_key) select id, 'platform_admin' from auth.users where email = 'you@example.org';`. Then sign in and open `/platform` (it requires sign-in; it is not linked in the header).
+- Demo requests: read and mark them in `/platform`. No email is sent when one arrives; check the inbox page. Duplicate emails within a day count once; more than 30 requests in an hour are refused.
+- Plans: create in `/platform`. Leave a limit blank to allow none; type `unlimited` to allow any number. Tick Published to show it on `/plans`. Assign to an organisation with a status (trial, active, suspended, ended) and an optional end date.
+- To stop an organisation adding records: set its status to `suspended`. Existing data stays. To remove limits entirely, delete its `org_plans` row (it becomes unmanaged).
+- Invoices: create a draft (amounts typed in), Issue (assigns `HS-YYYY-NNNNNN`), then Mark paid with a method and reference after you receive money, or Void with a reason. Issued invoices cannot be edited. Customers see issued invoices at `/billing` (org admins only) and can print them.
+- Online payment is not available. `PAYMENT_PROVIDER=manual` only changes the wording; no other value does anything.

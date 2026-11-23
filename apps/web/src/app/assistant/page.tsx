@@ -2,6 +2,7 @@ import { AssistantLimit } from "@/components/assistant-limit";
 import { AssistantPanel } from "@/components/assistant-panel";
 import { Shell } from "@/components/shell";
 import { ErrorNote } from "@/components/ui";
+import { blockedMessage } from "@/lib/entitlements";
 import { loadAccess, permissionsInOrg } from "@/lib/load-access";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,15 @@ export default async function Assistant({
   const want = Array.isArray(sp.org) ? sp.org[0] : sp.org;
   const orgs = a.memberships.map((m) => m.org_id as string);
   const orgId = want && orgs.includes(want) ? want : (orgs[0] ?? null);
+  const blocked = orgId
+    ? await blockedMessage(a.supabase, [orgId], "assistant")
+    : null;
+  if (blocked)
+    return (
+      <Shell title="Assistant" signedInAs={a.user.email ?? undefined}>
+        <ErrorNote>{blocked}</ErrorNote>
+      </Shell>
+    );
   const perms = orgId ? permissionsInOrg(orgId, a) : new Set<string>();
   const lim =
     orgId && (perms.has("assistant.manage") || perms.has("assistant.use"))

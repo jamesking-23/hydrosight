@@ -1,6 +1,7 @@
 import { ReportView } from "@/components/report-view";
 import { Shell } from "@/components/shell";
 import { ErrorNote, Field } from "@/components/ui";
+import { blockedMessage } from "@/lib/entitlements";
 import { loadAccess } from "@/lib/load-access";
 import { defaultWindow, loadAnalyticsReport } from "@/lib/report-data";
 
@@ -16,6 +17,17 @@ export default async function Analytics({
   searchParams: SP;
 }) {
   const a = await loadAccess("/analytics");
+  const blocked = await blockedMessage(
+    a.supabase,
+    a.memberships.map((m) => m.org_id as string),
+    "analytics",
+  );
+  if (blocked)
+    return (
+      <Shell title="Analytics" signedInAs={a.user.email ?? undefined}>
+        <ErrorNote>{blocked}</ErrorNote>
+      </Shell>
+    );
   const sp = await searchParams;
   const dw = defaultWindow();
   const q = {

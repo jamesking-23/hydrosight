@@ -1,11 +1,16 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SignOutButton } from "@/components/sign-out-button";
+import { NAV } from "@/lib/site-content";
 
 export function Logo({ className = "h-12" }: { className?: string }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src="/brand/hydrosight-logo.png" alt="HydroSight" className={`${className} w-auto`} />
+    <img
+      src="/brand/hydrosight-logo.png"
+      alt="HydroSight"
+      className={`${className} w-auto`}
+    />
   );
 }
 
@@ -51,11 +56,26 @@ export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
             <Link href="/moderation" className="font-semibold hover:text-ocean">
               Moderation
             </Link>
+            <Link href="/billing" className="font-semibold hover:text-ocean">
+              Billing
+            </Link>
             <span className="hidden text-muted sm:inline">{signedInAs}</span>
             <SignOutButton />
           </nav>
         ) : (
-          <nav className="flex items-center gap-4 text-sm font-semibold">
+          <nav className="flex flex-wrap items-center gap-4 text-sm font-semibold">
+            {NAV.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className="hidden hover:text-ocean md:inline"
+              >
+                {n.label}
+              </Link>
+            ))}
+            <Link href="/demo" className="hover:text-ocean">
+              Request a demo
+            </Link>
             <Link href="/login" className="hover:text-ocean">
               Sign in
             </Link>
@@ -70,8 +90,9 @@ export function SiteFooter() {
   return (
     <footer className="mt-16 border-t border-line">
       <p className="mx-auto max-w-5xl px-6 py-6 text-sm text-muted">
-        HydroSight is decision-support software. Forecasts and risk estimates are advisory until
-        validated for your area, and public warnings are issued only after human approval.
+        HydroSight is decision-support software. Forecasts and risk estimates
+        are advisory until validated for your area, and public warnings are
+        issued only after human approval.
       </p>
     </footer>
   );
@@ -91,8 +112,12 @@ export function Shell({
   return (
     <>
       <SiteHeader signedInAs={signedInAs} />
-      <main className={`mx-auto ${wide ? "max-w-7xl" : "max-w-5xl"} px-6 py-10`}>
-        {title ? <h1 className="mb-8 text-3xl font-extrabold">{title}</h1> : null}
+      <main
+        className={`mx-auto ${wide ? "max-w-7xl" : "max-w-5xl"} px-6 py-10`}
+      >
+        {title ? (
+          <h1 className="mb-8 text-3xl font-extrabold">{title}</h1>
+        ) : null}
         {children}
       </main>
       <SiteFooter />
@@ -102,9 +127,13 @@ export function Shell({
 
 export function NotConfigured() {
   return (
-    <p role="alert" className="rounded-md border border-src-synthetic/50 bg-src-synthetic/5 p-4">
-      Sign-in is not available: the Supabase connection is not configured on this deployment
-      (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY).
+    <p
+      role="alert"
+      className="rounded-md border border-src-synthetic/50 bg-src-synthetic/5 p-4"
+    >
+      Sign-in is not available: the Supabase connection is not configured on
+      this deployment (NEXT_PUBLIC_SUPABASE_URL /
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY).
     </p>
   );
 }

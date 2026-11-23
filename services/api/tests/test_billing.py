@@ -302,3 +302,12 @@ def test_invoice_input_rules_and_roles(geo_world: World) -> None:
     iid = w.db.one(DRAFT, (w.org_a, LINES))
     w.db.run("select public.void_invoice(%s, 'wrong customer')", (iid,))
     fails(w.db, BadInput, "select public.issue_invoice(%s)", (iid,))
+
+
+def test_platform_org_list_is_platform_only(geo_world: World) -> None:
+    w = geo_world
+    _platform(w)
+    w.as_("grace")
+    assert w.db.one("select count(*) from public.platform_orgs()") >= 1
+    w.as_("alice")  # an ordinary organisation member
+    fails(w.db, NoPerm, "select * from public.platform_orgs()")

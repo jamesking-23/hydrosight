@@ -41,5 +41,7 @@ Assets: elevation, waterway distance and hazard intersection come only from supp
 
 Assistant: read-only tools run as the signed-in person; answers use Observed / Forecast / Assumptions / Not known with citations that must exist; it never issues warnings, evacuation advice or "safe" statements; community text is untrusted; off by default with a token cap per organisation; every turn is logged.
 
+Plans: no price, plan name or limit is ever invented; plans are published by the platform owner and a price needs amount, currency, interval and basis. Limits and feature gates are enforced in the database (missing limit = 0, NULL = unlimited, no plan = unmanaged). Invoices are typed in, never calculated; issued ones are immutable. No payment provider is connected and no payment claim is made until one is verified. Platform roles see only demo requests, plans, assignments, invoices and organisation names.
+
 ## Current state
 See `docs/PROGRESS.md`.

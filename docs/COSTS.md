@@ -37,3 +37,7 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 8
 - The assistant uses the Gemini API on its free tier (rate limits apply and are UNVERIFIED here; free-tier content may be used by Google to improve its products, so it is for demo data only). A Claude adapter exists but is paid. Nothing is called until an org admin switches it on and sets a daily token cap; there is no default. A typical question may use several thousand tokens (tool results are included); measure before setting caps. No price is assumed anywhere in the code.
 - No new dependency (the model is called with `fetch`). Turn log rows are small.
+
+## Phase 9
+- No new dependency and no paid service. No payment provider is connected, so no payment fees exist yet; provider fees are UNVERIFIED (see `docs/PAYMENTS_RESEARCH.md`).
+- Demo requests and invoices are small rows in Supabase. Owner email notification is off until an email provider is verified (a free tier may exist; not checked).

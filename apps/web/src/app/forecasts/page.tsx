@@ -8,12 +8,24 @@ import {
   type ModelRow,
   type PredictionRow,
 } from "@/lib/forecast";
+import { blockedMessage } from "@/lib/entitlements";
 import { loadAccess } from "@/lib/load-access";
 
 export const dynamic = "force-dynamic";
 
 export default async function Forecasts() {
   const a = await loadAccess("/forecasts");
+  const blocked = await blockedMessage(
+    a.supabase,
+    a.memberships.map((m) => m.org_id as string),
+    "forecasts",
+  );
+  if (blocked)
+    return (
+      <Shell title="Forecasts" signedInAs={a.user.email ?? undefined}>
+        <ErrorNote>{blocked}</ErrorNote>
+      </Shell>
+    );
   const since = hoursAgoIso(7 * 24);
   const [preds, models, tests, stations] = await Promise.all([
     a.supabase

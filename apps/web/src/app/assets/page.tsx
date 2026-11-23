@@ -2,6 +2,7 @@ import { AssetFormView } from "@/components/asset-form";
 import { ReportView } from "@/components/report-view";
 import { Shell } from "@/components/shell";
 import { ErrorNote } from "@/components/ui";
+import { blockedMessage } from "@/lib/entitlements";
 import { loadAccess, permissionsInOrg } from "@/lib/load-access";
 import { loadAssetsReport } from "@/lib/report-data";
 
@@ -19,6 +20,15 @@ export default async function Assets({ searchParams }: { searchParams: SP }) {
     one(sp.org) && orgs.includes(one(sp.org) as string)
       ? (one(sp.org) as string)
       : (orgs[0] ?? null);
+  const blocked = orgId
+    ? await blockedMessage(a.supabase, [orgId], "assets")
+    : null;
+  if (blocked)
+    return (
+      <Shell title="Assets and exposure" signedInAs={a.user.email ?? undefined}>
+        <ErrorNote>{blocked}</ErrorNote>
+      </Shell>
+    );
   const names = orgId
     ? await a.supabase.from("organizations").select("id, name").in("id", orgs)
     : null;

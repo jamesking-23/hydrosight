@@ -86,6 +86,17 @@ export async function POST(req: NextRequest) {
     });
 
   if (!b.allowed) {
+    if (b.reason === "not_in_plan") {
+      await log("not_configured", "not_in_plan");
+      return json(
+        {
+          status: "not_enabled",
+          message:
+            "The assistant is not included in this organisation's plan. Contact HydroSight to change the plan.",
+        },
+        403,
+      );
+    }
     const capped = b.reason === "daily_cap_reached";
     await log(capped ? "capped" : "not_configured", b.reason ?? "not_enabled");
     return json(

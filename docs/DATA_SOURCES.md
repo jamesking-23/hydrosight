@@ -36,3 +36,6 @@ Status after Phase 2: nothing external is integrated. OSM raster tiles are used 
 |---|---|---|---|
 | Gemini API (Google), model `gemini-3.8-flash` | Language model for the data assistant | Adapter built; NOT called live (build environment cannot reach it) | Free tier per Google pricing page; free-tier content used to improve Google products; limits and terms UNVERIFIED |
 | Claude API (Anthropic) | Optional alternative model | Adapter built; not configured | Paid; terms UNVERIFIED |
+
+## Phase 9 update
+No data source added. Plans, limits, prices and invoices are entered by the platform owner. No third-party pricing or payment data is used or displayed.

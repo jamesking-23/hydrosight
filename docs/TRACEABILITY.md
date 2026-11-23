@@ -92,3 +92,12 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-AI-006 | Stale, offline or missing data is stated; empty tool results lead to "not known", not a guess | `answer.ts`, `tools.ts` | `tests/assistant.test.ts` |
 | HS-AI-007 | No warnings, evacuation advice or safety claims; no tool can create, approve or publish alerts | `answer.ts`, `tools.ts` | `tests/assistant.test.ts` |
 | HS-AI-008 | Community text is sanitised, wrapped, flagged and logged; an obeying model is still stopped by the validator | `untrusted.ts`, `answer.ts` | `tests/assistant.test.ts` |
+| HS-BIL-001 | Demo requests are stored with consent, deduplicated, rate-capped, no IP or device data; only platform staff read them | `0012` `submit_demo_request`, `api/demo/route.ts`, `demo-request.ts` | `tests/test_billing.py`, `tests/billing.test.ts` |
+| HS-BIL-002 | Plans start unpublished; a price needs amount, currency, interval and basis; the public sees only published plans | `0012` `plans`, `save_plan`, RLS | `tests/test_billing.py` |
+| HS-BIL-003 | Plan limits are enforced by the database on insert; missing limit = 0, NULL = unlimited; users counted once | `0012` triggers `enforce_limit` | `tests/test_billing.py` |
+| HS-BIL-004 | An organisation with no plan is unmanaged and not gated; a suspended, ended or expired plan blocks new records and never deletes | `0012` `org_plan_in_force` | `tests/test_billing.py` |
+| HS-BIL-005 | Feature gating for assets and the assistant, with a clear on-screen reason | `0012`, `entitlements.ts` | `tests/test_billing.py`, `tests/billing.test.ts` |
+| HS-BIL-006 | Invoices are typed in, issued ones are immutable and undeletable, paid needs method and reference, void needs a reason | `0012` `invoice_guard` | `tests/test_billing.py` |
+| HS-BIL-007 | No payment provider is connected; the UI makes no payment claim; only `manual` or `none` can be selected | `lib/payments/` | `tests/billing.test.ts` |
+| HS-BIL-008 | Platform roles see only demo requests, plans, assignments, invoices and organisation names | `0012`, `0013` `platform_orgs` | `tests/test_billing.py` |
+| HS-WEB-001 | Public copy makes no accuracy, lead-time, price, customer or partner claims | `lib/site-content.ts` | `tests/billing.test.ts` |

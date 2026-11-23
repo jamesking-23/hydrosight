@@ -125,3 +125,15 @@ Everything measured so far is synthetic. To produce a real backtest the owner mu
 - The daily cap is checked before a question, so one question can overshoot it. Prompt-injection defences have been tested with scripted models only, not with a real model.
 - The assistant does not answer questions that need spatial reasoning beyond the stored exposure indicators (for example "communities downstream of River X"); no such data layer exists.
 - Questions are logged in full. Confirm the notice to users and a retention period with a data-protection review.
+
+## Phase 9
+- NEEDS OWNER: plan names, limits, features and prices (with currency, interval and basis). None is invented; the Plans page says plans are being finalised until you publish some in `/platform`.
+- NEEDS OWNER: add yourself to `public.platform_memberships` (role `platform_admin`) so `/platform` works (see RUNBOOK). Until then nobody can read demo requests.
+- NEEDS OWNER: company details for the About and Contact pages (legal name, registered address, public email and phone). Nothing is invented; the pages say these will be added. Also whether any person may be named publicly.
+- UNVERIFIED: payment provider choice, fees, onboarding documents, licence status and MTN/Airtel direct integration (see `docs/PAYMENTS_RESEARCH.md`). No online payment is offered.
+- UNVERIFIED: owner notification of new demo requests. No email provider is verified, so nothing is sent; requests wait in `/platform`. Decide on an email provider and sender domain.
+- LEGAL REVIEW: the demo-form consent text (`CONSENT_TEXT`, version `demo-2026-11-draft`) and a privacy notice for submitted details; retention period for demo requests.
+- POLICY: organisations without a plan are unlimited ("unmanaged"). Confirm that is right for existing pilots, or assign every organisation a plan.
+- LIMITATION: usage history is not stored (live counts only), so there is no usage-over-time report. A suspended plan blocks new records only; it does not hide data or stop alerts.
+- LIMITATION: the Platform screen does not appear in the header; open `/platform` directly. Tax and totals are typed in; HydroSight checks only that total = subtotal + tax.
+- UNVERIFIED: the public pages and `/platform` have not been viewed with a real sign-in; the DB tests for 0012 and 0013 run in CI.
