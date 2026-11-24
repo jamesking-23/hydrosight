@@ -336,7 +336,7 @@ export function StationMap({
             ["catchments", catchments.length ? `Catchments (${catchments.length})` : "Catchments: none loaded yet"],
             ["reports", `Community reports, unverified (${reports.length}, last 72 h)`],
           ] as const).map(([key, label]) => (
-            <label key={key} className="flex items-center gap-2 py-0.5 text-sm">
+            <label key={key} className="flex items-center gap-2 py-1.5 text-sm">
               <input type="checkbox" checked={layers[key]} onChange={(e) => setLayers({ ...layers, [key]: e.target.checked })} />
               {label}
             </label>
@@ -399,7 +399,7 @@ export function StationMap({
 
       <div className="space-y-4">
         <div className="relative">
-          <div ref={el} className="h-[28rem] w-full overflow-hidden rounded-xl border border-line lg:h-[34rem]" role="region" aria-label="Map of monitoring stations" />
+          <div ref={el} className="h-[min(28rem,70dvh)] w-full overflow-hidden rounded-xl border border-line lg:h-[34rem]" role="region" aria-label="Map of monitoring stations" />
           {tileError && layers.basemap ? (
             <p role="alert" className="absolute left-3 top-3 rounded-md border border-src-synthetic/50 bg-white p-2 text-sm text-src-synthetic">
               Base map tiles could not be loaded. Stations are still shown, without a background map.
@@ -438,7 +438,7 @@ export function StationMap({
             {sensors === null && !sensorError ? <p className="text-sm text-muted" role="status">Loading sensors…</p> : null}
             {sensors && sensors.length === 0 ? <p className="text-sm text-muted">No sensors registered for this station.</p> : null}
             {sensors && sensors.length > 0 ? (
-              <table className="w-full text-left text-sm">
+              <div className="overflow-x-auto"><table className="w-full text-left text-sm">
                 <thead><tr><th className="py-1">Sensor</th><th>Status</th><th>Latest value</th><th>Expected every</th><th>Source</th></tr></thead>
                 <tbody>
                   {sensors.map((s) => (
@@ -451,7 +451,7 @@ export function StationMap({
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             ) : null}
             {sensors && sensors.length > 0 && sensors.every((s) => !s.last_observed_at) ? (
               <p className="mt-3 text-sm text-muted">No readings have been received for this station, so no value is shown.</p>

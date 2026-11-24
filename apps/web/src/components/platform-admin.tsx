@@ -353,7 +353,7 @@ function PlanForm({
       />
       <Field label="Name" name="name" required maxLength={60} />
       <Field label="Description" name="description" />
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Field label="Locations limit" name="limit_locations" />
         <Field label="Sensors limit" name="limit_sensors" />
         <Field label="Users limit" name="limit_users" />
@@ -366,7 +366,7 @@ function PlanForm({
           </label>
         ))}
       </fieldset>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Field
           label="Price (optional)"
           name="price_amount"
@@ -433,7 +433,7 @@ function InvoiceForm({
           </option>
         ))}
       </select>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Field label="Period start" name="start" type="date" required />
         <Field label="Period end" name="end" type="date" required />
         <Field label="Due date" name="due" type="date" />

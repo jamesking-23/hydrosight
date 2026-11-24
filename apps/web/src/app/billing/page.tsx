@@ -101,7 +101,7 @@ export default async function Billing({ searchParams }: { searchParams: SP }) {
           </Card>
           <Card title="Invoices">
             {inv?.data && inv.data.length > 0 ? (
-              <table className="w-full text-left text-sm">
+              <div className="overflow-x-auto"><table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-line">
                     <th className="py-2">Number</th>
@@ -129,7 +129,7 @@ export default async function Billing({ searchParams }: { searchParams: SP }) {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             ) : (
               <p className="text-muted">No invoices yet.</p>
             )}

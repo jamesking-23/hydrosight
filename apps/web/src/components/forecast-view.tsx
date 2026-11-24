@@ -231,7 +231,7 @@ export function ForecastView({
                     {new Date(b.holdout_end).toLocaleDateString()},{" "}
                     {b.horizon_hours} h ahead, {b.n_forecasts} forecasts.
                   </p>
-                  <table className="mt-3 w-full text-sm">
+                  <div className="overflow-x-auto"><table className="mt-3 w-full text-sm">
                     <caption className="sr-only">Measured scores</caption>
                     <tbody>
                       <tr>
@@ -299,13 +299,13 @@ export function ForecastView({
                         </td>
                       </tr>
                     </tbody>
-                  </table>
+                  </table></div>
                   {b.reliability && b.reliability.length > 0 ? (
                     <details className="mt-3 text-sm">
                       <summary className="cursor-pointer font-semibold">
                         Reliability: forecast chance against what happened
                       </summary>
-                      <table className="mt-2 w-full text-xs">
+                      <div className="overflow-x-auto"><table className="mt-2 w-full text-xs">
                         <thead>
                           <tr>
                             <th className="text-left">Forecast chance</th>
@@ -327,7 +327,7 @@ export function ForecastView({
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </details>
                   ) : null}
                 </li>

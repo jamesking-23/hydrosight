@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SignOutButton } from "@/components/sign-out-button";
+import { AppNav, PublicNav, type NavGroup } from "@/components/site-nav";
 import { NAV } from "@/lib/site-content";
 
 export function Logo({ className = "h-12" }: { className?: string }) {
@@ -14,72 +15,60 @@ export function Logo({ className = "h-12" }: { className?: string }) {
   );
 }
 
+const APP_NAV: readonly NavGroup[] = [
+  {
+    title: "Overview",
+    links: [
+      { href: "/dashboard", label: "Dashboard" },
+      { href: "/map", label: "Map" },
+      { href: "/monitor", label: "Monitor" },
+    ],
+  },
+  {
+    title: "Intelligence",
+    links: [
+      { href: "/forecasts", label: "Forecasts" },
+      { href: "/analytics", label: "Analytics" },
+      { href: "/assistant", label: "Assistant" },
+    ],
+  },
+  {
+    title: "Warnings",
+    links: [
+      { href: "/alerts", label: "Alerts" },
+      { href: "/rules", label: "Rules" },
+      { href: "/moderation", label: "Moderation" },
+    ],
+  },
+  {
+    title: "Organisation",
+    links: [
+      { href: "/devices", label: "Devices" },
+      { href: "/assets", label: "Assets" },
+      { href: "/billing", label: "Billing" },
+    ],
+  },
+];
+
 export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
   return (
-    <header className="border-b border-line">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
-        <Link href="/" aria-label="HydroSight home">
-          <Logo />
+    <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-x-4 px-4 py-2 sm:px-6">
+        <Link
+          href="/"
+          aria-label="HydroSight home"
+          className="inline-flex w-fit"
+        >
+          <Logo className="h-9 sm:h-11" />
         </Link>
         {signedInAs ? (
-          <nav className="flex items-center gap-4 text-sm">
-            <Link href="/dashboard" className="font-semibold hover:text-ocean">
-              Dashboard
-            </Link>
-            <Link href="/map" className="font-semibold hover:text-ocean">
-              Map
-            </Link>
-            <Link href="/monitor" className="font-semibold hover:text-ocean">
-              Monitor
-            </Link>
-            <Link href="/forecasts" className="font-semibold hover:text-ocean">
-              Forecasts
-            </Link>
-            <Link href="/assistant" className="font-semibold hover:text-ocean">
-              Assistant
-            </Link>
-            <Link href="/analytics" className="font-semibold hover:text-ocean">
-              Analytics
-            </Link>
-            <Link href="/assets" className="font-semibold hover:text-ocean">
-              Assets
-            </Link>
-            <Link href="/alerts" className="font-semibold hover:text-ocean">
-              Alerts
-            </Link>
-            <Link href="/devices" className="font-semibold hover:text-ocean">
-              Devices
-            </Link>
-            <Link href="/rules" className="font-semibold hover:text-ocean">
-              Rules
-            </Link>
-            <Link href="/moderation" className="font-semibold hover:text-ocean">
-              Moderation
-            </Link>
-            <Link href="/billing" className="font-semibold hover:text-ocean">
-              Billing
-            </Link>
-            <span className="hidden text-muted sm:inline">{signedInAs}</span>
-            <SignOutButton />
-          </nav>
+          <AppNav
+            groups={APP_NAV}
+            signedInAs={signedInAs}
+            signOut={<SignOutButton />}
+          />
         ) : (
-          <nav className="flex flex-wrap items-center gap-4 text-sm font-semibold">
-            {NAV.map((n) => (
-              <Link
-                key={n.href}
-                href={n.href}
-                className="hidden hover:text-ocean md:inline"
-              >
-                {n.label}
-              </Link>
-            ))}
-            <Link href="/demo" className="hover:text-ocean">
-              Request a demo
-            </Link>
-            <Link href="/login" className="hover:text-ocean">
-              Sign in
-            </Link>
-          </nav>
+          <PublicNav links={NAV} />
         )}
       </div>
     </header>
@@ -89,7 +78,7 @@ export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
 export function SiteFooter() {
   return (
     <footer className="mt-16 border-t border-line">
-      <p className="mx-auto max-w-5xl px-6 py-6 text-sm text-muted">
+      <p className="mx-auto max-w-5xl px-4 py-6 text-sm text-muted sm:px-6">
         HydroSight is decision-support software. Forecasts and risk estimates
         are advisory until validated for your area, and public warnings are
         issued only after human approval.
@@ -113,10 +102,12 @@ export function Shell({
     <>
       <SiteHeader signedInAs={signedInAs} />
       <main
-        className={`mx-auto ${wide ? "max-w-7xl" : "max-w-5xl"} px-6 py-10`}
+        className={`mx-auto ${wide ? "max-w-7xl" : "max-w-5xl"} px-4 py-6 sm:px-6 sm:py-10`}
       >
         {title ? (
-          <h1 className="mb-8 text-3xl font-extrabold">{title}</h1>
+          <h1 className="mb-6 text-2xl font-extrabold sm:mb-8 sm:text-3xl">
+            {title}
+          </h1>
         ) : null}
         {children}
       </main>

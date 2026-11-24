@@ -44,7 +44,7 @@ export default async function InvoicePage({
         · status: {i.status}
         {i.status === "void" ? ` (${i.void_reason})` : ""}
       </p>
-      <table className="mt-6 w-full max-w-2xl text-left text-sm">
+      <div className="overflow-x-auto"><table className="mt-6 w-full max-w-2xl text-left text-sm">
         <thead>
           <tr className="border-b border-line">
             <th className="py-2">Description</th>
@@ -73,7 +73,7 @@ export default async function InvoicePage({
             <td className="text-right">{money(i.total, i.currency)}</td>
           </tr>
         </tbody>
-      </table>
+      </table></div>
       {i.due_at ? <p className="mt-4">Due {i.due_at}</p> : null}
       {i.status === "paid" ? (
         <p className="mt-2">

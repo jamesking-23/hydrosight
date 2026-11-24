@@ -7,7 +7,7 @@ export function Button({ className = "", ...p }: ButtonHTMLAttributes<HTMLButton
   return (
     <button
       {...p}
-      className={`rounded-md bg-ocean px-4 py-2 font-semibold text-white hover:bg-ocean-deep disabled:opacity-50 ${className}`}
+      className={`min-h-11 rounded-md bg-ocean px-4 py-2 font-semibold text-white hover:bg-ocean-deep disabled:opacity-50 ${className}`}
     />
   );
 }
@@ -16,7 +16,7 @@ export function GhostButton({ className = "", ...p }: ButtonHTMLAttributes<HTMLB
   return (
     <button
       {...p}
-      className={`rounded-md border border-[#b9cad8] bg-white px-3 py-1 text-sm font-semibold text-ink hover:border-ocean disabled:opacity-50 ${className}`}
+      className={`min-h-10 rounded-md border border-[#b9cad8] bg-white px-3 py-1 text-sm font-semibold text-ink hover:border-ocean disabled:opacity-50 ${className}`}
     />
   );
 }

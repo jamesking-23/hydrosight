@@ -43,7 +43,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
 
       {members?.data ? (
         <Card title="Members">
-          <table className="w-full text-left text-sm">
+          <div className="overflow-x-auto"><table className="w-full text-left text-sm">
             <thead><tr><th>Email</th><th>Role</th><th>Status</th>{canManage ? <th>Actions</th> : null}</tr></thead>
             <tbody>
               {members.data.map((m) => (
@@ -55,14 +55,14 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </Card>
       ) : null}
 
       {invites ? (
         <Card title="Invitations">
           <InviteForm orgId={orgId} roles={orgRoles.map((r) => ({ key: r.key, label: r.label }))} />
-          <table className="mt-5 w-full text-left text-sm">
+          <div className="overflow-x-auto"><table className="mt-5 w-full text-left text-sm">
             <thead><tr><th>Email</th><th>Role</th><th>Expires</th><th>State</th><th /></tr></thead>
             <tbody>
               {(invites.data ?? []).map((i) => {
@@ -75,14 +75,14 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
                 );
               })}
             </tbody>
-          </table>
+          </table></div>
         </Card>
       ) : null}
 
       {keys ? (
         <Card title="API keys">
           <ApiKeyForm orgId={orgId} scopes={grantable} />
-          <table className="mt-5 w-full text-left text-sm">
+          <div className="overflow-x-auto"><table className="mt-5 w-full text-left text-sm">
             <thead><tr><th>Name</th><th>Prefix</th><th>Scopes</th><th>Last used</th><th>State</th><th /></tr></thead>
             <tbody>
               {(keys.data ?? []).map((k) => {
@@ -96,7 +96,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
                 );
               })}
             </tbody>
-          </table>
+          </table></div>
         </Card>
       ) : null}
 
