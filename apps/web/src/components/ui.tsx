@@ -43,8 +43,8 @@ export function ErrorNote({ children }: { children: ReactNode }) {
 
 export function Card({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mb-8 border-t border-line pt-6">
-      <h2 className="mb-4 text-xl font-bold">{title}</h2>
+    <section className="mb-5 rounded-xl border border-line bg-white p-4 shadow-[0_1px_2px_rgba(11,31,51,0.04)] sm:p-5">
+      <h2 className="mb-3 text-xl font-bold sm:mb-4">{title}</h2>
       {children}
     </section>
   );

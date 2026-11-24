@@ -25,12 +25,12 @@ export function NetworkSummary({ sensors, devices }: { sensors: SensorStatusRow[
   const s = summariseSensors(sensors, now);
   const d = summariseDevices(devices, now);
   return (
-    <dl className="grid gap-4 sm:grid-cols-2">
-      <div>
+    <dl className="grid gap-3 sm:grid-cols-2">
+      <div className="rounded-lg bg-mist p-3">
         <dt className="font-semibold">Devices</dt>
         <dd>{devices.length === 0 ? "No devices registered." : `${d.online} online, ${d.degraded} degraded, ${d.offline} offline`}</dd>
       </div>
-      <div>
+      <div className="rounded-lg bg-mist p-3">
         <dt className="font-semibold">Sensors</dt>
         <dd>{sensors.length === 0 ? "No sensors." : `${s.live} live, ${s.stale} stale, ${s.offline} offline, ${s.never_reported} with no data`}</dd>
       </div>
@@ -42,7 +42,30 @@ export function SensorTable({ sensors, stationName }: { sensors: SensorStatusRow
   const now = useNow();
   if (sensors.length === 0) return <p>No sensors are visible to you yet.</p>;
   return (
-    <div className="overflow-x-auto">
+    <>
+    <ul className="space-y-3 md:hidden">
+      {sensors.map((s) => {
+        const f = classifyFreshness(s.last_observed_at, s.expected_interval_s, now);
+        return (
+          <li key={s.sensor_id} className="rounded-lg border border-line p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-semibold">{stationName[s.station_id] ?? "Station"}<span className="font-normal text-muted"> · {s.kind.replace("_", " ")}</span></p>
+              <Chip kind={f}>{FRESHNESS_LABELS[f]}</Chip>
+            </div>
+            <p className="mt-1 text-lg font-bold">
+              {f === "never_reported" ? "No data received" : formatValue(s.last_value, s.unit)}
+            </p>
+            {s.last_observed_at ? <p className="text-sm text-muted">{describeAge(s.last_observed_at, now)}{f === "live" ? "" : ", not a current value"}</p> : null}
+            {s.calibrated ? <p className="text-sm text-muted">Calibrated (raw {formatValue(s.last_raw_value, s.unit)})</p> : null}
+            <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              <SourceBadge source={s.source_type} />
+              <span>Quality: {s.last_quality ? QUALITY_LABEL[s.last_quality] ?? s.last_quality : "none"}</span>
+            </p>
+          </li>
+        );
+      })}
+    </ul>
+    <div className="hidden overflow-x-auto md:block">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-line">
@@ -71,6 +94,7 @@ export function SensorTable({ sensors, stationName }: { sensors: SensorStatusRow
         </tbody>
       </table>
     </div>
+    </>
   );
 }
 
@@ -78,7 +102,25 @@ export function DeviceTable({ devices }: { devices: DeviceRow[] }) {
   const now = useNow();
   if (devices.length === 0) return <p>No devices are registered. An administrator can add one on the Devices page.</p>;
   return (
-    <div className="overflow-x-auto">
+    <>
+    <ul className="space-y-3 md:hidden">
+      {devices.map((d) => {
+        const st = liveDeviceState(d, now);
+        const reasons = st === "offline" && d.last_seen_at ? [`no_contact_within_${d.offline_multiple}x_interval`] : st === "offline" ? ["never_reported"] : d.reasons ?? [];
+        return (
+          <li key={d.device_id} className="rounded-lg border border-line p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-semibold">{d.name}</p>
+              <Chip kind={st}>{DEVICE_LABEL[st]}</Chip>
+            </div>
+            <p className="mt-1 text-sm text-muted">Last contact: {d.last_seen_at ? describeAge(d.last_seen_at, now) : "never"}</p>
+            <p className="text-sm">Battery {d.battery_pct === null ? "unknown" : `${Math.round(d.battery_pct)}%`} · Signal {d.signal_dbm === null ? "unknown" : `${Math.round(d.signal_dbm)} dBm`}</p>
+            <p className="mt-1 text-sm">{reasons.map(reasonLabel).join(", ") || "No problems reported"}</p>
+          </li>
+        );
+      })}
+    </ul>
+    <div className="hidden overflow-x-auto md:block">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-line">
@@ -104,5 +146,6 @@ export function DeviceTable({ devices }: { devices: DeviceRow[] }) {
         </tbody>
       </table>
     </div>
+    </>
   );
 }
