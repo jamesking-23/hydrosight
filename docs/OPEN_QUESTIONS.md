@@ -137,3 +137,15 @@ Everything measured so far is synthetic. To produce a real backtest the owner mu
 - LIMITATION: usage history is not stored (live counts only), so there is no usage-over-time report. A suspended plan blocks new records only; it does not hide data or stop alerts.
 - LIMITATION: the Platform screen does not appear in the header; open `/platform` directly. Tax and totals are typed in; HydroSight checks only that total = subtotal + tax.
 - UNVERIFIED: the public pages and `/platform` have not been viewed with a real sign-in; the DB tests for 0012 and 0013 run in CI.
+
+## Phase 10
+- NEEDS OWNER: rotate the Gemini API key and revoke the GitHub token (both were shared in chat); then run a first live `/assistant` question.
+- NEEDS OWNER: set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` so scheduled jobs run.
+- NEEDS OWNER: choose recovery point and recovery time targets; schedule backups; confirm what the Supabase plan includes for backups (UNVERIFIED); run one restore from a real hosted backup.
+- NEEDS OWNER: enable leaked-password protection and review Supabase Auth settings.
+- NEEDS OWNER: sign off or close each OPEN row in `docs/PILOT_READINESS.md` (section 8).
+- LEGAL REVIEW: data-protection (Uganda DPPA 2019), consent texts, retention periods, access and deletion handling, processor terms with Supabase, Vercel and Google.
+- UNVERIFIED: rate-limit values (120 per key and 3000 overall per minute) are not tuned to real traffic.
+- UNVERIFIED: load figures come from the build sandbox, not the hosted setup.
+- LIMITATION: no script-src CSP; signed-in screens not audited for accessibility; no screen reader test; no Playwright end-to-end journeys; no independent penetration test; no uptime monitoring.
+- UNVERIFIED: hardware, communications and partner choices (`docs/IOT_SPEC.md` section 8). MQTT and LoRaWAN are design only.

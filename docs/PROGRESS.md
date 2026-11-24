@@ -103,4 +103,9 @@ Built: migration `0011` (per-org switch and token cap, append-only turn log); ei
 Built: migrations `0012` (demo intake, plans, limits, features, assignments, invoices, entitlements, DB-enforced limits and gates) and `0013` (platform organisation list); public pages (home refreshed, about, capabilities, solutions, industries, technology, plans, contact, demo); demo form and `/api/demo`; `/platform` (demo inbox, plans, assignments, invoices); `/billing` with printable invoices; plan gating on analytics, forecasts, assets and assistant; payment-provider interface with no live provider; ADR-011; `docs/PAYMENTS_RESEARCH.md`.
 Applied to Supabase: `0012` yes; `0013` see report. Not built: a live payment provider, owner email notification, usage history, a header link to `/platform`.
 
-## Next: waiting for owner's "proceed" (Phase 10).
+## Phase 10: hardening and pilot readiness - BUILT 2026-11-24
+Built: migration `0014` (database rate limiting) wired into ingest; security headers; dependency and contrast fixes; `scripts/` for backup, restore, timed restore drill, load test and accessibility audit; `docs/SECURITY_REVIEW.md`, `DISASTER_RECOVERY.md`, `PERFORMANCE.md`, `DATA_PROTECTION.md`, `IOT_SPEC.md`, `PILOT_READINESS.md`, expanded `RUNBOOK.md`; ADR-012.
+Measured: restore drill (573 MB, 2M readings) backup 3.4 s, restore 12.1 s, PASS, on a scratch server only. Load figures in `PERFORMANCE.md` (sandbox).
+Applied to Supabase: `0014` see report. Not done: independent pen test, real-backup restore, signed-in accessibility audit, script CSP, tuning.
+
+## Next: waiting for owner's "proceed". Phases 0-10 are built; the pilot checklist has open rows for the owner.

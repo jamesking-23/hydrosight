@@ -41,3 +41,8 @@ Entries are added, with a verified source for each price, as services are introd
 ## Phase 9
 - No new dependency and no paid service. No payment provider is connected, so no payment fees exist yet; provider fees are UNVERIFIED (see `docs/PAYMENTS_RESEARCH.md`).
 - Demo requests and invoices are small rows in Supabase. Owner email notification is off until an email provider is verified (a free tier may exist; not checked).
+
+## Phase 10
+- No new paid service and no new runtime dependency (one pnpm override). Axe-core and Playwright are used for audits only. The restore drill ran on a local Postgres.
+- Rate-limit counters are a small unlogged table; housekeeping deletes old windows.
+- Backup storage, uptime monitoring and a hosted restore test may cost money or need a paid plan: UNVERIFIED, not checked.

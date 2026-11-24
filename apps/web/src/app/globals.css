@@ -17,9 +17,9 @@
   --color-muted: #4a6176;
 
   /* Source-type badge colours (rule 2), all >= 4.5:1 on white */
-  --color-src-measured: #2f7a33;
+  --color-src-measured: #286d2c;
   --color-src-forecast: #1b5e9b;
-  --color-src-estimated: #8a6d0e;
+  --color-src-estimated: #7a5f0a;
   --color-src-community: #7a4aa8;
   --color-src-synthetic: #b3261e;
 

@@ -1,6 +1,6 @@
 # Runbook
 
-Stub. Expanded in Phase 10 (backups, restore drill, incident response).
+Operations guide. Phase 10 sections (incidents, backups, rate limits, load test, accessibility, requests about personal data, key rotation) are at the end.
 
 ## Local checks
 - `curl localhost:3000/health` and `/ready`; `curl localhost:8000/health` and `/ready`.
@@ -76,3 +76,36 @@ Set GitHub secret `DATABASE_URL` and variable `FORECAST_USER_AGENT` (real contac
 - To stop an organisation adding records: set its status to `suspended`. Existing data stays. To remove limits entirely, delete its `org_plans` row (it becomes unmanaged).
 - Invoices: create a draft (amounts typed in), Issue (assigns `HS-YYYY-NNNNNN`), then Mark paid with a method and reference after you receive money, or Void with a reason. Issued invoices cannot be edited. Customers see issued invoices at `/billing` (org admins only) and can print them.
 - Online payment is not available. `PAYMENT_PROVIDER=manual` only changes the wording; no other value does anything.
+
+## Incident response (Phase 10)
+1. Confirm: `/ready` on web and API (503 names the failing dependency); Vercel deployments (`list_deployments` or dashboard); Supabase project status.
+2. Contain: to stop one organisation adding records, suspend its plan in `/platform`; to stop the assistant, switch it off on `/assistant`; to stop a device, retire its key on `/devices`; to stop all ingest, revoke org keys or pause the API host.
+3. Data stale: the UI already shows stale or offline explicitly. Do not tell users data is live. If ingest is down, say so on the status channel agreed with the pilot partner.
+4. Wrong or suspect warning: a person with the permission withdraws it in `/alerts`; record why. Warnings are never edited silently.
+5. Record: time, what was seen, what was done, who. Review within a week; add a test or a runbook line for each cause.
+6. Suspected data exposure: stop the path, preserve logs, tell the owner immediately; notification duties under the data-protection law need legal advice (`DATA_PROTECTION.md`).
+
+## Backup and restore (Phase 10)
+Details and measured times: `docs/DISASTER_RECOVERY.md`.
+- Backup: `scripts/db-backup.sh` (needs `DATABASE_URL`; writes a custom-format dump of schemas public and private, auth users data, and a sha256 file under `backups/`, which is gitignored). Store dumps encrypted, off the machine.
+- Restore: `scripts/db-restore.sh <dump> <target-url>`; it checks the checksum, neutralises default privileges during restore and re-applies them after.
+- Drill (scratch server only, never production): `scripts/restore-drill.sh`. It builds a source database, snapshots counts, policies, triggers, functions and grants, backs up, drops, restores, compares and runs behaviour checks. Run it after any migration that changes grants or policies.
+- Not yet done: a restore from a real hosted backup, and a schedule.
+
+## Rate limits (Phase 10)
+- Ingest only. Settings: `RATE_LIMIT_PER_KEY_PER_MIN` (default 120) and `RATE_LIMIT_GLOBAL_PER_MIN` (default 3000). Over the limit the API answers 429 with `Retry-After: 60` before any work.
+- A device sending every minute needs 1 request per minute per batch; size batches accordingly (max 1000 readings per request).
+- Counters live in `public.rate_counters` (not readable by app roles); if the counter cannot be read, requests are allowed (fail open) so a fault there cannot silence real sensors.
+
+## Load test and accessibility script (Phase 10)
+- Load: `python scripts/load-test.py --help` (needs a fleet file from the simulator; run against a non-production API). Results and limits are in `docs/PERFORMANCE.md`.
+- Accessibility: `node scripts/a11y-audit.mjs <base-url>` (axe-core through Playwright, 1280 px and 375 px). Fix any violation before release; signed-in screens still need a manual check.
+
+## Requests about personal data (Phase 10)
+No self-service tooling exists yet. For access, correction or deletion requests: confirm identity by the registered email, locate rows using the inventory in `docs/DATA_PROTECTION.md`, tell the owner, act only on the owner's instruction, and record what was done. Community reports are anonymous by design (no IP or device data), so they cannot be matched to a person.
+
+## Key rotation (Phase 10)
+- Gemini key: create a new one, update `GEMINI_API_KEY` in Vercel (Sensitive), redeploy, delete the old key.
+- GitHub token: revoke in GitHub settings; use SSH or a fine-grained token with minimum scope.
+- Device or API keys: rotate or retire in the app; the old key stops working at once.
+- Supabase keys: rotate in the dashboard, update Vercel and GitHub secrets, redeploy.

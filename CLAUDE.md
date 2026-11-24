@@ -43,5 +43,7 @@ Assistant: read-only tools run as the signed-in person; answers use Observed / F
 
 Plans: no price, plan name or limit is ever invented; plans are published by the platform owner and a price needs amount, currency, interval and basis. Limits and feature gates are enforced in the database (missing limit = 0, NULL = unlimited, no plan = unmanaged). Invoices are typed in, never calculated; issued ones are immutable. No payment provider is connected and no payment claim is made until one is verified. Platform roles see only demo requests, plans, assignments, invoices and organisation names.
 
+Hardening: ingest is rate limited in the database (`rate_hit`, fails open); restore scripts must neutralise default privileges and the drill compares grants; never claim a restore, load or accessibility result that was not run; pilot gaps live in `docs/PILOT_READINESS.md` and only the owner acknowledges them.
+
 ## Current state
 See `docs/PROGRESS.md`.

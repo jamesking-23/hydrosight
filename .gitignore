@@ -28,3 +28,7 @@ apps/web/public/vendor/
 
 # simulator fleet files hold device keys
 fleet*.json
+
+# database backups hold personal data
+backups/
+*.dump

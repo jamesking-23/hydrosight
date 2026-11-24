@@ -3,7 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev:web": "pnpm --filter @hydrosight/web dev",
     "lint": "pnpm --filter @hydrosight/web lint",
@@ -13,5 +15,10 @@
     "check:web": "pnpm lint && pnpm typecheck && pnpm test:web",
     "check:api": "cd services/api && uv run ruff check . && uv run ruff format --check . && uv run mypy src && uv run --python 3.12 --group geo pytest -q",
     "check": "pnpm check:web && pnpm check:api"
+  },
+  "pnpm": {
+    "overrides": {
+      "uuid": ">=11.1.1"
+    }
   }
 }

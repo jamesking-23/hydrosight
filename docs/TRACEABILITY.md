@@ -101,3 +101,10 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-BIL-007 | No payment provider is connected; the UI makes no payment claim; only `manual` or `none` can be selected | `lib/payments/` | `tests/billing.test.ts` |
 | HS-BIL-008 | Platform roles see only demo requests, plans, assignments, invoices and organisation names | `0012`, `0013` `platform_orgs` | `tests/test_billing.py` |
 | HS-WEB-001 | Public copy makes no accuracy, lead-time, price, customer or partner claims | `lib/site-content.ts` | `tests/billing.test.ts` |
+| HS-SEC-001 | Ingest is rate limited per key and overall; over-limit requests get 429 before any work; counter fault fails open | `0014` `rate_hit`, `ingest.py` | `tests/test_rate_limit.py` |
+| HS-SEC-002 | Counter table is closed to app roles | `0014` | `tests/test_rate_limit.py` |
+| HS-SEC-003 | Security headers on every web response (no script CSP yet) | `apps/web/next.config.ts` | checked on a local production build; no automated test |
+| HS-OPS-001 | Backup, restore and a timed drill that compares counts, policies, triggers, functions and grants and runs behaviour checks | `scripts/db-backup.sh`, `db-restore.sh`, `restore-drill.sh` | drill run 2026-11-24 (PASS), not part of CI |
+| HS-OPS-002 | Measured ingest load test | `scripts/load-test.py` | `docs/PERFORMANCE.md` |
+| HS-A11Y-001 | Public pages pass axe-core WCAG checks at desktop and phone widths | `scripts/a11y-audit.mjs`, `globals.css` tokens | audit run; signed-in screens not covered |
+| HS-DOC-001 | Pilot-readiness checklist with owner-acknowledged gaps | `docs/PILOT_READINESS.md` | review by owner |

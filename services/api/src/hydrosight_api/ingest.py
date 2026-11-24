@@ -2,6 +2,7 @@
 (`public.ingest_readings`); this layer only transports the request and maps failures to
 explicit HTTP errors. The API key is never logged."""
 
+import hashlib
 from collections.abc import Callable
 from typing import Annotated, Any
 
@@ -68,8 +69,31 @@ def post_process(conn: Any, readings: list[Any], result: dict[str, Any]) -> dict
     return result
 
 
+def rate_allowed(conn: Any, settings: Settings, api_key: str) -> bool:
+    """Counts this request against the per-key and the overall bucket (own transaction, committed
+    before anything else so a refused request still counts). The key is hashed, never stored.
+    Fails open if the counter cannot be read: ingestion itself then reports the database problem."""
+    digest = hashlib.sha256(api_key.encode()).hexdigest()[:32]
+    try:
+        with conn.transaction():
+            per_key = conn.execute(
+                "select public.rate_hit(%s, %s, 60)",
+                (f"ingest:key:{digest}", settings.rate_limit_per_key_per_min),
+            ).fetchone()
+            overall = conn.execute(
+                "select public.rate_hit('ingest:all', %s, 60)",
+                (settings.rate_limit_global_per_min,),
+            ).fetchone()
+    except psycopg.Error:
+        return True
+    return bool(per_key and per_key[0]) and bool(overall and overall[0])
+
+
 def _execute(
-    settings: Settings, work: Callable[[Any], dict[str, Any]], key_scope_msg: str
+    settings: Settings,
+    work: Callable[[Any], dict[str, Any]],
+    key_scope_msg: str,
+    api_key: str | None = None,
 ) -> dict[str, Any]:
     if not settings.database_url:
         raise HTTPException(503, detail="database is not configured")
@@ -77,6 +101,12 @@ def _execute(
         with psycopg.connect(
             settings.database_url, connect_timeout=5, prepare_threshold=None
         ) as conn:
+            if api_key is not None and not rate_allowed(conn, settings, api_key):
+                raise HTTPException(
+                    429,
+                    detail="rate limit reached; retry in a minute",
+                    headers={"Retry-After": "60"},
+                )
             result = work(conn)
     except psycopg.errors.InvalidAuthorizationSpecification as exc:
         raise HTTPException(401, detail="invalid, expired or revoked API key") from exc
@@ -103,7 +133,7 @@ def db_ingestor(settings: Annotated[Settings, Depends(get_settings)]) -> Ingesto
                 raise HTTPException(500, detail="unexpected database response")
             return post_process(conn, readings, dict(row[0]))
 
-        return _execute(settings, work, "API key lacks the readings.write scope")
+        return _execute(settings, work, "API key lacks the readings.write scope", api_key)
 
     return run
 
@@ -118,7 +148,7 @@ def db_device_ingestor(settings: Annotated[Settings, Depends(get_settings)]) -> 
                 raise HTTPException(500, detail="unexpected database response")
             return post_process(conn, batch["readings"], dict(row[0]))
 
-        return _execute(settings, work, "API key cannot write readings from this device")
+        return _execute(settings, work, "API key cannot write readings from this device", api_key)
 
     return run
 
