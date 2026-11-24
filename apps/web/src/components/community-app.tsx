@@ -175,7 +175,7 @@ export function CommunityApp() {
             key={k}
             onClick={() => setTab(k)}
             aria-current={tab === k ? "page" : undefined}
-            className={`flex-1 rounded-md px-2 py-2 text-sm font-semibold ${tab === k ? "bg-ocean text-white" : "hover:bg-[#eef3f8]"}`}
+            className={`min-h-11 flex-1 rounded-md px-2 py-2 text-sm font-semibold ${tab === k ? "bg-ocean text-white" : "hover:bg-[#eef3f8]"}`}
           >
             {tr(`community.tab.${k}` as MessageKey)}
           </button>
@@ -357,7 +357,7 @@ function ReportForm({
       <div>
         <label className="block">
           <span className="mb-1 block text-sm font-semibold">{tr("report.photo")}</span>
-          <input type="file" accept="image/*" capture="environment" onChange={(e) => void onPhoto(e.target.files?.[0])} />
+          <input type="file" accept="image/*" capture="environment" onChange={(e) => void onPhoto(e.target.files?.[0])} className="block w-full text-sm file:mr-3 file:min-h-10 file:rounded-md file:border file:border-[#b9cad8] file:bg-white file:px-3 file:py-2 file:font-semibold hover:file:border-ocean" />
         </label>
         <p className="mt-1 text-xs text-muted">{tr("report.photo.note")}</p>
         {draft.photoBase64 ? (
@@ -370,12 +370,12 @@ function ReportForm({
       </div>
       {signedIn ? (
         <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" checked={draft.anonymous} onChange={(e) => set({ anonymous: e.target.checked })} className="mt-1" />
+          <input type="checkbox" checked={draft.anonymous} onChange={(e) => set({ anonymous: e.target.checked })} className="mt-0.5 h-5 w-5 shrink-0" />
           <span>{tr("report.anonymous")}{!draft.anonymous ? ` — ${tr("report.signedin")}` : ""}</span>
         </label>
       ) : null}
       <label className="flex items-start gap-2 text-sm">
-        <input type="checkbox" checked={draft.consent} onChange={(e) => set({ consent: e.target.checked })} className="mt-1" />
+        <input type="checkbox" checked={draft.consent} onChange={(e) => set({ consent: e.target.checked })} className="mt-0.5 h-5 w-5 shrink-0" />
         <span>{tr("report.consent")}</span>
       </label>
       {problems.length > 0 ? (

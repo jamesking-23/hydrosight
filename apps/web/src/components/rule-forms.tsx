@@ -87,7 +87,7 @@ export function RuleActions({ id, canActivate, canRetire }: { id: string; canAct
   }
   return (
     <div className="mt-2 space-y-2">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {canActivate ? <GhostButton onClick={() => call("activate_threshold_rule")}>Approve and activate</GhostButton> : null}
         {canRetire ? <GhostButton onClick={() => call("retire_threshold_rule")}>Retire</GhostButton> : null}
       </div>

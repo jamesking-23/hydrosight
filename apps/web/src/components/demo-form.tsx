@@ -114,7 +114,7 @@ export function DemoForm() {
         </label>
       </div>
       <label className="flex items-start gap-3 text-sm">
-        <input type="checkbox" name="consent" className="mt-1" />
+        <input type="checkbox" name="consent" className="mt-0.5 h-5 w-5 shrink-0" />
         <span>{CONSENT_TEXT}</span>
       </label>
       <ErrorNote>{err}</ErrorNote>

@@ -90,7 +90,7 @@ export function DeviceRowActions({ id }: { id: string }) {
   if (secret) return <KeyNotice secret={secret} onDone={() => setSecret("")} />;
   return (
     <div className="space-y-2">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <GhostButton onClick={rotate}>Rotate key</GhostButton>
         <GhostButton onClick={retire}>Retire</GhostButton>
       </div>
