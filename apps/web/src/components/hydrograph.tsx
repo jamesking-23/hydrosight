@@ -45,11 +45,11 @@ export function Hydrograph() {
         <text x="334" y="46" fontSize="13" fontWeight="700" fill="#0b1f33" textAnchor="end">Now</text>
       </svg>
       <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <li className="flex items-center gap-2">
+        <li className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span aria-hidden className="inline-block h-1 w-6 rounded bg-leaf" />
           Readings up to now are labelled <SourceBadge source="measured" />
         </li>
-        <li className="flex items-center gap-2">
+        <li className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span aria-hidden className="inline-block h-1 w-6 rounded border-t-4 border-dotted border-ocean" />
           Anything after now is labelled <SourceBadge source="forecast" />
         </li>

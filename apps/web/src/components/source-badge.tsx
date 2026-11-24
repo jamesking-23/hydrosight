@@ -17,7 +17,7 @@ export function SourceBadge({ source, locale = "en" }: { source: SourceType; loc
   return (
     <span
       data-source-type={source}
-      className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${STYLES[source]}`}
+      className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-bold ${STYLES[source]}`}
     >
       {label}
     </span>

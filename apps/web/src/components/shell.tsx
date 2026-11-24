@@ -53,7 +53,9 @@ const APP_NAV: readonly NavGroup[] = [
 export function SiteHeader({ signedInAs }: { signedInAs?: string }) {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-x-4 px-4 py-2 sm:px-6">
+      <div
+        className={`mx-auto grid ${signedInAs ? "max-w-7xl" : "max-w-5xl"} grid-cols-[1fr_auto] items-center gap-x-4 px-4 py-2 sm:px-6`}
+      >
         <Link
           href="/"
           aria-label="HydroSight home"
