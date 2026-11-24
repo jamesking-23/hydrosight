@@ -7,7 +7,7 @@ export function Button({ className = "", ...p }: ButtonHTMLAttributes<HTMLButton
   return (
     <button
       {...p}
-      className={`min-h-11 rounded-md bg-ocean px-4 py-2 font-semibold text-white hover:bg-ocean-deep disabled:opacity-50 ${className}`}
+      className={`min-h-11 whitespace-nowrap rounded-md bg-ocean px-4 py-2 font-semibold text-white hover:bg-ocean-deep disabled:opacity-50 ${className}`}
     />
   );
 }

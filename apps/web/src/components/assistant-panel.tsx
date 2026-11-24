@@ -114,11 +114,11 @@ export function AssistantPanel({ orgId }: { orgId: string }) {
             placeholder="Which sensors are stale right now?"
           />
         </label>
-        <div className="mt-2 flex items-center gap-3">
-          <Button disabled={busy || q.trim().length < 3}>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <Button className="shrink-0 whitespace-nowrap" disabled={busy || q.trim().length < 3}>
             {busy ? "Checking records…" : "Ask"}
           </Button>
-          <span className="text-xs text-muted">
+          <span className="min-w-[14rem] flex-1 text-xs text-muted">
             Read-only. It does not issue warnings or advise on evacuation.
             Questions are logged.
           </span>
