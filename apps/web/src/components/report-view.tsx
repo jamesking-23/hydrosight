@@ -61,7 +61,7 @@ export function ReportView({
         </dl>
       </section>
       {report.tables.map((t) => (
-        <section key={t.title} className="mb-6 overflow-x-auto">
+        <section key={t.title} className="mb-6 overflow-x-auto" role="region" aria-label={t.title} tabIndex={0}>
           <h3 className="mb-2 font-bold">{t.title}</h3>
           {t.rows.length > 0 ? (
             <table className="w-full text-sm">

@@ -44,7 +44,7 @@ export default async function InvoicePage({
         · status: {i.status}
         {i.status === "void" ? ` (${i.void_reason})` : ""}
       </p>
-      <div className="overflow-x-auto"><table className="mt-6 w-full max-w-2xl text-left text-sm">
+      <div className="overflow-x-auto" role="region" aria-label="Invoice lines table" tabIndex={0}><table className="mt-6 w-full max-w-2xl text-left text-sm">
         <thead>
           <tr className="border-b border-line">
             <th className="py-2">Description</th>

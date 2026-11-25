@@ -438,7 +438,7 @@ export function StationMap({
             {sensors === null && !sensorError ? <p className="text-sm text-muted" role="status">Loading sensors…</p> : null}
             {sensors && sensors.length === 0 ? <p className="text-sm text-muted">No sensors registered for this station.</p> : null}
             {sensors && sensors.length > 0 ? (
-              <div className="overflow-x-auto"><table className="w-full text-left text-sm">
+              <div className="overflow-x-auto" role="region" aria-label="Sensors table" tabIndex={0}><table className="w-full text-left text-sm">
                 <thead><tr><th className="py-1">Sensor</th><th>Status</th><th>Latest value</th><th>Expected every</th><th>Source</th></tr></thead>
                 <tbody>
                   {sensors.map((s) => (

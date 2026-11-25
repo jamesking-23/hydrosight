@@ -65,7 +65,7 @@ export function SensorTable({ sensors, stationName }: { sensors: SensorStatusRow
         );
       })}
     </ul>
-    <div className="hidden overflow-x-auto md:block">
+    <div className="hidden overflow-x-auto md:block" role="region" aria-label="Sensors table" tabIndex={0}>
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-line">
@@ -120,7 +120,7 @@ export function DeviceTable({ devices }: { devices: DeviceRow[] }) {
         );
       })}
     </ul>
-    <div className="hidden overflow-x-auto md:block">
+    <div className="hidden overflow-x-auto md:block" role="region" aria-label="Devices table" tabIndex={0}>
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-line">

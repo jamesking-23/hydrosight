@@ -43,7 +43,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
 
       {members?.data ? (
         <Card title="Members">
-          <div className="overflow-x-auto"><table className="w-full text-left text-sm">
+          <div className="overflow-x-auto" role="region" aria-label="Members table" tabIndex={0}><table className="w-full text-left text-sm">
             <thead><tr><th>Email</th><th>Role</th><th>Status</th>{canManage ? <th>Actions</th> : null}</tr></thead>
             <tbody>
               {members.data.map((m) => (
@@ -62,7 +62,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
       {invites ? (
         <Card title="Invitations">
           <InviteForm orgId={orgId} roles={orgRoles.map((r) => ({ key: r.key, label: r.label }))} />
-          <div className="overflow-x-auto"><table className="mt-5 w-full text-left text-sm">
+          <div className="overflow-x-auto" role="region" aria-label="Invitations table" tabIndex={0}><table className="mt-5 w-full text-left text-sm">
             <thead><tr><th>Email</th><th>Role</th><th>Expires</th><th>State</th><th /></tr></thead>
             <tbody>
               {(invites.data ?? []).map((i) => {
@@ -82,7 +82,7 @@ export default async function OrgPage({ params }: { params: Promise<{ orgId: str
       {keys ? (
         <Card title="API keys">
           <ApiKeyForm orgId={orgId} scopes={grantable} />
-          <div className="overflow-x-auto"><table className="mt-5 w-full text-left text-sm">
+          <div className="overflow-x-auto" role="region" aria-label="API keys table" tabIndex={0}><table className="mt-5 w-full text-left text-sm">
             <thead><tr><th>Name</th><th>Prefix</th><th>Scopes</th><th>Last used</th><th>State</th><th /></tr></thead>
             <tbody>
               {(keys.data ?? []).map((k) => {
