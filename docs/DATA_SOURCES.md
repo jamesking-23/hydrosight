@@ -39,3 +39,12 @@ Status after Phase 2: nothing external is integrated. OSM raster tiles are used 
 
 ## Phase 9 update
 No data source added. Plans, limits, prices and invoices are entered by the platform owner. No third-party pricing or payment data is used or displayed.
+
+## Flood Scenarios pilot data (Phase 11, Kabale area)
+| Dataset | Use | Loaded | Licence and notes |
+|---------|-----|--------|-------------------|
+| Copernicus DEM GLO-30 (tile S02 E029 covers Kabale) | Terrain | NO (owner to upload; the build environment cannot reach the host) | Licence text read 2026-11-25: free of charge, worldwide, no purpose restriction stated. Must carry "produced using Copernicus WorldDEM-30" for adapted data, and the notice that the Copernicus organisations incur no liability. Data is "as is". Resolution about 30 m: too coarse for streets, buildings or culverts. |
+| ESA WorldCover 10 m (tile S03 E027) | Roughness class | NO | Licence UNVERIFIED in this session; recorded as CC BY 4.0 by the publisher, confirm at download |
+| SoilGrids (ISRIC) | Infiltration class | NO | Licence UNVERIFIED in this session; recorded as CC BY 4.0 by the publisher, confirm at download |
+| FABDEM | (not used) | NO | The publisher says commercial use needs a commercial licence. Excluded |
+| FastFlood (service/API) | (not used) | NO | Terms, pricing and limits UNVERIFIED. Method only is used |

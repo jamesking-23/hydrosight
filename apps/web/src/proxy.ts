@@ -21,6 +21,7 @@ const PROTECTED = [
   "/analytics",
   "/assets",
   "/assistant",
+  "/scenarios",
   "/billing",
   "/platform",
 ];

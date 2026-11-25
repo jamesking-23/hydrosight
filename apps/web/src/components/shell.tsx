@@ -29,6 +29,7 @@ const APP_NAV: readonly NavGroup[] = [
     links: [
       { href: "/forecasts", label: "Forecasts" },
       { href: "/analytics", label: "Analytics" },
+      { href: "/scenarios", label: "Scenarios" },
       { href: "/assistant", label: "Assistant" },
     ],
   },

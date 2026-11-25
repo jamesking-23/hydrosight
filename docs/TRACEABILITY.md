@@ -108,3 +108,6 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-OPS-002 | Measured ingest load test | `scripts/load-test.py` | `docs/PERFORMANCE.md` |
 | HS-A11Y-001 | Public pages pass axe-core WCAG checks at desktop and phone widths | `scripts/a11y-audit.mjs`, `globals.css` tokens | audit run; signed-in screens not covered; navigation and card layout re-checked after the UI pass |
 | HS-DOC-001 | Pilot-readiness checklist with owner-acknowledged gaps | `docs/PILOT_READINESS.md` | review by owner |
+| HS-SCN-001 | Flood Scenarios outputs are labelled, `synthetic`, and isolated from alerts, status and predictions | `lib/scenario`, `components/scenario-app.tsx`, ADR-013 | `tests/scenario.test.ts` (isolation test) |
+| HS-SCN-002 | Solver matches known answers and conserves water | `lib/scenario/solver.ts` | `tests/scenario.test.ts`, `scenario-data.test.ts` |
+| HS-SCN-003 | Rainfall, infiltration and Manning n are typed in; terrain needs dataset name, licence and source | `components/scenario-app.tsx` | browser drive; no automated UI test |

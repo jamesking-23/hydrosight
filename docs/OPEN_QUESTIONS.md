@@ -149,3 +149,10 @@ Everything measured so far is synthetic. To produce a real backtest the owner mu
 - UNVERIFIED: load figures come from the build sandbox, not the hosted setup.
 - LIMITATION: no script-src CSP; signed-in screens not audited for accessibility; no screen reader test; no Playwright end-to-end journeys; no independent penetration test; no uptime monitoring.
 - UNVERIFIED: hardware, communications and partner choices (`docs/IOT_SPEC.md` section 8). MQTT and LoRaWAN are design only.
+
+## Phase 11 (Flood Scenarios)
+- NEEDS OWNER: upload the three Kabale tiles (Copernicus GLO-30 S02 E029, ESA WorldCover S03 E027, SoilGrids layers) and confirm the licences at download.
+- UNVERIFIED: FastFlood commercial terms; not used.
+- UNVERIFIED: solver accuracy; no real events compared. Manning roughness and infiltration lookup values must come from cited sources (to be recorded in `docs/SCENARIO_MODEL.md`).
+- OPEN: large-area runs need a server worker; may cost money.
+

@@ -114,4 +114,9 @@ Built: grouped navigation (tab bar on wide screens, menu panel on small ones; `c
 Checked: axe-core 0 violations and no horizontal overflow on the 12 public pages at 360/375 and 1280 px; 137 web tests, lint, types and production build pass. Dashboard, forms and assistant were previewed with made-up data on temporary pages (removed).
 Not checked: signed-in screens with real data on a phone (map, analytics, asset and invoice tables, moderation, platform admin). No automated test covers layout.
 
-## Next: waiting for owner's "proceed". Phases 0-10 are built; the pilot checklist has open rows for the owner.
+## Phase 11: Flood Scenarios - BUILT 2026-11-25
+Built: ADR-013 and the rule change in CLAUDE.md; `/scenarios` page and nav link; own browser solver (`lib/scenario`), terrain edit (barrier, channel, basin), GeoTIFF loader (`geotiff` dependency), synthetic demo terrain, map layers with probe, results table, settings used and limits; `docs/SCENARIO_MODEL.md`.
+Checked: 23 scenario tests (analytic plane and valley, water balance, demo plausibility, isolation); full web suite 161 tests, types and lint clean; browser drive of the page earlier (run about 210 ms on 240 x 240). A depth artefact found on the demo terrain (28 m) was fixed (averaged slope, outlet slope, cross-section stops at cells below the bed); demo max depth is now about 3.9 m for a 550 m3/s peak.
+Not done: validation against owner-recorded events, land-cover and soil rasters, real Kabale terrain (owner must upload; licences to confirm), re-run of the browser screenshots after the final solver fix, axe audit of the signed-in page.
+
+## Next: waiting for owner's "proceed". Phases 0-11 are built; the pilot checklist has open rows for the owner.
