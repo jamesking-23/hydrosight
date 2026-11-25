@@ -106,5 +106,5 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-SEC-003 | Security headers on every web response (no script CSP yet) | `apps/web/next.config.ts` | checked on a local production build; no automated test |
 | HS-OPS-001 | Backup, restore and a timed drill that compares counts, policies, triggers, functions and grants and runs behaviour checks | `scripts/db-backup.sh`, `db-restore.sh`, `restore-drill.sh` | drill run 2026-11-24 (PASS), not part of CI |
 | HS-OPS-002 | Measured ingest load test | `scripts/load-test.py` | `docs/PERFORMANCE.md` |
-| HS-A11Y-001 | Public pages pass axe-core WCAG checks at desktop and phone widths | `scripts/a11y-audit.mjs`, `globals.css` tokens | audit run; signed-in screens not covered |
+| HS-A11Y-001 | Public pages pass axe-core WCAG checks at desktop and phone widths | `scripts/a11y-audit.mjs`, `globals.css` tokens | audit run; signed-in screens not covered; navigation and card layout re-checked after the UI pass |
 | HS-DOC-001 | Pilot-readiness checklist with owner-acknowledged gaps | `docs/PILOT_READINESS.md` | review by owner |

@@ -108,4 +108,10 @@ Built: migration `0014` (database rate limiting) wired into ingest; security hea
 Measured: restore drill (573 MB, 2M readings) backup 3.4 s, restore 12.1 s, PASS, on a scratch server only. Load figures in `PERFORMANCE.md` (sandbox).
 Applied to Supabase: `0014` see report. Not done: independent pen test, real-backup restore, signed-in accessibility audit, script CSP, tuning.
 
+## UI and mobile pass (post Phase 10, 2026-11-24/25)
+Requested by the owner: navigation looked squeezed and mobile responsiveness was weak.
+Built: grouped navigation (tab bar on wide screens, menu panel on small ones; `components/site-nav.tsx`); data tables scroll sideways inside their own box; sensor and device lists stack as cards on phones; shared `Card` and `Button` restyled (larger tap targets, no wrapped labels); home page hero backdrop and principle cards; community app and forms tap targets; fixed a crushed Ask button in the assistant on phones.
+Checked: axe-core 0 violations and no horizontal overflow on the 12 public pages at 360/375 and 1280 px; 137 web tests, lint, types and production build pass. Dashboard, forms and assistant were previewed with made-up data on temporary pages (removed).
+Not checked: signed-in screens with real data on a phone (map, analytics, asset and invoice tables, moderation, platform admin). No automated test covers layout.
+
 ## Next: waiting for owner's "proceed". Phases 0-10 are built; the pilot checklist has open rows for the owner.
