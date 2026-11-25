@@ -65,9 +65,11 @@ export type { OrgChoice, SavedComparison };
 export function ScenarioApp({
   orgs,
   saved,
+  userId,
 }: {
   orgs: OrgChoice[];
   saved: SavedComparison[];
+  userId: string;
 }) {
   const [terrain, setTerrain] = useState<Terrain | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -846,6 +848,7 @@ export function ScenarioApp({
           probe={probe}
           orgs={orgs}
           saved={saved}
+          userId={userId}
           terrain={{
             name: terrain?.name ?? "",
             isDemo: terrain?.isDemo ?? true,

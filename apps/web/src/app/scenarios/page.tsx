@@ -17,7 +17,7 @@ export default async function Scenarios() {
     a.supabase
       .from("scenario_validations")
       .select(
-        "id, org_id, event_name, event_date, terrain_name, data_origin, status, comparison, created_at",
+        "id, org_id, event_name, event_date, terrain_name, data_origin, status, comparison, recorded_by, created_at",
       )
       .order("created_at", { ascending: false })
       .limit(50),
@@ -37,6 +37,7 @@ export default async function Scenarios() {
       <ScenarioApp
         orgs={choices}
         saved={(saved.data ?? []) as unknown as SavedComparison[]}
+        userId={a.user.id}
       />
     </Shell>
   );

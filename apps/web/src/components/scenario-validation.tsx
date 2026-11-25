@@ -35,6 +35,7 @@ export type SavedComparison = {
   comparison: {
     counts?: { points: number; compared: number; agree: number };
   } | null;
+  recorded_by: string;
   created_at: string;
 };
 
@@ -52,6 +53,7 @@ export function ScenarioValidation({
   probe,
   orgs,
   saved,
+  userId,
   terrain,
   context,
 }: {
@@ -60,6 +62,7 @@ export function ScenarioValidation({
   probe: { x: number; y: number } | null;
   orgs: OrgChoice[];
   saved: SavedComparison[];
+  userId: string;
   terrain: { name: string; isDemo: boolean; source: string; licence: string };
   context: { view: "base" | "mitigated"; terrainEdits: number };
 }) {
@@ -70,6 +73,11 @@ export function ScenarioValidation({
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
   const org = recordable.find((o) => o.id === orgId);
+  /** Shown only to a different person who may review. The database enforces this again. */
+  const canReview = (r: SavedComparison) =>
+    r.recorded_by !== userId &&
+    orgs.find((o) => o.id === r.org_id)?.canConfirm === true &&
+    (r.status === "validated" || r.data_origin === "real_confirmed");
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [evidence, setEvidence] = useState("");
@@ -462,10 +470,66 @@ export function ScenarioValidation({
               <span className="text-muted">
                 Modelled scenario. Not a forecast or warning.
               </span>
+              {canReview(r) ? (
+                <ReviewControl row={r} onDone={() => router.refresh()} />
+              ) : null}
             </li>
           ))}
         </ul>
       )}
     </Card>
+  );
+}
+
+function ReviewControl({
+  row,
+  onDone,
+}: {
+  row: SavedComparison;
+  onDone: () => void;
+}) {
+  const [evidence, setEvidence] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+  const validated = row.status === "validated";
+
+  async function go() {
+    setMsg("");
+    if (!validated && evidence.trim().length < 3)
+      return setMsg("Add a link or reference to your evidence first.");
+    setBusy(true);
+    const { error } = await createClient().rpc("promote_scenario_validation", {
+      p_id: row.id,
+      p_status: validated ? "unvalidated" : "validated",
+      p_evidence_url: validated ? null : evidence.trim(),
+    });
+    setBusy(false);
+    if (error) return setMsg(error.message);
+    onDone();
+  }
+
+  return (
+    <div className="mt-2 flex flex-wrap items-end gap-2">
+      {validated ? null : (
+        <label className="block min-w-[14rem] flex-1">
+          <span className="mb-1 block text-sm font-semibold">
+            Your evidence (link or reference)
+          </span>
+          <input
+            className={inputCls}
+            value={evidence}
+            onChange={(e) => setEvidence(e.target.value)}
+          />
+        </label>
+      )}
+      <Button type="button" onClick={go} disabled={busy}>
+        {validated ? "Return to unvalidated" : "Confirm this comparison"}
+      </Button>
+      {msg ? (
+        <p role="alert" className="w-full text-sm text-src-synthetic">
+          {msg}
+        </p>
+      ) : null}
+    </div>
   );
 }
