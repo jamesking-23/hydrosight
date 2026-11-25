@@ -1,6 +1,10 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ScenarioValidation } from "@/components/scenario-validation";
+import {
+  ScenarioValidation,
+  type OrgChoice,
+  type SavedComparison,
+} from "@/components/scenario-validation";
 import { SourceBadge } from "@/components/source-badge";
 import {
   Button,
@@ -56,7 +60,15 @@ function num(s: string): number {
   return s.trim() === "" ? Number.NaN : Number(s);
 }
 
-export function ScenarioApp() {
+export type { OrgChoice, SavedComparison };
+
+export function ScenarioApp({
+  orgs,
+  saved,
+}: {
+  orgs: OrgChoice[];
+  saved: SavedComparison[];
+}) {
   const [terrain, setTerrain] = useState<Terrain | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [centre, setCentre] = useState({ lon: "", lat: "", km: "" });
@@ -828,7 +840,23 @@ export function ScenarioApp() {
       ) : null}
 
       {shownGrid && result ? (
-        <ScenarioValidation grid={shownGrid} result={result} probe={probe} />
+        <ScenarioValidation
+          grid={shownGrid}
+          result={result}
+          probe={probe}
+          orgs={orgs}
+          saved={saved}
+          terrain={{
+            name: terrain?.name ?? "",
+            isDemo: terrain?.isDemo ?? true,
+            source: meta.ref,
+            licence: meta.licence,
+          }}
+          context={{
+            view,
+            terrainEdits: edits.length,
+          }}
+        />
       ) : null}
 
       <Card title="What this model cannot do">

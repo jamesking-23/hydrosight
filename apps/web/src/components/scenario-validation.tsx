@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
   Button,
@@ -8,12 +9,34 @@ import {
   GhostButton,
   inputCls,
 } from "@/components/ui";
+import { createClient } from "@/lib/supabase/browser";
 import type { Grid, ScenarioResult } from "@/lib/scenario/solver";
 import {
   comparePoints,
   validateEvent,
   type ObservedPoint,
 } from "@/lib/scenario/validate";
+
+export type OrgChoice = {
+  id: string;
+  name: string;
+  canRecord: boolean;
+  canConfirm: boolean;
+};
+
+export type SavedComparison = {
+  id: string;
+  org_id: string;
+  event_name: string;
+  event_date: string;
+  terrain_name: string;
+  data_origin: "real_unconfirmed" | "real_confirmed";
+  status: "unvalidated" | "validated";
+  comparison: {
+    counts?: { points: number; compared: number; agree: number };
+  } | null;
+  created_at: string;
+};
 
 function num(s: string): number {
   return s.trim() === "" ? Number.NaN : Number(s);
@@ -27,11 +50,26 @@ export function ScenarioValidation({
   grid,
   result,
   probe,
+  orgs,
+  saved,
+  terrain,
+  context,
 }: {
   grid: Grid;
   result: ScenarioResult;
   probe: { x: number; y: number } | null;
+  orgs: OrgChoice[];
+  saved: SavedComparison[];
+  terrain: { name: string; isDemo: boolean; source: string; licence: string };
+  context: { view: "base" | "mitigated"; terrainEdits: number };
 }) {
+  const router = useRouter();
+  const recordable = orgs.filter((o) => o.canRecord);
+  const [orgId, setOrgId] = useState(recordable[0]?.id ?? "");
+  const [asConfirmed, setAsConfirmed] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveMsg, setSaveMsg] = useState("");
+  const org = recordable.find((o) => o.id === orgId);
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [evidence, setEvidence] = useState("");
@@ -78,6 +116,47 @@ export function ScenarioValidation({
       t,
     );
   }, [shown, result, grid, points, t]);
+
+  async function save() {
+    setSaveMsg("");
+    if (!comparison || !org) return;
+    setSaving(true);
+    const { error: err } = await createClient().rpc(
+      "record_scenario_validation",
+      {
+        p_org: org.id,
+        p_event_name: name.trim(),
+        p_event_date: date,
+        p_evidence_ref: evidence.trim(),
+        p_terrain_name: terrain.name,
+        p_terrain_source: terrain.source,
+        p_terrain_licence: terrain.licence,
+        p_terrain_is_demo: terrain.isDemo,
+        p_inputs: { ...result.settings, ...context },
+        p_wet_threshold_m: t,
+        p_points: points,
+        p_comparison: {
+          counts: comparison.counts,
+          depth: comparison.depth,
+          rows: comparison.rows.map((r) => ({
+            label: r.point.label,
+            observedWet: r.point.wet,
+            observedDepthM: r.point.depthM ?? null,
+            modelledDepthM: r.modelledDepthM ?? null,
+            agrees: r.agrees ?? null,
+          })),
+        },
+        p_data_origin:
+          asConfirmed && org.canConfirm ? "real_confirmed" : "real_unconfirmed",
+      },
+    );
+    setSaving(false);
+    if (err) return setSaveMsg(err.message);
+    setSaveMsg(
+      "Saved. It stays unvalidated until a second person with the right permission reviews it.",
+    );
+    router.refresh();
+  }
 
   function compare() {
     const errs = validateEvent({ name, date, evidence, confirmed, points }, t);
@@ -289,8 +368,104 @@ export function ScenarioValidation({
             model. The scenario also has to use the rainfall and terrain of that
             event for the comparison to mean anything.
           </p>
+
+          <div className="mt-4 rounded-md border border-line p-3">
+            <h3 className="text-base font-bold">Save this comparison</h3>
+            {terrain.isDemo ? (
+              <p className="mt-1 text-sm text-muted">
+                Comparisons on the demo terrain cannot be saved. Load real
+                terrain with its source and licence first.
+              </p>
+            ) : recordable.length === 0 ? (
+              <p className="mt-1 text-sm text-muted">
+                Your role in your organisation cannot save comparisons.
+              </p>
+            ) : (
+              <>
+                <p className="mt-1 text-sm text-muted">
+                  Saves the event, evidence, terrain details, the settings used
+                  and this table. A saved comparison cannot be edited or
+                  deleted. It stays unvalidated until a different person who may
+                  review models confirms it with evidence.
+                </p>
+                <div className="mt-2 flex flex-wrap items-end gap-3">
+                  {recordable.length > 1 ? (
+                    <label className="block">
+                      <span className="mb-1 block text-sm font-semibold">
+                        Organisation
+                      </span>
+                      <select
+                        className={inputCls}
+                        value={orgId}
+                        onChange={(e) => setOrgId(e.target.value)}
+                      >
+                        {recordable.map((o) => (
+                          <option key={o.id} value={o.id}>
+                            {o.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : null}
+                  {org?.canConfirm ? (
+                    <label className="flex items-start gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-5 w-5"
+                        checked={asConfirmed}
+                        onChange={(e) => setAsConfirmed(e.target.checked)}
+                      />
+                      <span>
+                        Record the event as confirmed real (I hold the authority
+                        to confirm it).
+                      </span>
+                    </label>
+                  ) : null}
+                  <Button type="button" onClick={save} disabled={saving}>
+                    {saving ? "Saving…" : "Save comparison"}
+                  </Button>
+                </div>
+                {saveMsg ? (
+                  <p className="mt-2 text-sm" role="status">
+                    {saveMsg}
+                  </p>
+                ) : null}
+              </>
+            )}
+          </div>
         </div>
       ) : null}
+
+      <h3 className="mt-6 text-base font-bold">Saved comparisons</h3>
+      {saved.length === 0 ? (
+        <p className="mt-1 text-sm text-muted">
+          None yet. A saved comparison lists the event, terrain and counts. It
+          is a record for review, not a statement that the model is accurate.
+        </p>
+      ) : (
+        <ul className="mt-2 divide-y divide-line rounded-md border border-line text-sm">
+          {saved.map((r) => (
+            <li key={r.id} className="p-2">
+              <span className="font-semibold">{r.event_name}</span> (
+              {r.event_date}), terrain {r.terrain_name}.{" "}
+              {r.comparison?.counts
+                ? `${r.comparison.counts.agree} of ${r.comparison.counts.compared} compared points the same. `
+                : ""}
+              Event{" "}
+              {r.data_origin === "real_confirmed"
+                ? "confirmed real"
+                : "not yet confirmed"}
+              .{" "}
+              {r.status === "validated"
+                ? "Reviewed and confirmed by a second person with evidence."
+                : "Unvalidated."}{" "}
+              <span className="text-muted">
+                Modelled scenario. Not a forecast or warning.
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </Card>
   );
 }
