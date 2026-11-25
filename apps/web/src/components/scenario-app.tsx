@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ScenarioValidation } from "@/components/scenario-validation";
 import { SourceBadge } from "@/components/source-badge";
 import {
   Button,
@@ -723,7 +724,12 @@ export function ScenarioApp() {
 
       {base ? (
         <Card title="5. Results">
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            role="region"
+            aria-label="Scenario results table"
+            tabIndex={0}
+          >
             <table className="w-full text-left text-sm">
               <caption className="sr-only">Scenario summary. {LABEL}</caption>
               <thead>
@@ -815,10 +821,14 @@ export function ScenarioApp() {
             </ul>
           </details>
           <p className="mt-3 text-sm font-semibold">
-            Not validated: no result here has been compared with a recorded
-            flood.
+            Not validated: no result here has been checked against a recorded
+            flood. Section 5 only shows differences for points you enter.
           </p>
         </Card>
+      ) : null}
+
+      {shownGrid && result ? (
+        <ScenarioValidation grid={shownGrid} result={result} probe={probe} />
       ) : null}
 
       <Card title="What this model cannot do">

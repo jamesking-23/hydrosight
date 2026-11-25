@@ -111,3 +111,4 @@ Requirement IDs follow the blueprint scheme (`HS-<AREA>-NNN`). IDs not present i
 | HS-SCN-001 | Flood Scenarios outputs are labelled, `synthetic`, and isolated from alerts, status and predictions | `lib/scenario`, `components/scenario-app.tsx`, ADR-013 | `tests/scenario.test.ts` (isolation test) |
 | HS-SCN-002 | Solver matches known answers and conserves water | `lib/scenario/solver.ts` | `tests/scenario.test.ts`, `scenario-data.test.ts` |
 | HS-SCN-003 | Rainfall, infiltration and Manning n are typed in; terrain needs dataset name, licence and source | `components/scenario-app.tsx` | browser drive; no automated UI test |
+| HS-SCN-004 | Comparison with a real event needs name, date, evidence and confirmation, shows differences only, makes no accuracy claim and stores nothing | `lib/scenario/validate.ts`, `components/scenario-validation.tsx` | `tests/scenario-validate.test.ts`; browser drive |
