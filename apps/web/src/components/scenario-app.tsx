@@ -383,6 +383,61 @@ export function ScenarioApp({
             </div>
             <div className="rounded-lg border border-line p-3">
               <h3 className="mb-2 font-bold">Load a GeoTIFF elevation file</h3>
+              <details className="mb-3 rounded-md border border-line p-3 text-sm">
+                <summary className="min-h-10 cursor-pointer py-2 font-semibold">
+                  How to get a real elevation file
+                </summary>
+                <ol className="mt-2 list-decimal space-y-2 pl-5">
+                  <li>
+                    Download a Copernicus DEM GLO-30 tile from the{" "}
+                    <a
+                      className="underline"
+                      href="https://registry.opendata.aws/copernicus-dem/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      AWS open data page
+                    </a>
+                    . The{" "}
+                    <a
+                      className="underline"
+                      href="https://copernicus-dem-30m.s3.amazonaws.com/readme.html"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      readme
+                    </a>{" "}
+                    explains how the tiles are named. Each tile is a GeoTIFF
+                    covering about one degree square.
+                  </li>
+                  <li>
+                    Pick the tile that contains your area. Kabale town is at
+                    about 1.25° S, 29.99° E, which falls in the tile named for
+                    S02 and E029. Check the position of your own site on a map
+                    before choosing.
+                  </li>
+                  <li>
+                    Choose the file above. To keep the run quick, type the
+                    centre of your area and a half-width in km (for example 10
+                    km). Only that window is read.
+                  </li>
+                  <li>
+                    Press &quot;Fill in for Copernicus DEM GLO-30&quot; for the
+                    name and licence text, then type where and when you
+                    downloaded it. Check the licence text against the download
+                    page.
+                  </li>
+                  <li>
+                    Load the terrain, then enter rainfall and ground values from
+                    your own documented source. Nothing is filled in for you.
+                  </li>
+                </ol>
+                <p className="mt-2 text-muted">
+                  Use only data whose licence allows your use. Datasets that
+                  need a commercial licence, such as FABDEM, are not supported
+                  here.
+                </p>
+              </details>
               <div className="space-y-3">
                 <label className="block">
                   <span className="mb-1 block text-sm font-semibold">
